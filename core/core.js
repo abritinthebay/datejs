@@ -1,15 +1,6 @@
-/**
- * @version: 1.0 Alpha-1
- * @author: Coolite Inc. http://www.coolite.com/
- * @date: 2008-04-13
- * @copyright: Copyright (c) 2006-2008, Coolite Inc. (http://www.coolite.com/). All rights reserved.
- * @license: Licensed under The MIT License. See license.txt and http://www.datejs.com/license/. 
- * @website: http://www.datejs.com/
- */
- 
 (function () {
-    var $D = Date, 
-        $P = $D.prototype, 
+    var $D = Date,
+        $P = $D.prototype,
         $C = $D.CultureInfo,
         p = function (s, l) {
             if (!l) {
@@ -59,12 +50,12 @@
      * @return {Number}  -1 = date1 is lessthan date2. 0 = values are equal. 1 = date1 is greaterthan date2.
      */
     $D.compare = function (date1, date2) {
-        if (isNaN(date1) || isNaN(date2)) { 
-            throw new Error(date1 + " - " + date2); 
+        if (isNaN(date1) || isNaN(date2)) {
+            throw new Error(date1 + " - " + date2);
         } else if (date1 instanceof Date && date2 instanceof Date) {
             return (date1 < date2) ? -1 : (date1 > date2) ? 1 : 0;
-        } else { 
-            throw new TypeError(date1 + " - " + date2); 
+        } else {
+            throw new TypeError(date1 + " - " + date2);
         }
     };
     
@@ -74,8 +65,8 @@
      * @param {Date}     Second Date object to compare to [Required]
      * @return {Boolean} true if dates are equal. false if they are not equal.
      */
-    $D.equals = function (date1, date2) { 
-        return (date1.compareTo(date2) === 0); 
+    $D.equals = function (date1, date2) {
+        return (date1.compareTo(date2) === 0);
     };
 
     /**
@@ -85,12 +76,12 @@
      */
     $D.getDayNumberFromName = function (name) {
         var n = $C.dayNames, m = $C.abbreviatedDayNames, o = $C.shortestDayNames, s = name.toLowerCase();
-        for (var i = 0; i < n.length; i++) { 
-            if (n[i].toLowerCase() == s || m[i].toLowerCase() == s || o[i].toLowerCase() == s) { 
-                return i; 
+        for (var i = 0; i < n.length; i++) {
+            if (n[i].toLowerCase() === s || m[i].toLowerCase() === s || o[i].toLowerCase() === s) {
+                return i;
             }
         }
-        return -1;  
+        return -1;
     };
     
     /**
@@ -101,8 +92,8 @@
     $D.getMonthNumberFromName = function (name) {
         var n = $C.monthNames, m = $C.abbreviatedMonthNames, s = name.toLowerCase();
         for (var i = 0; i < n.length; i++) {
-            if (n[i].toLowerCase() == s || m[i].toLowerCase() == s) { 
-                return i; 
+            if (n[i].toLowerCase() === s || m[i].toLowerCase() === s) {
+                return i;
             }
         }
         return -1;
@@ -113,8 +104,8 @@
      * @param {Number}   The year.
      * @return {Boolean} true if date is within a LeapYear, otherwise false.
      */
-    $D.isLeapYear = function (year) { 
-        return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0); 
+    $D.isLeapYear = function (year) {
+        return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
     };
 
     /**
@@ -127,15 +118,15 @@
         return [31, ($D.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
     };
  
-    $D.getTimezoneAbbreviation = function (offset) {
-        var z = $C.timezones, p;
-        for (var i = 0; i < z.length; i++) {
-            if (z[i].offset === offset) {
-                return z[i].name;
-            }
-        }
-        return null;
-    };
+	$D.getTimezoneAbbreviation = function (offset, dst) {
+		var p, n = (dst || false) ? Date.CultureInfo.abbreviatedTimeZoneDST : Date.CultureInfo.abbreviatedTimeZoneStandard;
+		for (p in n) {
+			if (n[p] === offset) {
+				return p;
+			}
+		}
+		return null;
+	};
     
     $D.getTimezoneOffset = function (name) {
         var z = $C.timezones, p;
