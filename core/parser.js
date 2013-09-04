@@ -1051,20 +1051,31 @@
 	 * @param {String}   The string value to convert into a Date object [Required]
 	 * @return {Date}    A Date object or null if the string cannot be converted into a Date.
 	 */
+
 	$D.parse = function (s) {
-		var r = null;
+		var date, time, r = null;
 		if (!s) {
 			return null;
 		}
 		if (s instanceof Date) {
 			return s;
 		}
-		try {
-			r = $D.Grammar.start.call({}, s.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
-		} catch (e) {
-			return null;
+
+		date = new Date(Date._parse(s));
+		time = date.getTime();
+		// The following will be FALSE if time is NaN which happens if date is an Invalid Date 
+		// (yes, invalid dates are still date objects. Go figure.)
+		if (time === time) {
+			return date;
+		} else {
+			// try our grammar parser
+			try {
+				r = $D.Grammar.start.call({}, s.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
+			} catch (e) {
+				return null;
+			}
+			return ((r[1].length === 0) ? r[0] : null);
 		}
-		return ((r[1].length === 0) ? r[0] : null);
 	};
 
 	$D.getParseFunction = function (fx) {
