@@ -10,16 +10,18 @@ var getI18NFiles = function () {
 	return fs.readdirSync(dirs.i18n);
 };
 
-var buildUglifyFileList = function () {
+var buildUglifyFileList = function (dev) {
+	var output_path = dev ? 'development' : 'production';
+	var output_ext = dev ? '.' : '.min.';
 	var files = getI18NFiles();
 	var output = {};
 	files.map(function(item){
 		var file_core_name = 'date-' + item.replace('.js', '');
-		var dest = dirs.build + '/production/' + file_core_name.toLowerCase() + '.min.js';
-		output[dest] = [dirs.build + '/development/' + file_core_name.toLowerCase() + '.js'];
+		var dest = dirs.build + '/'+output_path+'/' + file_core_name.toLowerCase() + output_ext+'js';
+		output[dest] = [dirs.build + '/development/' + file_core_name.toLowerCase() + output_ext+'js'];
 		return dest;
 	});
-	output[dirs.build + '/production/' + 'date.min.js'] = [dirs.build + '/development/' + 'date.js'];
+	output[dirs.build + '/'+output_path+'/' + 'date'+output_ext+'js'] = [dirs.build + '/development/' + 'date.js'];
 	return output;
 };
 
@@ -28,6 +30,7 @@ var banner = '/* \n' +
 			' * Version: <%= pkg.version %>\n' +
 			' * Date: <%= grunt.template.today("yyyy-mm-dd") %>\n' +
 			' * Copyright: <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
+			' * Original Project: 2008 <%= pkg.originator %>\n' +
 			' * Licence: <%= pkg.license %>\n' +
 			' * URL: <%= pkg.homepage %>\n' +
 			' */\n';
@@ -40,17 +43,17 @@ module.exports = function(grunt) {
 		dirs: dirs,
 		concat: {
 			options: {
-				separator: '\n'
+				separator: '\n',
+				banner: banner,
+				nonull: true
 			},
 			core: {
-				nonull: true,
 				src: ['<%= dirs.core %>/*.js'],
-				dest: '<%= dirs.build %>/date-core.js'
+				dest: '<%= dirs.build %>/date-core.js',
 			},
 			basic: {
-				nonull: true,
 				src: ['<%= dirs.i18n %>/en-US.js', '<%= dirs.core %>/*.js' ],
-				dest: '<%= dirs.build %>/development/date.js'
+				dest: '<%= dirs.build %>/development/date.js',
 			}
 		},
 		uglify: {
@@ -58,12 +61,14 @@ module.exports = function(grunt) {
 				mangle: true,
 				compress: true,
 				preserveComments: false,
-				banner: banner
+				banner: banner,
 			},
-			developement: {
-				compress: false,
-				mangle: false,
-				files: buildUglifyFileList()
+			development: {
+				options: {
+					compress: false,
+					mangle: false
+				},
+				files: buildUglifyFileList('dev')
 			},
 			production: {
 				files: buildUglifyFileList()
@@ -96,7 +101,7 @@ module.exports = function(grunt) {
             grunt.log.writeln('File "' + p + '" created.');
         });
 	});
-	grunt.registerTask('build_dev', ['concat:core', 'concat:basic', 'i18n:core', 'uglify:development']);
+	grunt.registerTask('build_dev', ['concat:core', 'concat:basic', 'i18n:core']);
 	grunt.registerTask('build_prod', ['concat:core', 'concat:basic', 'i18n:core', 'uglify:production']);
 
 	// Load the plugin that provides the "uglify" task.

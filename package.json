@@ -24,7 +24,8 @@
     "js",
     "mit"
   ],
-  "author": "Gregory Wild-Smith & Geoffrey McGill",
+  "author": "Gregory Wild-Smith",
+  "originator": "Geoffrey McGill",
   "license": "MIT",
   "readmeFilename": "README.md",
   "gitHead": "6c7b201a7379360b40b6c3aa84069dd3277134e9"
