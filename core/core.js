@@ -121,15 +121,17 @@
 	$D.getTimezoneAbbreviation = function (offset, dst) {
 		var p, n = (dst || false) ? Date.CultureInfo.abbreviatedTimeZoneDST : Date.CultureInfo.abbreviatedTimeZoneStandard;
 		for (p in n) {
-			if (n[p] === offset) {
-				return p;
+			if (n.hasOwnProperty(p)) {
+				if (n[p] === offset) {
+					return p;
+				}
 			}
 		}
 		return null;
 	};
 	
 	$D.getTimezoneOffset = function (name) {
-		var z = $C.timezones, p;
+		var z = $C.timezones;
 		for (var i = 0; i < z.length; i++) {
 			if (z[i].name === name.toUpperCase()) {
 				return z[i].offset;
