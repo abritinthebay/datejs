@@ -490,6 +490,14 @@
 				this.second = Number(s);
 			};
 		},
+		/* for ss.s format */
+		secondAndMillisecond: function (s) {
+			return function () {
+				var mx = s.match(/^([0-5][0-9])\.([0-9]{1,3})/);
+				this.second = Number(mx[1]);
+				this.millisecond = Number(mx[2]);
+			};
+		},
 		meridian: function (s) {
 			return function () {
 				this.meridian = s.slice(0, 1).toLowerCase();
@@ -580,7 +588,9 @@
 			if (!this.second) {
 				this.second = 0;
 			}
-
+			if (!this.millisecond) {
+				this.millisecond = 0;
+			}
 			if (this.meridian && this.hour) {
 				if (this.meridian == "p" && this.hour < 12) {
 					this.hour = this.hour + 12;
@@ -593,7 +603,7 @@
 				throw new RangeError(this.day + " is not a valid value for days.");
 			}
 
-			var r = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
+			var r = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second, this.millisecond);
 
 			if (this.timezone) {
 				r.set({ timezone: this.timezone });
@@ -764,6 +774,7 @@
 	g.mm = _.cache(_.process(_.rtoken(/^[0-5][0-9]/), t.minute));
 	g.s = _.cache(_.process(_.rtoken(/^([0-5][0-9]|[0-9])/), t.second));
 	g.ss = _.cache(_.process(_.rtoken(/^[0-5][0-9]/), t.second));
+	g["ss.s"] = _.cache(_.process(_.rtoken(/^[0-5][0-9]\.[0-9]{1,3}/), t.secondAndMillisecond));
 	g.hms = _.cache(_.sequence([g.H, g.m, g.s], g.timePartDelimiter));
   
 	// _.min(1, _.set([ g.H, g.m, g.s ], g._t));
@@ -911,6 +922,7 @@
 	// check for these formats first
 	g._formats = g.formats([
 		"\"yyyy-MM-ddTHH:mm:ssZ\"",
+		"yyyy-MM-ddTHH:mm:ss.sz",
 		"yyyy-MM-ddTHH:mm:ssZ",
 		"yyyy-MM-ddTHH:mm:ssz",
 		"yyyy-MM-ddTHH:mm:ss",
