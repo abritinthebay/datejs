@@ -218,7 +218,7 @@
 	 */
 	$N.fromNow = $N.after = function (date) {
 		var c = {};
-		c[this._dateElement] = this;
+		c[this._dateElement + "s"] = this;
 		return ((!date) ? new Date() : date.clone()).add(c);
 	};
 
@@ -239,7 +239,7 @@
 	 */
 	$N.ago = $N.before = function (date) {
 		var c = {};
-		c[this._dateElement] = this * -1;
+		c[this._dateElement + "s"] = this * -1;
 		return ((!date) ? new Date() : date.clone()).add(c);
 	};
 
