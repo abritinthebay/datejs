@@ -405,12 +405,16 @@
 
 	// private
 	var validate = function (n, min, max, name) {
+		name = name ? name : "Object";
 		if (typeof n === "undefined") {
 			return false;
 		} else if (typeof n !== "number") {
 			throw new TypeError(n + " is not a Number.");
 		} else if (n < min || n > max) {
-			throw new RangeError(n + " is not a valid value for " + name + ".");
+			// As failing validation is *not* an exceptional circumstance 
+			// lets not throw a RangeError Exception here. 
+			// It's semantically correct but it's not sensible.
+			return false;
 		}
 		return true;
 	};
