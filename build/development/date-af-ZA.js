@@ -1,7 +1,7 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha2
- * Date: 2013-09-09
+ * Version: 1.0-alpha-2013-09-10
+ * Date: 2013-09-10
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -220,8 +220,8 @@ Date.CultureInfo = {
  */
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha2
- * Date: 2013-09-09
+ * Version: 1.0-alpha-2013-09-10
+ * Date: 2013-09-10
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -634,12 +634,16 @@ Date.CultureInfo = {
 
 	// private
 	var validate = function (n, min, max, name) {
+		name = name ? name : "Object";
 		if (typeof n === "undefined") {
 			return false;
 		} else if (typeof n !== "number") {
 			throw new TypeError(n + " is not a Number.");
 		} else if (n < min || n > max) {
-			throw new RangeError(n + " is not a valid value for " + name + ".");
+			// As failing validation is *not* an exceptional circumstance 
+			// lets not throw a RangeError Exception here. 
+			// It's semantically correct but it's not sensible.
+			return false;
 		}
 		return true;
 	};
@@ -2317,6 +2321,18 @@ Date.CultureInfo = {
 		_F[f] = (_F[f] || g.format(f)[0]);
 		return _F[f];
 	};
+
+	g.allformats = function (fx) {
+		var rx = [];
+		if (fx instanceof Array) {
+			for (var i = 0; i < fx.length; i++) {
+				rx.push(_get(fx[i]));
+			}
+		} else {
+			rx.push(_get(fx));
+		}
+		return rx;
+	};
   
 	g.formats = function (fx) {
 		if (fx instanceof Array) {
@@ -2498,32 +2514,35 @@ Date.CultureInfo = {
 			return ((r[1].length === 0) ? r[0] : null);
 		}
 	};
-	// $D.parse = function (s) {
-	// 	var r = null;
-	// 	if (!s) {
-	// 		return null;
-	// 	}
-	// 	if (s instanceof Date) {
-	// 		return s;
-	// 	}
-	// 	try {
-	// 		r = $D.Grammar.start.call({}, s.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
-	// 	} catch (e) {
-	// 		return null;
-	// 	}
-	// 	return ((r[1].length === 0) ? r[0] : null);
+
+	// $D.getParseFunction = function (fx) {
+	// 	var fn = $D.Grammar.formats(fx);
+	// 	return function (s) {
+	// 		var r = null;
+	// 		try {
+	// 			r = fn.call({}, s);
+	// 		} catch (e) {
+	// 			return null;
+	// 		}
+	// 		return ((r[1].length === 0) ? r[0] : null);
+	// 	};
 	// };
 
-	$D.getParseFunction = function (fx) {
-		var fn = $D.Grammar.formats(fx);
+	Date.getParseFunction = function (fx) {
+		var fns = Date.Grammar.allformats(fx);
 		return function (s) {
 			var r = null;
-			try {
-				r = fn.call({}, s);
-			} catch (e) {
-				return null;
+			for (var i = 0; i < fns.length; i++) {
+				try {
+					r = fns[i].call({}, s);
+				} catch (e) {
+					continue;
+				}
+				if (r[1].length === 0) {
+					return r[0];
+				}
 			}
-			return ((r[1].length === 0) ? r[0] : null);
+			return null;
 		};
 	};
 	
