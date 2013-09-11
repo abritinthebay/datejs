@@ -1,6 +1,6 @@
 {
   "name": "Date-JS",
-  "version": "1.0-alpha2",
+  "version": "1.0-alpha",
   "description": "Datejs is an open-source JavaScript Date Library.",
   "main": "GruntFile.js",
   "devDependencies": {
