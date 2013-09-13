@@ -1638,7 +1638,7 @@ Date.CultureStrings = {
 		},
 		updateCultureInfo: function () {
 			$D.CultureInfo = CultureInfo();
-		},
+		}
 	};
 	$D.l18n.updateCultureInfo(); // run automatically
 }());
