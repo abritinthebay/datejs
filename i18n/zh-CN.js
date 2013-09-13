@@ -1,211 +1,176 @@
-Date.CultureInfo = {
-	/* Culture Name */
-    name: "zh-CN",
-    englishName: "Chinese (People's Republic of China)",
-    nativeName: "中文(中华人民共和国)",
-    
-    /* Day Name Strings */
-    dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-    abbreviatedDayNames: ["日", "一", "二", "三", "四", "五", "六"],
-    shortestDayNames: ["日", "一", "二", "三", "四", "五", "六"],
-    firstLetterDayNames: ["日", "一", "二", "三", "四", "五", "六"],
-    
-    /* Month Name Strings */
-    monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-    abbreviatedMonthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-
-	/* AM/PM Designators */
-    amDesignator: "上午",
-    pmDesignator: "下午",
-
-    firstDayOfWeek: 0,
-    twoDigitYearMax: 2029,
-    
-    /**
-     * The dateElementOrder is based on the order of the 
-     * format specifiers in the formatPatterns.DatePattern. 
-     *
-     * Example:
-     <pre>
-     shortDatePattern    dateElementOrder
-     ------------------  ---------------- 
-     "M/d/yyyy"          "mdy"
-     "dd/MM/yyyy"        "dmy"
-     "yyyy-MM-dd"        "ymd"
-     </pre>
-     *
-     * The correct dateElementOrder is required by the parser to
-     * determine the expected order of the date elements in the
-     * string being parsed.
-     */
-    dateElementOrder: "ymd",
-    
-    /* Standard date and time format patterns */
-    formatPatterns: {
-        shortDate: "yyyy/M/d",
-        longDate: "yyyy'年'M'月'd'日'",
-        shortTime: "H:mm",
-        longTime: "H:mm:ss",
-        fullDateTime: "yyyy'年'M'月'd'日' H:mm:ss",
-        sortableDateTime: "yyyy-MM-ddTHH:mm:ss",
-        universalSortableDateTime: "yyyy-MM-dd HH:mm:ssZ",
-        rfc1123: "ddd, dd MMM yyyy HH:mm:ss GMT",
-        monthDay: "M'月'd'日'",
-        yearMonth: "yyyy'年'M'月'"
-    },
-
-    /**
-     * NOTE: If a string format is not parsing correctly, but
-     * you would expect it parse, the problem likely lies below. 
-     * 
-     * The following regex patterns control most of the string matching
-     * within the parser.
-     * 
-     * The Month name and Day name patterns were automatically generated
-     * and in general should be (mostly) correct. 
-     *
-     * Beyond the month and day name patterns are natural language strings.
-     * Example: "next", "today", "months"
-     *
-     * These natural language string may NOT be correct for this culture. 
-     * If they are not correct, please translate and edit this file
-     * providing the correct regular expression pattern. 
-     *
-     * If you modify this file, please post your revised CultureInfo file
-     * to the Datejs Forum located at http://www.datejs.com/forums/.
-     *
-     * Please mark the subject of the post with [CultureInfo]. Example:
-     *    Subject: [CultureInfo] Translated "da-DK" Danish(Denmark)
-     * 
-     * We will add the modified patterns to the master source files.
-     *
-     * As well, please review the list of "Future Strings" section below. 
-     */	
-    regexPatterns: {
-        jan: /^一月/i,
-        feb: /^二月/i,
-        mar: /^三月/i,
-        apr: /^四月/i,
-        may: /^五月/i,
-        jun: /^六月/i,
-        jul: /^七月/i,
-        aug: /^八月/i,
-        sep: /^九月/i,
-        oct: /^十月/i,
-        nov: /^十一月/i,
-        dec: /^十二月/i,
-
-        sun: /^星期日/i,
-        mon: /^星期一/i,
-        tue: /^星期二/i,
-        wed: /^星期三/i,
-        thu: /^星期四/i,
-        fri: /^星期五/i,
-        sat: /^星期六/i,
-
-        future: /^next/i,
-        past: /^last|past|prev(ious)?/i,
-        add: /^(\+|aft(er)?|from|hence)/i,
-        subtract: /^(\-|bef(ore)?|ago)/i,
-        
-        yesterday: /^yes(terday)?/i,
-        today: /^t(od(ay)?)?/i,
-        tomorrow: /^tom(orrow)?/i,
-        now: /^n(ow)?/i,
-        
-        millisecond: /^ms|milli(second)?s?/i,
-        second: /^sec(ond)?s?/i,
-        minute: /^mn|min(ute)?s?/i,
-		hour: /^h(our)?s?/i,
-		week: /^w(eek)?s?/i,
-        month: /^m(onth)?s?/i,
-        day: /^d(ay)?s?/i,
-        year: /^y(ear)?s?/i,
-		
-        shortMeridian: /^(a|p)/i,
-        longMeridian: /^(a\.?m?\.?|p\.?m?\.?)/i,
-        timezone: /^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\s*(\+|\-)\s*\d\d\d\d?)|gmt|utc)/i,
-        ordinalSuffix: /^\s*(st|nd|rd|th)/i,
-        timeContext: /^\s*(\:|a(?!u|p)|p)/i
-    },
-
-	timezones: [{name:"UTC", offset:"-000"}, {name:"GMT", offset:"-000"}, {name:"EST", offset:"-0500"}, {name:"EDT", offset:"-0400"}, {name:"CST", offset:"-0600"}, {name:"CDT", offset:"-0500"}, {name:"MST", offset:"-0700"}, {name:"MDT", offset:"-0600"}, {name:"PST", offset:"-0800"}, {name:"PDT", offset:"-0700"}],
-
-	abbreviatedTimeZoneDST: {
-		GMT: "-000",
-		EDT: "-0400",
-		CDT: "-0500",
-		MDT: "-0600",
-		PDT: "-0700"
-	},
-	
-	abbreviatedTimeZoneStandard: {
-		GMT: "-000",
-		EST: "-0500",
-		CST: "-0600",
-		MST: "-0700",
-		PST: "-0800"
-	}
-};
-
-/********************
- ** Future Strings **
- ********************
- * 
- * The following list of strings may not be currently being used, but 
- * may be incorporated into the Datejs library later. 
- *
- * We would appreciate any help translating the strings below.
- * 
- * If you modify this file, please post your revised CultureInfo file
- * to the Datejs Forum located at http://www.datejs.com/forums/.
- *
- * Please mark the subject of the post with [CultureInfo]. Example:
- *    Subject: [CultureInfo] Translated "da-DK" Danish(Denmark)b
- *
- * English Name        Translated
- * ------------------  -----------------
- * about               about
- * ago                 ago
- * date                date
- * time                time
- * calendar            calendar
- * show                show
- * hourly              hourly
- * daily               daily
- * weekly              weekly
- * bi-weekly           bi-weekly
- * fortnight           fortnight
- * monthly             monthly
- * bi-monthly          bi-monthly
- * quarter             quarter
- * quarterly           quarterly
- * yearly              yearly
- * annual              annual
- * annually            annually
- * annum               annum
- * again               again
- * between             between
- * after               after
- * from now            from now
- * repeat              repeat
- * times               times
- * per                 per
- * min (abbrev minute) min
- * morning             morning
- * noon                noon
- * night               night
- * midnight            midnight
- * mid-night           mid-night
- * evening             evening
- * final               final
- * future              future
- * spring              spring
- * summer              summer
- * fall                fall
- * winter              winter
- * end of              end of
- * end                 end
- * long                long
- * short               short
+/* 
+ * DateJS Culture String File
+ * Country Code: zh-CN
+ * Name: Chinese (People's Republic of China)
+ * Format: "key" : "value"
+ * Key is the en-US term, Value is the Key in the current language.
  */
+Date.CultureStrings = {
+	"name": "zh-CN",
+	"englishName": "Chinese (People's Republic of China)",
+	"nativeName": "中文(中华人民共和国)",
+	"Sunday": "星期日",
+	"Monday": "星期一",
+	"Tuesday": "星期二",
+	"Wednesday": "星期三",
+	"Thursday": "星期四",
+	"Friday": "星期五",
+	"Saturday": "星期六",
+	"Sun": "日",
+	"Mon": "一",
+	"Tue": "二",
+	"Wed": "三",
+	"Thu": "四",
+	"Fri": "五",
+	"Sat": "六",
+	"Su": "日",
+	"Mo": "一",
+	"Tu": "二",
+	"We": "三",
+	"Th": "四",
+	"Fr": "五",
+	"Sa": "六",
+	"S_Sun_Initial": "日",
+	"M_Mon_Initial": "一",
+	"T_Tue_Initial": "二",
+	"W_Wed_Initial": "三",
+	"T_Thu_Initial": "四",
+	"F_Fri_Initial": "五",
+	"S_Sat_Initial": "六",
+	"January": "一月",
+	"February": "二月",
+	"March": "三月",
+	"April": "四月",
+	"May": "五月",
+	"June": "六月",
+	"July": "七月",
+	"August": "八月",
+	"September": "九月",
+	"October": "十月",
+	"November": "十一月",
+	"December": "十二月",
+	"Jan_Abbr": "一月",
+	"Feb_Abbr": "二月",
+	"Mar_Abbr": "三月",
+	"Apr_Abbr": "四月",
+	"May_Abbr": "五月",
+	"Jun_Abbr": "六月",
+	"Jul_Abbr": "七月",
+	"Aug_Abbr": "八月",
+	"Sep_Abbr": "九月",
+	"Oct_Abbr": "十月",
+	"Nov_Abbr": "十一月",
+	"Dec_Abbr": "十二月",
+	"AM": "上午",
+	"PM": "下午",
+	"firstDayOfWeek": 0,
+	"twoDigitYearMax": 2029,
+	"mdy": "ymd",
+	"M/d/yyyy": "yyyy/M/d",
+	"dddd, MMMM dd, yyyy": "yyyy'年'M'月'd'日'",
+	"h:mm tt": "H:mm",
+	"h:mm:ss tt": "H:mm:ss",
+	"dddd, MMMM dd, yyyy h:mm:ss tt": "yyyy'年'M'月'd'日' H:mm:ss",
+	"yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",
+	"yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",
+	"ddd, dd MMM yyyy HH:mm:ss GMT": "ddd, dd MMM yyyy HH:mm:ss GMT",
+	"MMMM dd": "M'月'd'日'",
+	"MMMM, yyyy": "yyyy'年'M'月'",
+	"^jan(uary)?": "^一月",
+	"^feb(ruary)?": "^二月",
+	"^mar(ch)?": "^三月",
+	"^apr(il)?": "^四月",
+	"^may": "^五月",
+	"^jun(e)?": "^六月",
+	"^jul(y)?": "^七月",
+	"^aug(ust)?": "^八月",
+	"^sep(t(ember)?)?": "^九月",
+	"^oct(ober)?": "^十月",
+	"^nov(ember)?": "^十一月",
+	"^dec(ember)?": "^十二月",
+	"^su(n(day)?)?": "^星期日",
+	"^mo(n(day)?)?": "^星期一",
+	"^tu(e(s(day)?)?)?": "^星期二",
+	"^we(d(nesday)?)?": "^星期三",
+	"^th(u(r(s(day)?)?)?)?": "^星期四",
+	"^fr(i(day)?)?": "^星期五",
+	"^sa(t(urday)?)?": "^星期六",
+	"^next": "^next",
+	"^last|past|prev(ious)?": "^last|past|prev(ious)?",
+	"^(\\+|aft(er)?|from|hence)": "^(\\+|aft(er)?|from|hence)",
+	"^(\\-|bef(ore)?|ago)": "^(\\-|bef(ore)?|ago)",
+	"^yes(terday)?": "^yes(terday)?",
+	"^t(od(ay)?)?": "^t(od(ay)?)?",
+	"^tom(orrow)?": "^tom(orrow)?",
+	"^n(ow)?": "^n(ow)?",
+	"^ms|milli(second)?s?": "^ms|milli(second)?s?",
+	"^sec(ond)?s?": "^sec(ond)?s?",
+	"^mn|min(ute)?s?": "^mn|min(ute)?s?",
+	"^h(our)?s?": "^h(our)?s?",
+	"^w(eek)?s?": "^w(eek)?s?",
+	"^m(onth)?s?": "^m(onth)?s?",
+	"^d(ay)?s?": "^d(ay)?s?",
+	"^y(ear)?s?": "^y(ear)?s?",
+	"^(a|p)": "^(a|p)",
+	"^(a\\.?m?\\.?|p\\.?m?\\.?)": "^(a\\.?m?\\.?|p\\.?m?\\.?)",
+	"^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)": "^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)",
+	"^\\s*(st|nd|rd|th)": "^\\s*(st|nd|rd|th)",
+	"^\\s*(\\:|a(?!u|p)|p)": "^\\s*(\\:|a(?!u|p)|p)",
+	"LINT": "LINT",
+	"TOT": "TOT",
+	"CHAST": "CHAST",
+	"NZST": "NZST",
+	"NFT": "NFT",
+	"SBT": "SBT",
+	"AEST": "AEST",
+	"ACST": "ACST",
+	"JST": "JST",
+	"CWST": "CWST",
+	"CT": "CT",
+	"ICT": "ICT",
+	"MMT": "MMT",
+	"BIOT": "BST",
+	"NPT": "NPT",
+	"IST": "IST",
+	"PKT": "PKT",
+	"AFT": "AFT",
+	"MSK": "MSK",
+	"IRST": "IRST",
+	"FET": "FET",
+	"EET": "EET",
+	"CET": "CET",
+	"UTC": "UTC",
+	"GMT": "GMT",
+	"CVT": "CVT",
+	"GST": "GST",
+	"BRT": "BRT",
+	"NST": "NST",
+	"AST": "AST",
+	"EST": "EST",
+	"CST": "CST",
+	"MST": "MST",
+	"PST": "PST",
+	"AKST": "AKST",
+	"MIT": "MIT",
+	"HST": "HST",
+	"SST": "SST",
+	"BIT": "BIT",
+	"CHADT": "CHADT",
+	"NZDT": "NZDT",
+	"AEDT": "AEDT",
+	"ACDT": "ACDT",
+	"AZST": "AZST",
+	"IRDT": "IRDT",
+	"EEST": "EEST",
+	"CEST": "CEST",
+	"BST": "BST",
+	"PMDT": "PMDT",
+	"ADT": "ADT",
+	"NDT": "NDT",
+	"EDT": "EDT",
+	"CDT": "CDT",
+	"MDT": "MDT",
+	"PDT": "PDT",
+	"AKDT": "AKDT",
+	"HADT": "HADT"
+};
