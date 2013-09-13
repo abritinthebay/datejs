@@ -1,194 +1,233 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-13
- * Date: 2013-09-13
+ * Version: 1.0-alpha-2013-09-10
+ * Date: 2013-09-10
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
  * URL: https://github.com/abritinthebay/datejs
  */
 
-/* 
- * DateJS Culture String File
- * Country Code: hy-AM
- * Name: Armenian (Armenia)
- * Format: "key" : "value"
- * Key is the en-US term, Value is the Key in the current language.
- */
 Date.CultureStrings = {
-	"name": "hy-AM",
-	"englishName": "Armenian (Armenia)",
-	"nativeName": "Հայերեն (Հայաստան)",
-	"Sunday": "Կիրակի",
-	"Monday": "Երկուշաբթի",
-	"Tuesday": "Երեքշաբթի",
-	"Wednesday": "Չորեքշաբթի",
-	"Thursday": "Հինգշաբթի",
-	"Friday": "ՈՒրբաթ",
-	"Saturday": "Շաբաթ",
-	"Sun": "Կիր",
-	"Mon": "Երկ",
-	"Tue": "Երք",
-	"Wed": "Չրք",
-	"Thu": "Հնգ",
-	"Fri": "ՈՒր",
-	"Sat": "Շբթ",
-	"Su": "Կ",
-	"Mo": "Ե",
-	"Tu": "Ե",
-	"We": "Չ",
-	"Th": "Հ",
-	"Fr": "Ո",
-	"Sa": "Շ",
-	"S_Sun_Initial": "Կ",
-	"M_Mon_Initial": "Ե",
-	"T_Tue_Initial": "Ե",
-	"W_Wed_Initial": "Չ",
-	"T_Thu_Initial": "Հ",
-	"F_Fri_Initial": "Ո",
-	"S_Sat_Initial": "Շ",
-	"January": "Հունվար",
-	"February": "Փետրվար",
-	"March": "Մարտ",
-	"April": "Ապրիլ",
-	"May": "Մայիս",
-	"June": "Հունիս",
-	"July": "Հուլիս",
-	"August": "Օգոստոս",
-	"September": "Սեպտեմբեր",
-	"October": "Հոկտեմբեր",
-	"November": "Նոյեմբեր",
-	"December": "Դեկտեմբեր",
-	"Jan_Abbr": "ՀՆՎ",
-	"Feb_Abbr": "ՓՏՎ",
-	"Mar_Abbr": "ՄՐՏ",
-	"Apr_Abbr": "ԱՊՐ",
-	"May_Abbr": "ՄՅՍ",
-	"Jun_Abbr": "ՀՆՍ",
-	"Jul_Abbr": "ՀԼՍ",
-	"Aug_Abbr": "ՕԳՍ",
-	"Sep_Abbr": "ՍԵՊ",
-	"Oct_Abbr": "ՀՈԿ",
-	"Nov_Abbr": "ՆՈՅ",
-	"Dec_Abbr": "ԴԵԿ",
-	"AM": "",
-	"PM": "",
-	"firstDayOfWeek": 1,
-	"twoDigitYearMax": 2029,
-	"mdy": "dmy",
-	"M/d/yyyy": "dd.MM.yyyy",
-	"dddd, MMMM dd, yyyy": "d MMMM, yyyy",
-	"h:mm tt": "H:mm",
-	"h:mm:ss tt": "H:mm:ss",
-	"dddd, MMMM dd, yyyy h:mm:ss tt": "d MMMM, yyyy H:mm:ss",
-	"yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",
-	"yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",
-	"ddd, dd MMM yyyy HH:mm:ss GMT": "ddd, dd MMM yyyy HH:mm:ss GMT",
-	"MMMM dd": "d MMMM",
-	"MMMM, yyyy": "MMMM, yyyy",
-	"^jan(uary)?": "^հունվար",
-	"^feb(ruary)?": "^փետրվար",
-	"^mar(ch)?": "^մարտ",
-	"^apr(il)?": "^ապր(իլ)?",
-	"^may": "^մայիս",
-	"^jun(e)?": "^հունիս",
-	"^jul(y)?": "^հուլիս",
-	"^aug(ust)?": "^օգոստոս",
-	"^sep(t(ember)?)?": "^սեպ(տեմբեր)?",
-	"^oct(ober)?": "^հոկ(տեմբեր)?",
-	"^nov(ember)?": "^նոյ(եմբեր)?",
-	"^dec(ember)?": "^դեկ(տեմբեր)?",
-	"^su(n(day)?)?": "^կ(իր(ակի)?)?",
-	"^mo(n(day)?)?": "^ե(րկ(ուշաբթի)?)?",
-	"^tu(e(s(day)?)?)?": "^ե(րք(քշաբթի)?)?",
-	"^we(d(nesday)?)?": "^չ(րք(եքշաբթի)?)?",
-	"^th(u(r(s(day)?)?)?)?": "^հ(նգ(գշաբթի)?)?",
-	"^fr(i(day)?)?": "^ո(ւր(բաթ)?)?",
-	"^sa(t(urday)?)?": "^շ(բթ(աթ)?)?",
-	"^next": "^next",
-	"^last|past|prev(ious)?": "^last|past|prev(ious)?",
-	"^(\\+|aft(er)?|from|hence)": "^(\\+|aft(er)?|from|hence)",
-	"^(\\-|bef(ore)?|ago)": "^(\\-|bef(ore)?|ago)",
-	"^yes(terday)?": "^yes(terday)?",
-	"^t(od(ay)?)?": "^t(od(ay)?)?",
-	"^tom(orrow)?": "^tom(orrow)?",
-	"^n(ow)?": "^n(ow)?",
-	"^ms|milli(second)?s?": "^ms|milli(second)?s?",
-	"^sec(ond)?s?": "^sec(ond)?s?",
-	"^mn|min(ute)?s?": "^mn|min(ute)?s?",
-	"^h(our)?s?": "^h(our)?s?",
-	"^w(eek)?s?": "^w(eek)?s?",
-	"^m(onth)?s?": "^m(onth)?s?",
-	"^d(ay)?s?": "^d(ay)?s?",
-	"^y(ear)?s?": "^y(ear)?s?",
-	"^(a|p)": "^(a|p)",
-	"^(a\\.?m?\\.?|p\\.?m?\\.?)": "^(a\\.?m?\\.?|p\\.?m?\\.?)",
-	"^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)": "^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)",
-	"^\\s*(st|nd|rd|th)": "^\\s*(st|nd|rd|th)",
-	"^\\s*(\\:|a(?!u|p)|p)": "^\\s*(\\:|a(?!u|p)|p)",
-	"LINT": "LINT",
-	"TOT": "TOT",
-	"CHAST": "CHAST",
-	"NZST": "NZST",
-	"NFT": "NFT",
-	"SBT": "SBT",
-	"AEST": "AEST",
-	"ACST": "ACST",
-	"JST": "JST",
-	"CWST": "CWST",
-	"CT": "CT",
-	"ICT": "ICT",
-	"MMT": "MMT",
-	"BIOT": "BST",
-	"NPT": "NPT",
-	"IST": "IST",
-	"PKT": "PKT",
-	"AFT": "AFT",
-	"MSK": "MSK",
-	"IRST": "IRST",
-	"FET": "FET",
-	"EET": "EET",
-	"CET": "CET",
-	"UTC": "UTC",
-	"GMT": "GMT",
-	"CVT": "CVT",
-	"GST": "GST",
-	"BRT": "BRT",
-	"NST": "NST",
-	"AST": "AST",
-	"EST": "EST",
-	"CST": "CST",
-	"MST": "MST",
-	"PST": "PST",
-	"AKST": "AKST",
-	"MIT": "MIT",
-	"HST": "HST",
-	"SST": "SST",
-	"BIT": "BIT",
-	"CHADT": "CHADT",
-	"NZDT": "NZDT",
-	"AEDT": "AEDT",
-	"ACDT": "ACDT",
-	"AZST": "AZST",
-	"IRDT": "IRDT",
-	"EEST": "EEST",
-	"CEST": "CEST",
-	"BST": "BST",
-	"PMDT": "PMDT",
-	"ADT": "ADT",
-	"NDT": "NDT",
-	"EDT": "EDT",
-	"CDT": "CDT",
-	"MDT": "MDT",
-	"PDT": "PDT",
-	"AKDT": "AKDT",
-	"HADT": "HADT"
+	/* Culture Name */
+	name: "en-US", // country code
+	englishName: "English (United States)", // Language name in English
+	nativeName: "English (United States)", // Language name in native script.
+	/* Day Name Strings */
+	Sunday: "Sunday",
+	Monday: "Monday",
+	Tuesday: "Tuesday",
+	Wednesday: "Wednesday",
+	Thursday: "Thursday",
+	Friday: "Friday",
+	Saturday: "Saturday",
+	Sun: "Sun",
+	Mon: "Mon",
+	Tue: "Tue",
+	Wed: "Wed",
+	Thu: "Thu",
+	Fri: "Fri",
+	Sat: "Sat",
+	Su: "Su",
+	Mo: "Mo",
+	Tu: "Tu",
+	We: "We",
+	Th: "Th",
+	Fr: "Fr",
+	Sa: "Sa",
+	S_Sun_Initial: "S",
+	M_Mon_Initial: "M",
+	T_Tue_Initial: "T",
+	W_Wed_Initial: "W",
+	T_Thu_Initial: "T",
+	F_Fri_Initial: "F",
+	S_Sat_Initial: "S",
+	/* Month Name Strings */
+	January: "January",
+	February: "February",
+	March: "March",
+	April: "April",
+	May: "May",
+	June: "June",
+	July: "July",
+	August: "August",
+	September: "September",
+	October: "October",
+	November: "November",
+	December: "December",
+	Jan_Abbr: "Jan",
+	Feb_Abbr: "Feb",
+	Mar_Abbr: "Mar",
+	Apr_Abbr: "Apr",
+	May_Abbr: "May",		// same in English, not in other languages tho.
+	Jun_Abbr: "Jun",
+	Jul_Abbr: "Jul",
+	Aug_Abbr: "Aug",
+	Sep_Abbr: "Sep",
+	Oct_Abbr: "Oct",
+	Nov_Abbr: "Nov",
+	Dec_Abbr: "Dec",
+	/* AM/PM Designators */
+	AM: "AM",
+	PM: "PM",
+
+	/* Timezones */
+	UTC: "UTC",
+	GMT: "GMT",
+	EST: "EST",
+	EDT: "EDT",
+	CST: "CST",
+	CDT: "CDT",
+	MST: "MST",
+	MDT: "MDT",
+	PST: "PST",
+	PDT: "PDT",
+	/* Misc */
+	firstDayOfWeek: 0,
+	twoDigitYearMax: 2029,
+	/*
+     * The dateElementOrder is based on the order of the 
+     * format specifiers in the formatPatterns.DatePattern. 
+     *
+     * Example:
+	 *   shortDatePattern    dateElementOrder
+	 *   ------------------  ---------------- 
+	 *   "M/d/yyyy"          "mdy"
+	 *   "dd/MM/yyyy"        "dmy"
+	 *   "yyyy-MM-dd"        "ymd"
+     *
+     * The correct dateElementOrder is required by the parser to
+     * determine the expected order of the date elements in the
+     * string being parsed.
+     */
+	"mdy": "mdy", //dateElementOrder
+
+	/* Standard date and time format patterns */
+	"M/d/yyyy": "M/d/yyyy",												//shortDate
+	"dddd, MMMM dd, yyyy": "dddd, MMMM dd, yyyy",						//longDate
+	"h:mm tt": "h:mm tt",												//shortTime
+	"h:mm:ss tt": "h:mm:ss tt",											//longTime
+	"dddd, MMMM dd, yyyy h:mm:ss tt": "dddd, MMMM dd, yyyy h:mm:ss tt",	//fullDateTime
+	"yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",						//sortableDateTime
+	"yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",						//universalSortableDateTime
+	"ddd, dd MMM yyyy HH:mm:ss GMT": "ddd, dd MMM yyyy HH:mm:ss GMT",	//rfc1123
+	"MMMM dd": "MMMM dd",												//monthDay
+	"MMMM, yyyy": "MMMM, yyyy",											//yearMonth
+
+	/* Regex Patterns
+	 * NOTE: If a string format is not parsing correctly, but you would expect
+	 * it to parse, the problem likely lies below.
+	 *
+	 * Beyond the month and day name patterns are natural language strings.
+	 * Example: "next", "today", "months"
+	 */
+	/* Months */
+	"/^jan(uary)?/i": /^jan(uary)?/i,			// January
+	"/^feb(ruary)?/i": /^feb(ruary)?/i,			// February
+	"/^mar(ch)?/i": /^mar(ch)?/i,				// March
+	"/^apr(il)?/i": /^apr(il)?/i,				// April
+	"/^may/i": /^may/i,							// May
+	"/^jun(e)?/i": /^jun(e)?/i,					// June
+	"/^jul(y)?/i": /^jul(y)?/i,					// July
+	"/^aug(ust)?/i": /^aug(ust)?/i,				// August
+	"/^sep(t(ember)?)?/i": /^sep(t(ember)?)?/i,	// September
+	"/^oct(ober)?/i": /^oct(ober)?/i,			// October
+	"/^nov(ember)?/i": /^nov(ember)?/i,			// November
+	"/^dec(ember)?/i": /^dec(ember)?/i,			// December
+	/* Days */
+	"/^su(n(day)?)?/i": /^su(n(day)?)?/i,					// Sunday
+	"/^mo(n(day)?)?/i": /^mo(n(day)?)?/i,					// Monday
+	"/^tu(e(s(day)?)?)?/i": /^tu(e(s(day)?)?)?/i,			// Tuesday
+	"/^we(d(nesday)?)?/i": /^we(d(nesday)?)?/i,				// Wednesday
+	"/^th(u(r(s(day)?)?)?)?/i": /^th(u(r(s(day)?)?)?)?/i,	// Thurday
+	"/^fr(i(day)?)?/i": /^fr(i(day)?)?/i,					// Friday
+	"/^sa(t(urday)?)?/i": /^sa(t(urday)?)?/i,				// Saturday
+	/* Relative Terms */
+	"/^next/i": /^next/i,											// Future term(s) (ie, next) "next week"
+	"/^last|past|prev(ious)?/i": /^last|past|prev(ious)?/i,			// Past term(s) (ie, last, previous, etc) "last tuesday"
+	"/^(\\+|aft(er)?|from|hence)/i": /^(\+|aft(er)?|from|hence)/i,	// Additive terms(s) (ie, after) "two days from now"
+	"/^(\\-|bef(ore)?|ago)/i": /^(\-|bef(ore)?|ago)/i,				// Subtractive term(s) (ie, before) "6 days ago"
+
+		yesterday: /^yes(terday)?/i,
+		today: /^t(od(ay)?)?/i,
+		tomorrow: /^tom(orrow)?/i,
+		now: /^n(ow)?/i,
+		/* Time Related */
+		millisecond: /^ms|milli(second)?s?/i,
+		second: /^sec(ond)?s?/i,
+		minute: /^mn|min(ute)?s?/i,
+		hour: /^h(our)?s?/i,
+		week: /^w(eek)?s?/i,
+		month: /^m(onth)?s?/i,
+		day: /^d(ay)?s?/i,
+		year: /^y(ear)?s?/i,
+
+		shortMeridian: /^(a|p)/i,
+		longMeridian: /^(a\.?m?\.?|p\.?m?\.?)/i,
+		timezone: /^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\s*(\+|\-)\s*\d\d\d\d?)|gmt|utc)/i,
+		ordinalSuffix: /^\s*(st|nd|rd|th)/i,
+		timeContext: /^\s*(\:|a(?!u|p)|p)/i
 };
 
+/********************
+ ** Future Strings **
+ ********************
+ * 
+ * The following list of strings may not be currently being used, but 
+ * may be incorporated into the Datejs library later. 
+ *
+ * We would appreciate any help translating the strings below.
+ *
+ * English Name        Translated
+ * ------------------  -----------------
+ * about               about
+ * ago                 ago
+ * date                date
+ * time                time
+ * calendar            calendar
+ * show                show
+ * hourly              hourly
+ * daily               daily
+ * weekly              weekly
+ * bi-weekly           bi-weekly
+ * fortnight           fortnight
+ * monthly             monthly
+ * bi-monthly          bi-monthly
+ * quarter             quarter
+ * quarterly           quarterly
+ * yearly              yearly
+ * annual              annual
+ * annually            annually
+ * annum               annum
+ * again               again
+ * between             between
+ * after               after
+ * from now            from now
+ * repeat              repeat
+ * times               times
+ * per                 per
+ * min (abbrev minute) min
+ * morning             morning
+ * noon                noon
+ * night               night
+ * midnight            midnight
+ * mid-night           mid-night
+ * evening             evening
+ * final               final
+ * future              future
+ * spring              spring
+ * summer              summer
+ * fall                fall
+ * winter              winter
+ * end of              end of
+ * end                 end
+ * long                long
+ * short               short
+ */
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-13
- * Date: 2013-09-13
+ * Version: 1.0-alpha-2013-09-10
+ * Date: 2013-09-10
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -1380,268 +1419,6 @@ Date.CultureStrings = {
 		$P.format = $P.$format;
 	}
 }());    
-(function () {
-	var $D = Date;
-	var __ = function (key) {
-		var output, split, length, last;
-		if (Date.CultureStrings[key]) {
-			output = Date.CultureStrings[key];
-		} else {
-			output = key;
-			split = key.split("_");
-			length = split.length;
-			if (length > 1 && key.charAt(0) !== "^") {
-				// if the key isn't a regex and it has a split.
-				last = split[(length - 1)].toLowerCase();
-				if (last === "initial" || last === "abbr") {
-					output = split[0];
-				}
-			}
-		}
-		if (key.charAt(0) === "^") {
-			// it's a regex
-			output = new RegExp(key);
-		}
-		return output;
-	};
-
-	var CultureInfo = function () {
-		var buildTimeZones = function (data) {
-			var zone;
-			for (zone in data.abbreviatedTimeZoneStandard) {
-				if (data.abbreviatedTimeZoneStandard.hasOwnProperty(zone)) {
-					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneStandard[zone]});
-				}
-			}
-			for (zone in data.abbreviatedTimeZoneDST) {
-				if (data.abbreviatedTimeZoneDST.hasOwnProperty(zone)) {
-					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneDST[zone]});
-				}
-			}
-			return data.timezones;
-		};
-		var info =  {
-			name: __("name"),
-			englishName: __("englishName"),
-			nativeName: __("nativeName"),
-			/* Day Name Strings */
-			dayNames: [
-				__("Sunday"),
-				__("Monday"),
-				__("Tuesday"),
-				__("Wednesday"),
-				__("Thursday"),
-				__("Friday"),
-				__("Saturday")
-			],
-			abbreviatedDayNames: [
-				__("Sun"),
-				__("Mon"),
-				__("Tue"),
-				__("Wed"),
-				__("Thu"),
-				__("Fri"),
-				__("Sat")
-			],
-			shortestDayNames: [
-				__("Su"),
-				__("Mo"),
-				__("Tu"),
-				__("We"),
-				__("Th"),
-				__("Fr"),
-				__("Sa")
-			],
-			firstLetterDayNames: [
-				__("S_Sun_Initial"),
-				__("M_Mon_Initial"),
-				__("T_Tues_Initial"),
-				__("W_Wed_Initial"),
-				__("T_Thu_Initial"),
-				__("F_Fri_Initial"),
-				__("S_Sat_Initial")
-			],
-
-			/* Month Name Strings */
-			monthNames: [
-				__("January"),
-				__("February"),
-				__("March"),
-				__("April"),
-				__("May"),
-				__("June"),
-				__("July"),
-				__("August"),
-				__("September"),
-				__("October"),
-				__("November"),
-				__("December")
-			],
-			abbreviatedMonthNames: [
-				__("Jan_Abbr"),
-				__("Feb_Abbr"),
-				__("Mar_Abbr"),
-				__("Apr_Abbr"),
-				__("May_Abbr"),
-				__("Jun_Abbr"),
-				__("Jul_Abbr"),
-				__("Aug_Abbr"),
-				__("Sep_Abbr"),
-				__("Oct_Abbr"),
-				__("Nov_Abbr"),
-				__("Dec_Abbr")
-			],
-			/* AM/PM Designators */
-			amDesignator: __("AM"),
-			pmDesignator: __("PM"),
-			firstDayOfWeek: __("firstDayOfWeek"),
-			twoDigitYearMax: __("twoDigitYearMax"),
-			dateElementOrder: __("mdy"),
-			/* Standard date and time format patterns */
-			formatPatterns: {
-				shortDate: __("M/d/yyyy"),
-				longDate: __("dddd, MMMM dd, yyyy"),
-				shortTime: __("h:mm tt"),
-				longTime: __("h:mm:ss tt"),
-				fullDateTime: __("dddd, MMMM dd, yyyy h:mm:ss tt"),
-				sortableDateTime: __("yyyy-MM-ddTHH:mm:ss"),
-				universalSortableDateTime: __("yyyy-MM-dd HH:mm:ssZ"),
-				rfc1123: __("ddd, dd MMM yyyy HH:mm:ss GMT"),
-				monthDay: __("MMMM dd"),
-				yearMonth: __("MMMM, yyyy")
-			},
-			regexPatterns: {
-				jan: __("^jan(uary)?/i"),
-				feb: __("^feb(ruary)?/i"),
-				mar: __("^mar(ch)?/i"),
-				apr: __("^apr(il)?/i"),
-				may: __("^may/i"),
-				jun: __("^jun(e)?/i"),
-				jul: __("^jul(y)?/i"),
-				aug: __("^aug(ust)?/i"),
-				sep: __("^sep(t(ember)?)?/i"),
-				oct: __("^oct(ober)?/i"),
-				nov: __("^nov(ember)?/i"),
-				dec: __("^dec(ember)?/i"),
-				sun: __("^su(n(day)?)?/i"),
-				mon: __("^mo(n(day)?)?/i"),
-				tue: __("^tu(e(s(day)?)?)?/i"),
-				wed: __("^we(d(nesday)?)?/i"),
-				thu: __("^th(u(r(s(day)?)?)?)?/i"),
-				fri: __("^fr(i(day)?)?/i"),
-				sat: __("^sa(t(urday)?)?/i"),
-				future: __("^next/i"),
-				past: __("^last|past|prev(ious)?/i"),
-				add: __("^(\\+|aft(er)?|from|hence)/i"),
-				subtract: __("^(\\-|bef(ore)?|ago)/i"),
-				yesterday: __("^yes(terday)?/i"),
-				today: __("^t(od(ay)?)?/i"),
-				tomorrow: __("^tom(orrow)?/i"),
-				now: __("^n(ow)?/i"),
-				millisecond: __("^ms|milli(second)?s?/i"),
-				second: __("^sec(ond)?s?/i"),
-				minute: __("^mn|min(ute)?s?/i"),
-				hour: __("^h(our)?s?/i"),
-				week: __("^w(eek)?s?/i"),
-				month: __("^m(onth)?s?/i"),
-				day: __("^d(ay)?s?/i"),
-				year: __("^y(ear)?s?/i"),
-				shortMeridian: __("^(a|p)/i"),
-				longMeridian: __("^(a\\.?m?\\.?|p\\.?m?\\.?)/i"),
-				timezone: __("^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)/i"),
-				ordinalSuffix: __("^\\s*(st|nd|rd|th)/i"),
-				timeContext: __("^\\s*(\\:|a(?!u|p)|p)/i")
-			},
-			timezones: [
-				// { name: "UTC", offset: "-000"},
-				// { name: "GMT", offset: "-000"},
-				// { name: "EST", offset: "-0500"},
-				// { name: "EDT", offset: "-0400"},
-				// { name: "CST", offset: "-0600"},
-				// { name: "CDT", offset: "-0500"},
-				// { name: "MST", offset: "-0700"},
-				// { name: "MDT", offset: "-0600"},
-				// { name: "PST", offset: "-0800"},
-				// { name: "PDT", offset: "-0700"}
-			],
-			abbreviatedTimeZoneDST: {},
-			abbreviatedTimeZoneStandard: {}
-		};
-		
-		info.abbreviatedTimeZoneDST[__("CHADT")] = "+1345";
-		info.abbreviatedTimeZoneDST[__("NZDT")] = "+1300";
-		info.abbreviatedTimeZoneDST[__("AEDT")] = "+1100";
-		info.abbreviatedTimeZoneDST[__("ACDT")] = "+1030";
-		info.abbreviatedTimeZoneDST[__("AZST")] = "+0500";
-		info.abbreviatedTimeZoneDST[__("IRDT")] = "+0430";
-		info.abbreviatedTimeZoneDST[__("EEST")] = "+0300";
-		info.abbreviatedTimeZoneDST[__("CEST")] = "+0200";
-		info.abbreviatedTimeZoneDST[__("BST")] = "+0100";
-		info.abbreviatedTimeZoneDST[__("PMDT")] = "-0200";
-		info.abbreviatedTimeZoneDST[__("ADT")] = "-0300";
-		info.abbreviatedTimeZoneDST[__("NDT")] = "-0230";
-		info.abbreviatedTimeZoneDST[__("EDT")] = "-0400";
-		info.abbreviatedTimeZoneDST[__("CDT")] = "-0500";
-		info.abbreviatedTimeZoneDST[__("MDT")] = "-0600";
-		info.abbreviatedTimeZoneDST[__("PDT")] = "-0700";
-		info.abbreviatedTimeZoneDST[__("AKDT")] = "-0800";
-		info.abbreviatedTimeZoneDST[__("HADT")] = "-0900";
-
-		info.abbreviatedTimeZoneStandard[__("LINT")] = "+1400";
-		info.abbreviatedTimeZoneStandard[__("TOT")] = "+1300";
-		info.abbreviatedTimeZoneStandard[__("CHAST")] = "+1245";
-		info.abbreviatedTimeZoneStandard[__("NZST")] = "+1200";
-		info.abbreviatedTimeZoneStandard[__("NFT")] = "+1130";
-		info.abbreviatedTimeZoneStandard[__("SBT")] = "+1100";
-		info.abbreviatedTimeZoneStandard[__("AEST")] = "+1000";
-		info.abbreviatedTimeZoneStandard[__("ACST")] = "+0930";
-		info.abbreviatedTimeZoneStandard[__("JST")] = "+0900";
-		info.abbreviatedTimeZoneStandard[__("CWST")] = "+0845";
-		info.abbreviatedTimeZoneStandard[__("CT")] = "+0800";
-		info.abbreviatedTimeZoneStandard[__("ICT")] = "+0700";
-		info.abbreviatedTimeZoneStandard[__("MMT")] = "+0630";
-		info.abbreviatedTimeZoneStandard[__("BST")] = "+0600";
-		info.abbreviatedTimeZoneStandard[__("NPT")] = "+0545";
-		info.abbreviatedTimeZoneStandard[__("IST")] = "+0530";
-		info.abbreviatedTimeZoneStandard[__("PKT")] = "+0500";
-		info.abbreviatedTimeZoneStandard[__("AFT")] = "+0430";
-		info.abbreviatedTimeZoneStandard[__("MSK")] = "+0400";
-		info.abbreviatedTimeZoneStandard[__("IRST")] = "+0330";
-		info.abbreviatedTimeZoneStandard[__("FET")] = "+0300";
-		info.abbreviatedTimeZoneStandard[__("EET")] = "+0200";
-		info.abbreviatedTimeZoneStandard[__("CET")] = "+0100";
-		info.abbreviatedTimeZoneStandard[__("UTC")] = "+000";
-		info.abbreviatedTimeZoneStandard[__("GMT")] = "+000";
-		info.abbreviatedTimeZoneStandard[__("CVT")] = "-0100";
-		info.abbreviatedTimeZoneStandard[__("GST")] = "-0200";
-		info.abbreviatedTimeZoneStandard[__("BRT")] = "-0300";
-		info.abbreviatedTimeZoneStandard[__("NST")] = "-0330";
-		info.abbreviatedTimeZoneStandard[__("AST")] = "-0400";
-		info.abbreviatedTimeZoneStandard[__("EST")] = "-0500";
-		info.abbreviatedTimeZoneStandard[__("CST")] = "-0600";
-		info.abbreviatedTimeZoneStandard[__("MST")] = "-0700";
-		info.abbreviatedTimeZoneStandard[__("PST")] = "-0800";
-		info.abbreviatedTimeZoneStandard[__("AKST")] = "-0900";
-		info.abbreviatedTimeZoneStandard[__("MIT")] = "-0930";
-		info.abbreviatedTimeZoneStandard[__("HST")] = "-1000";
-		info.abbreviatedTimeZoneStandard[__("SST")] = "-1100";
-		info.abbreviatedTimeZoneStandard[__("BIT")] = "-1200";
-
-		buildTimeZones(info);
-
-		return info;
-	};
-
-	$D.l18n = {
-		__: function (key) {
-			return __(key);
-		},
-		updateCultureInfo: function () {
-			$D.CultureInfo = CultureInfo();
-		},
-	};
-	$D.l18n.updateCultureInfo(); // run automatically
-}());
 (function () {
 	Date.Parsing = {
 		Exception: function (s) {

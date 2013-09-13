@@ -1,228 +1,194 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-10
- * Date: 2013-09-10
+ * Version: 1.0-alpha-2013-09-13
+ * Date: 2013-09-13
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
  * URL: https://github.com/abritinthebay/datejs
  */
 
-Date.CultureInfo = {
-	/* Culture Name */
-    name: "ko-KR",
-    englishName: "Korean (Korea)",
-    nativeName: "한국어 (대한민국)",
-    
-    /* Day Name Strings */
-    dayNames: ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"],
-    abbreviatedDayNames: ["일", "월", "화", "수", "목", "금", "토"],
-    shortestDayNames: ["일", "월", "화", "수", "목", "금", "토"],
-    firstLetterDayNames: ["일", "월", "화", "수", "목", "금", "토"],
-    
-    /* Month Name Strings */
-    monthNames: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
-    abbreviatedMonthNames: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-
-	/* AM/PM Designators */
-    amDesignator: "오전",
-    pmDesignator: "오후",
-
-    firstDayOfWeek: 0,
-    twoDigitYearMax: 2029,
-    
-    /**
-     * The dateElementOrder is based on the order of the 
-     * format specifiers in the formatPatterns.DatePattern. 
-     *
-     * Example:
-     <pre>
-     shortDatePattern    dateElementOrder
-     ------------------  ---------------- 
-     "M/d/yyyy"          "mdy"
-     "dd/MM/yyyy"        "dmy"
-     "yyyy-MM-dd"        "ymd"
-     </pre>
-     *
-     * The correct dateElementOrder is required by the parser to
-     * determine the expected order of the date elements in the
-     * string being parsed.
-     */
-    dateElementOrder: "ymd",
-    
-    /* Standard date and time format patterns */
-    formatPatterns: {
-        shortDate: "yyyy-MM-dd",
-        longDate: "yyyy'년' M'월' d'일' dddd",
-        shortTime: "tt h:mm",
-        longTime: "tt h:mm:ss",
-        fullDateTime: "yyyy'년' M'월' d'일' dddd tt h:mm:ss",
-        sortableDateTime: "yyyy-MM-ddTHH:mm:ss",
-        universalSortableDateTime: "yyyy-MM-dd HH:mm:ssZ",
-        rfc1123: "ddd, dd MMM yyyy HH:mm:ss GMT",
-        monthDay: "M'월' d'일'",
-        yearMonth: "yyyy'년' M'월'"
-    },
-
-    /**
-     * NOTE: If a string format is not parsing correctly, but
-     * you would expect it parse, the problem likely lies below. 
-     * 
-     * The following regex patterns control most of the string matching
-     * within the parser.
-     * 
-     * The Month name and Day name patterns were automatically generated
-     * and in general should be (mostly) correct. 
-     *
-     * Beyond the month and day name patterns are natural language strings.
-     * Example: "next", "today", "months"
-     *
-     * These natural language string may NOT be correct for this culture. 
-     * If they are not correct, please translate and edit this file
-     * providing the correct regular expression pattern. 
-     *
-     * If you modify this file, please post your revised CultureInfo file
-     * to the Datejs Forum located at http://www.datejs.com/forums/.
-     *
-     * Please mark the subject of the post with [CultureInfo]. Example:
-     *    Subject: [CultureInfo] Translated "da-DK" Danish(Denmark)
-     * 
-     * We will add the modified patterns to the master source files.
-     *
-     * As well, please review the list of "Future Strings" section below. 
-     */	
-    regexPatterns: {
-        jan: /^1(월)?/i,
-        feb: /^2(월)?/i,
-        mar: /^3(월)?/i,
-        apr: /^4(월)?/i,
-        may: /^5(월)?/i,
-        jun: /^6(월)?/i,
-        jul: /^7(월)?/i,
-        aug: /^8(월)?/i,
-        sep: /^9(월)?/i,
-        oct: /^10(월)?/i,
-        nov: /^11(월)?/i,
-        dec: /^12(월)?/i,
-
-        sun: /^일요일/i,
-        mon: /^월요일/i,
-        tue: /^화요일/i,
-        wed: /^수요일/i,
-        thu: /^목요일/i,
-        fri: /^금요일/i,
-        sat: /^토요일/i,
-
-        future: /^next/i,
-        past: /^last|past|prev(ious)?/i,
-        add: /^(\+|aft(er)?|from|hence)/i,
-        subtract: /^(\-|bef(ore)?|ago)/i,
-        
-        yesterday: /^yes(terday)?/i,
-        today: /^t(od(ay)?)?/i,
-        tomorrow: /^tom(orrow)?/i,
-        now: /^n(ow)?/i,
-        
-        millisecond: /^ms|milli(second)?s?/i,
-        second: /^sec(ond)?s?/i,
-        minute: /^mn|min(ute)?s?/i,
-		hour: /^h(our)?s?/i,
-		week: /^w(eek)?s?/i,
-        month: /^m(onth)?s?/i,
-        day: /^d(ay)?s?/i,
-        year: /^y(ear)?s?/i,
-		
-        shortMeridian: /^(a|p)/i,
-        longMeridian: /^(a\.?m?\.?|p\.?m?\.?)/i,
-        timezone: /^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\s*(\+|\-)\s*\d\d\d\d?)|gmt|utc)/i,
-        ordinalSuffix: /^\s*(st|nd|rd|th)/i,
-        timeContext: /^\s*(\:|a(?!u|p)|p)/i
-    },
-
-	timezones: [{name:"UTC", offset:"-000"}, {name:"GMT", offset:"-000"}, {name:"EST", offset:"-0500"}, {name:"EDT", offset:"-0400"}, {name:"CST", offset:"-0600"}, {name:"CDT", offset:"-0500"}, {name:"MST", offset:"-0700"}, {name:"MDT", offset:"-0600"}, {name:"PST", offset:"-0800"}, {name:"PDT", offset:"-0700"}],
-
-	abbreviatedTimeZoneDST: {
-		GMT: "-000",
-		EDT: "-0400",
-		CDT: "-0500",
-		MDT: "-0600",
-		PDT: "-0700"
-	},
-	
-	abbreviatedTimeZoneStandard: {
-		GMT: "-000",
-		EST: "-0500",
-		CST: "-0600",
-		MST: "-0700",
-		PST: "-0800"
-	}
+/* 
+ * DateJS Culture String File
+ * Country Code: ko-KR
+ * Name: Korean (Korea)
+ * Format: "key" : "value"
+ * Key is the en-US term, Value is the Key in the current language.
+ */
+Date.CultureStrings = {
+	"name": "ko-KR",
+	"englishName": "Korean (Korea)",
+	"nativeName": "한국어 (대한민국)",
+	"Sunday": "일요일",
+	"Monday": "월요일",
+	"Tuesday": "화요일",
+	"Wednesday": "수요일",
+	"Thursday": "목요일",
+	"Friday": "금요일",
+	"Saturday": "토요일",
+	"Sun": "일",
+	"Mon": "월",
+	"Tue": "화",
+	"Wed": "수",
+	"Thu": "목",
+	"Fri": "금",
+	"Sat": "토",
+	"Su": "일",
+	"Mo": "월",
+	"Tu": "화",
+	"We": "수",
+	"Th": "목",
+	"Fr": "금",
+	"Sa": "토",
+	"S_Sun_Initial": "일",
+	"M_Mon_Initial": "월",
+	"T_Tue_Initial": "화",
+	"W_Wed_Initial": "수",
+	"T_Thu_Initial": "목",
+	"F_Fri_Initial": "금",
+	"S_Sat_Initial": "토",
+	"January": "1월",
+	"February": "2월",
+	"March": "3월",
+	"April": "4월",
+	"May": "5월",
+	"June": "6월",
+	"July": "7월",
+	"August": "8월",
+	"September": "9월",
+	"October": "10월",
+	"November": "11월",
+	"December": "12월",
+	"Jan_Abbr": "1",
+	"Feb_Abbr": "2",
+	"Mar_Abbr": "3",
+	"Apr_Abbr": "4",
+	"May_Abbr": "5",
+	"Jun_Abbr": "6",
+	"Jul_Abbr": "7",
+	"Aug_Abbr": "8",
+	"Sep_Abbr": "9",
+	"Oct_Abbr": "10",
+	"Nov_Abbr": "11",
+	"Dec_Abbr": "12",
+	"AM": "오전",
+	"PM": "오후",
+	"firstDayOfWeek": 0,
+	"twoDigitYearMax": 2029,
+	"mdy": "ymd",
+	"M/d/yyyy": "yyyy-MM-dd",
+	"dddd, MMMM dd, yyyy": "yyyy'년' M'월' d'일' dddd",
+	"h:mm tt": "tt h:mm",
+	"h:mm:ss tt": "tt h:mm:ss",
+	"dddd, MMMM dd, yyyy h:mm:ss tt": "yyyy'년' M'월' d'일' dddd tt h:mm:ss",
+	"yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",
+	"yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",
+	"ddd, dd MMM yyyy HH:mm:ss GMT": "ddd, dd MMM yyyy HH:mm:ss GMT",
+	"MMMM dd": "M'월' d'일'",
+	"MMMM, yyyy": "yyyy'년' M'월'",
+	"^jan(uary)?": "^1(월)?",
+	"^feb(ruary)?": "^2(월)?",
+	"^mar(ch)?": "^3(월)?",
+	"^apr(il)?": "^4(월)?",
+	"^may": "^5(월)?",
+	"^jun(e)?": "^6(월)?",
+	"^jul(y)?": "^7(월)?",
+	"^aug(ust)?": "^8(월)?",
+	"^sep(t(ember)?)?": "^9(월)?",
+	"^oct(ober)?": "^10(월)?",
+	"^nov(ember)?": "^11(월)?",
+	"^dec(ember)?": "^12(월)?",
+	"^su(n(day)?)?": "^일요일",
+	"^mo(n(day)?)?": "^월요일",
+	"^tu(e(s(day)?)?)?": "^화요일",
+	"^we(d(nesday)?)?": "^수요일",
+	"^th(u(r(s(day)?)?)?)?": "^목요일",
+	"^fr(i(day)?)?": "^금요일",
+	"^sa(t(urday)?)?": "^토요일",
+	"^next": "^next",
+	"^last|past|prev(ious)?": "^last|past|prev(ious)?",
+	"^(\\+|aft(er)?|from|hence)": "^(\\+|aft(er)?|from|hence)",
+	"^(\\-|bef(ore)?|ago)": "^(\\-|bef(ore)?|ago)",
+	"^yes(terday)?": "^yes(terday)?",
+	"^t(od(ay)?)?": "^t(od(ay)?)?",
+	"^tom(orrow)?": "^tom(orrow)?",
+	"^n(ow)?": "^n(ow)?",
+	"^ms|milli(second)?s?": "^ms|milli(second)?s?",
+	"^sec(ond)?s?": "^sec(ond)?s?",
+	"^mn|min(ute)?s?": "^mn|min(ute)?s?",
+	"^h(our)?s?": "^h(our)?s?",
+	"^w(eek)?s?": "^w(eek)?s?",
+	"^m(onth)?s?": "^m(onth)?s?",
+	"^d(ay)?s?": "^d(ay)?s?",
+	"^y(ear)?s?": "^y(ear)?s?",
+	"^(a|p)": "^(a|p)",
+	"^(a\\.?m?\\.?|p\\.?m?\\.?)": "^(a\\.?m?\\.?|p\\.?m?\\.?)",
+	"^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)": "^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)",
+	"^\\s*(st|nd|rd|th)": "^\\s*(st|nd|rd|th)",
+	"^\\s*(\\:|a(?!u|p)|p)": "^\\s*(\\:|a(?!u|p)|p)",
+	"LINT": "LINT",
+	"TOT": "TOT",
+	"CHAST": "CHAST",
+	"NZST": "NZST",
+	"NFT": "NFT",
+	"SBT": "SBT",
+	"AEST": "AEST",
+	"ACST": "ACST",
+	"JST": "JST",
+	"CWST": "CWST",
+	"CT": "CT",
+	"ICT": "ICT",
+	"MMT": "MMT",
+	"BIOT": "BST",
+	"NPT": "NPT",
+	"IST": "IST",
+	"PKT": "PKT",
+	"AFT": "AFT",
+	"MSK": "MSK",
+	"IRST": "IRST",
+	"FET": "FET",
+	"EET": "EET",
+	"CET": "CET",
+	"UTC": "UTC",
+	"GMT": "GMT",
+	"CVT": "CVT",
+	"GST": "GST",
+	"BRT": "BRT",
+	"NST": "NST",
+	"AST": "AST",
+	"EST": "EST",
+	"CST": "CST",
+	"MST": "MST",
+	"PST": "PST",
+	"AKST": "AKST",
+	"MIT": "MIT",
+	"HST": "HST",
+	"SST": "SST",
+	"BIT": "BIT",
+	"CHADT": "CHADT",
+	"NZDT": "NZDT",
+	"AEDT": "AEDT",
+	"ACDT": "ACDT",
+	"AZST": "AZST",
+	"IRDT": "IRDT",
+	"EEST": "EEST",
+	"CEST": "CEST",
+	"BST": "BST",
+	"PMDT": "PMDT",
+	"ADT": "ADT",
+	"NDT": "NDT",
+	"EDT": "EDT",
+	"CDT": "CDT",
+	"MDT": "MDT",
+	"PDT": "PDT",
+	"AKDT": "AKDT",
+	"HADT": "HADT"
 };
 
-/********************
- ** Future Strings **
- ********************
- * 
- * The following list of strings may not be currently being used, but 
- * may be incorporated into the Datejs library later. 
- *
- * We would appreciate any help translating the strings below.
- * 
- * If you modify this file, please post your revised CultureInfo file
- * to the Datejs Forum located at http://www.datejs.com/forums/.
- *
- * Please mark the subject of the post with [CultureInfo]. Example:
- *    Subject: [CultureInfo] Translated "da-DK" Danish(Denmark)b
- *
- * English Name        Translated
- * ------------------  -----------------
- * about               about
- * ago                 ago
- * date                date
- * time                time
- * calendar            calendar
- * show                show
- * hourly              hourly
- * daily               daily
- * weekly              weekly
- * bi-weekly           bi-weekly
- * fortnight           fortnight
- * monthly             monthly
- * bi-monthly          bi-monthly
- * quarter             quarter
- * quarterly           quarterly
- * yearly              yearly
- * annual              annual
- * annually            annually
- * annum               annum
- * again               again
- * between             between
- * after               after
- * from now            from now
- * repeat              repeat
- * times               times
- * per                 per
- * min (abbrev minute) min
- * morning             morning
- * noon                noon
- * night               night
- * midnight            midnight
- * mid-night           mid-night
- * evening             evening
- * final               final
- * future              future
- * spring              spring
- * summer              summer
- * fall                fall
- * winter              winter
- * end of              end of
- * end                 end
- * long                long
- * short               short
- */
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-10
- * Date: 2013-09-10
+ * Version: 1.0-alpha-2013-09-13
+ * Date: 2013-09-13
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -1414,6 +1380,268 @@ Date.CultureInfo = {
 		$P.format = $P.$format;
 	}
 }());    
+(function () {
+	var $D = Date;
+	var __ = function (key) {
+		var output, split, length, last;
+		if (Date.CultureStrings[key]) {
+			output = Date.CultureStrings[key];
+		} else {
+			output = key;
+			split = key.split("_");
+			length = split.length;
+			if (length > 1 && key.charAt(0) !== "^") {
+				// if the key isn't a regex and it has a split.
+				last = split[(length - 1)].toLowerCase();
+				if (last === "initial" || last === "abbr") {
+					output = split[0];
+				}
+			}
+		}
+		if (key.charAt(0) === "^") {
+			// it's a regex
+			output = new RegExp(key);
+		}
+		return output;
+	};
+
+	var CultureInfo = function () {
+		var buildTimeZones = function (data) {
+			var zone;
+			for (zone in data.abbreviatedTimeZoneStandard) {
+				if (data.abbreviatedTimeZoneStandard.hasOwnProperty(zone)) {
+					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneStandard[zone]});
+				}
+			}
+			for (zone in data.abbreviatedTimeZoneDST) {
+				if (data.abbreviatedTimeZoneDST.hasOwnProperty(zone)) {
+					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneDST[zone]});
+				}
+			}
+			return data.timezones;
+		};
+		var info =  {
+			name: __("name"),
+			englishName: __("englishName"),
+			nativeName: __("nativeName"),
+			/* Day Name Strings */
+			dayNames: [
+				__("Sunday"),
+				__("Monday"),
+				__("Tuesday"),
+				__("Wednesday"),
+				__("Thursday"),
+				__("Friday"),
+				__("Saturday")
+			],
+			abbreviatedDayNames: [
+				__("Sun"),
+				__("Mon"),
+				__("Tue"),
+				__("Wed"),
+				__("Thu"),
+				__("Fri"),
+				__("Sat")
+			],
+			shortestDayNames: [
+				__("Su"),
+				__("Mo"),
+				__("Tu"),
+				__("We"),
+				__("Th"),
+				__("Fr"),
+				__("Sa")
+			],
+			firstLetterDayNames: [
+				__("S_Sun_Initial"),
+				__("M_Mon_Initial"),
+				__("T_Tues_Initial"),
+				__("W_Wed_Initial"),
+				__("T_Thu_Initial"),
+				__("F_Fri_Initial"),
+				__("S_Sat_Initial")
+			],
+
+			/* Month Name Strings */
+			monthNames: [
+				__("January"),
+				__("February"),
+				__("March"),
+				__("April"),
+				__("May"),
+				__("June"),
+				__("July"),
+				__("August"),
+				__("September"),
+				__("October"),
+				__("November"),
+				__("December")
+			],
+			abbreviatedMonthNames: [
+				__("Jan_Abbr"),
+				__("Feb_Abbr"),
+				__("Mar_Abbr"),
+				__("Apr_Abbr"),
+				__("May_Abbr"),
+				__("Jun_Abbr"),
+				__("Jul_Abbr"),
+				__("Aug_Abbr"),
+				__("Sep_Abbr"),
+				__("Oct_Abbr"),
+				__("Nov_Abbr"),
+				__("Dec_Abbr")
+			],
+			/* AM/PM Designators */
+			amDesignator: __("AM"),
+			pmDesignator: __("PM"),
+			firstDayOfWeek: __("firstDayOfWeek"),
+			twoDigitYearMax: __("twoDigitYearMax"),
+			dateElementOrder: __("mdy"),
+			/* Standard date and time format patterns */
+			formatPatterns: {
+				shortDate: __("M/d/yyyy"),
+				longDate: __("dddd, MMMM dd, yyyy"),
+				shortTime: __("h:mm tt"),
+				longTime: __("h:mm:ss tt"),
+				fullDateTime: __("dddd, MMMM dd, yyyy h:mm:ss tt"),
+				sortableDateTime: __("yyyy-MM-ddTHH:mm:ss"),
+				universalSortableDateTime: __("yyyy-MM-dd HH:mm:ssZ"),
+				rfc1123: __("ddd, dd MMM yyyy HH:mm:ss GMT"),
+				monthDay: __("MMMM dd"),
+				yearMonth: __("MMMM, yyyy")
+			},
+			regexPatterns: {
+				jan: __("^jan(uary)?/i"),
+				feb: __("^feb(ruary)?/i"),
+				mar: __("^mar(ch)?/i"),
+				apr: __("^apr(il)?/i"),
+				may: __("^may/i"),
+				jun: __("^jun(e)?/i"),
+				jul: __("^jul(y)?/i"),
+				aug: __("^aug(ust)?/i"),
+				sep: __("^sep(t(ember)?)?/i"),
+				oct: __("^oct(ober)?/i"),
+				nov: __("^nov(ember)?/i"),
+				dec: __("^dec(ember)?/i"),
+				sun: __("^su(n(day)?)?/i"),
+				mon: __("^mo(n(day)?)?/i"),
+				tue: __("^tu(e(s(day)?)?)?/i"),
+				wed: __("^we(d(nesday)?)?/i"),
+				thu: __("^th(u(r(s(day)?)?)?)?/i"),
+				fri: __("^fr(i(day)?)?/i"),
+				sat: __("^sa(t(urday)?)?/i"),
+				future: __("^next/i"),
+				past: __("^last|past|prev(ious)?/i"),
+				add: __("^(\\+|aft(er)?|from|hence)/i"),
+				subtract: __("^(\\-|bef(ore)?|ago)/i"),
+				yesterday: __("^yes(terday)?/i"),
+				today: __("^t(od(ay)?)?/i"),
+				tomorrow: __("^tom(orrow)?/i"),
+				now: __("^n(ow)?/i"),
+				millisecond: __("^ms|milli(second)?s?/i"),
+				second: __("^sec(ond)?s?/i"),
+				minute: __("^mn|min(ute)?s?/i"),
+				hour: __("^h(our)?s?/i"),
+				week: __("^w(eek)?s?/i"),
+				month: __("^m(onth)?s?/i"),
+				day: __("^d(ay)?s?/i"),
+				year: __("^y(ear)?s?/i"),
+				shortMeridian: __("^(a|p)/i"),
+				longMeridian: __("^(a\\.?m?\\.?|p\\.?m?\\.?)/i"),
+				timezone: __("^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)/i"),
+				ordinalSuffix: __("^\\s*(st|nd|rd|th)/i"),
+				timeContext: __("^\\s*(\\:|a(?!u|p)|p)/i")
+			},
+			timezones: [
+				// { name: "UTC", offset: "-000"},
+				// { name: "GMT", offset: "-000"},
+				// { name: "EST", offset: "-0500"},
+				// { name: "EDT", offset: "-0400"},
+				// { name: "CST", offset: "-0600"},
+				// { name: "CDT", offset: "-0500"},
+				// { name: "MST", offset: "-0700"},
+				// { name: "MDT", offset: "-0600"},
+				// { name: "PST", offset: "-0800"},
+				// { name: "PDT", offset: "-0700"}
+			],
+			abbreviatedTimeZoneDST: {},
+			abbreviatedTimeZoneStandard: {}
+		};
+		
+		info.abbreviatedTimeZoneDST[__("CHADT")] = "+1345";
+		info.abbreviatedTimeZoneDST[__("NZDT")] = "+1300";
+		info.abbreviatedTimeZoneDST[__("AEDT")] = "+1100";
+		info.abbreviatedTimeZoneDST[__("ACDT")] = "+1030";
+		info.abbreviatedTimeZoneDST[__("AZST")] = "+0500";
+		info.abbreviatedTimeZoneDST[__("IRDT")] = "+0430";
+		info.abbreviatedTimeZoneDST[__("EEST")] = "+0300";
+		info.abbreviatedTimeZoneDST[__("CEST")] = "+0200";
+		info.abbreviatedTimeZoneDST[__("BST")] = "+0100";
+		info.abbreviatedTimeZoneDST[__("PMDT")] = "-0200";
+		info.abbreviatedTimeZoneDST[__("ADT")] = "-0300";
+		info.abbreviatedTimeZoneDST[__("NDT")] = "-0230";
+		info.abbreviatedTimeZoneDST[__("EDT")] = "-0400";
+		info.abbreviatedTimeZoneDST[__("CDT")] = "-0500";
+		info.abbreviatedTimeZoneDST[__("MDT")] = "-0600";
+		info.abbreviatedTimeZoneDST[__("PDT")] = "-0700";
+		info.abbreviatedTimeZoneDST[__("AKDT")] = "-0800";
+		info.abbreviatedTimeZoneDST[__("HADT")] = "-0900";
+
+		info.abbreviatedTimeZoneStandard[__("LINT")] = "+1400";
+		info.abbreviatedTimeZoneStandard[__("TOT")] = "+1300";
+		info.abbreviatedTimeZoneStandard[__("CHAST")] = "+1245";
+		info.abbreviatedTimeZoneStandard[__("NZST")] = "+1200";
+		info.abbreviatedTimeZoneStandard[__("NFT")] = "+1130";
+		info.abbreviatedTimeZoneStandard[__("SBT")] = "+1100";
+		info.abbreviatedTimeZoneStandard[__("AEST")] = "+1000";
+		info.abbreviatedTimeZoneStandard[__("ACST")] = "+0930";
+		info.abbreviatedTimeZoneStandard[__("JST")] = "+0900";
+		info.abbreviatedTimeZoneStandard[__("CWST")] = "+0845";
+		info.abbreviatedTimeZoneStandard[__("CT")] = "+0800";
+		info.abbreviatedTimeZoneStandard[__("ICT")] = "+0700";
+		info.abbreviatedTimeZoneStandard[__("MMT")] = "+0630";
+		info.abbreviatedTimeZoneStandard[__("BST")] = "+0600";
+		info.abbreviatedTimeZoneStandard[__("NPT")] = "+0545";
+		info.abbreviatedTimeZoneStandard[__("IST")] = "+0530";
+		info.abbreviatedTimeZoneStandard[__("PKT")] = "+0500";
+		info.abbreviatedTimeZoneStandard[__("AFT")] = "+0430";
+		info.abbreviatedTimeZoneStandard[__("MSK")] = "+0400";
+		info.abbreviatedTimeZoneStandard[__("IRST")] = "+0330";
+		info.abbreviatedTimeZoneStandard[__("FET")] = "+0300";
+		info.abbreviatedTimeZoneStandard[__("EET")] = "+0200";
+		info.abbreviatedTimeZoneStandard[__("CET")] = "+0100";
+		info.abbreviatedTimeZoneStandard[__("UTC")] = "+000";
+		info.abbreviatedTimeZoneStandard[__("GMT")] = "+000";
+		info.abbreviatedTimeZoneStandard[__("CVT")] = "-0100";
+		info.abbreviatedTimeZoneStandard[__("GST")] = "-0200";
+		info.abbreviatedTimeZoneStandard[__("BRT")] = "-0300";
+		info.abbreviatedTimeZoneStandard[__("NST")] = "-0330";
+		info.abbreviatedTimeZoneStandard[__("AST")] = "-0400";
+		info.abbreviatedTimeZoneStandard[__("EST")] = "-0500";
+		info.abbreviatedTimeZoneStandard[__("CST")] = "-0600";
+		info.abbreviatedTimeZoneStandard[__("MST")] = "-0700";
+		info.abbreviatedTimeZoneStandard[__("PST")] = "-0800";
+		info.abbreviatedTimeZoneStandard[__("AKST")] = "-0900";
+		info.abbreviatedTimeZoneStandard[__("MIT")] = "-0930";
+		info.abbreviatedTimeZoneStandard[__("HST")] = "-1000";
+		info.abbreviatedTimeZoneStandard[__("SST")] = "-1100";
+		info.abbreviatedTimeZoneStandard[__("BIT")] = "-1200";
+
+		buildTimeZones(info);
+
+		return info;
+	};
+
+	$D.l18n = {
+		__: function (key) {
+			return __(key);
+		},
+		updateCultureInfo: function () {
+			$D.CultureInfo = CultureInfo();
+		},
+	};
+	$D.l18n.updateCultureInfo(); // run automatically
+}());
 (function () {
 	Date.Parsing = {
 		Exception: function (s) {
