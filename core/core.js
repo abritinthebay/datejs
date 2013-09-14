@@ -663,24 +663,26 @@
 		return (date || new Date()) - this;
 	};
 
-	if (!$P.toISOString) {
-		/**
-		 * Converts the current date instance into a string with an ISO 8601 format. The date is converted to it's UTC value.
-		 * @return {String}  ISO 8601 string of date
-		 */
-		$P.toISOString = function () {
-			// From http://www.json.org/json.js. Public Domain. 
-			function f(n) {
-				return n < 10 ? "0" + n : n;
+	if ( !$P.toISOString ) {
+		(function() {
+			function pad(number) {
+				var r = String(number);
+				if (r.length === 1) {
+					r = "0" + r;
+				}
+				return r;
 			}
-
-			return "\"" + this.getUTCFullYear()   + "-" +
-				f(this.getUTCMonth() + 1) + "-" +
-				f(this.getUTCDate())      + "T" +
-				f(this.getUTCHours())     + ":" +
-				f(this.getUTCMinutes())   + ":" +
-				f(this.getUTCSeconds())   + "Z";
-		};
+			$P.toISOString = function() {
+				return this.getUTCFullYear() +
+				"-" + pad(this.getUTCMonth() + 1) +
+				"-" + pad(this.getUTCDate()) +
+				"T" + pad(this.getUTCHours()) +
+				":" + pad(this.getUTCMinutes()) +
+				":" + pad(this.getUTCSeconds()) +
+				"." + String( (this.getUTCMilliseconds()/1000).toFixed(3)).slice(2, 5) +
+				"Z";
+			};
+		}());
 	}
 	
 	// private
