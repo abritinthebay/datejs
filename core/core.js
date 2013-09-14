@@ -686,7 +686,9 @@
 	}
 	
 	// private
-	$P._toString = $P.toString;
+	if ( $P._toString === undefined ){
+		$P._toString = $P.toString;
+	}
 
 	/**
 	 * Converts the value of the current Date object to its equivalent string representation.
