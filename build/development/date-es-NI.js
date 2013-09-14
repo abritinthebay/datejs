@@ -1,7 +1,7 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-13
- * Date: 2013-09-13
+ * Version: 1.0-alpha-2013-09-14
+ * Date: 2013-09-14
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -187,8 +187,8 @@ Date.CultureStrings = {
 
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-13
- * Date: 2013-09-13
+ * Version: 1.0-alpha-2013-09-14
+ * Date: 2013-09-14
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -859,28 +859,32 @@ Date.CultureStrings = {
 		return (date || new Date()) - this;
 	};
 
-	if (!$P.toISOString) {
-		/**
-		 * Converts the current date instance into a string with an ISO 8601 format. The date is converted to it's UTC value.
-		 * @return {String}  ISO 8601 string of date
-		 */
-		$P.toISOString = function () {
-			// From http://www.json.org/json.js. Public Domain. 
-			function f(n) {
-				return n < 10 ? "0" + n : n;
+	if ( !$P.toISOString ) {
+		(function() {
+			function pad(number) {
+				var r = String(number);
+				if (r.length === 1) {
+					r = "0" + r;
+				}
+				return r;
 			}
-
-			return "\"" + this.getUTCFullYear()   + "-" +
-				f(this.getUTCMonth() + 1) + "-" +
-				f(this.getUTCDate())      + "T" +
-				f(this.getUTCHours())     + ":" +
-				f(this.getUTCMinutes())   + ":" +
-				f(this.getUTCSeconds())   + "Z";
-		};
+			$P.toISOString = function() {
+				return this.getUTCFullYear() +
+				"-" + pad(this.getUTCMonth() + 1) +
+				"-" + pad(this.getUTCDate()) +
+				"T" + pad(this.getUTCHours()) +
+				":" + pad(this.getUTCMinutes()) +
+				":" + pad(this.getUTCSeconds()) +
+				"." + String( (this.getUTCMilliseconds()/1000).toFixed(3)).slice(2, 5) +
+				"Z";
+			};
+		}());
 	}
 	
 	// private
-	$P._toString = $P.toString;
+	if ( $P._toString === undefined ){
+		$P._toString = $P.toString;
+	}
 
 	/**
 	 * Converts the value of the current Date object to its equivalent string representation.
@@ -2826,7 +2830,7 @@ Date.CultureStrings = {
 	$P._isSecond = false;
 
 	// private
-	$N._dateElement = "day";
+	$N._dateElement = "days";
 
 	/** 
 	 * Moves the date to the next instance of a date as specified by the subsequent date element function (eg. .day(), .month()), month name function (eg. .january(), .jan()) or day name function (eg. .friday(), fri()).
@@ -3023,7 +3027,7 @@ Date.CultureStrings = {
 	 */
 	$N.fromNow = $N.after = function (date) {
 		var c = {};
-		c[this._dateElement + "s"] = this;
+		c[this._dateElement] = this;
 		return ((!date) ? new Date() : date.clone()).add(c);
 	};
 
@@ -3239,7 +3243,7 @@ Date.CultureStrings = {
 		$P[de] = $P[de + "s"] = ef(px[k]);
 		
 		// Create date element functions and plural date element functions used with Number (eg. day(), days(), months()).
-		$N[de] = $N[de + "s"] = nf(de);
+		$N[de] = $N[de + "s"] = nf(de + "s");
 	}
 	
 	$P._ss = ef("Second");
