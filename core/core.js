@@ -616,7 +616,7 @@
 
 	$P.setTimezoneOffset = function (offset) {
 		var here = this.getTimezoneOffset(), there = Number(offset) * -6 / 10;
-		return this.addMinutes(there - here);
+		return this.addMinutes(here - there);
 	};
 
 	$P.setTimezone = function (offset) {
