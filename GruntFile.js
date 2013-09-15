@@ -48,11 +48,26 @@ module.exports = function(grunt) {
 				nonull: true
 			},
 			core: {
-				src: ['<%= dirs.core %>/*.js'],
+				src: [
+					'<%= dirs.core %>/i18n.js',
+					'<%= dirs.core %>/core.js',
+					'<%= dirs.core %>/parser.js',
+					'<%= dirs.core %>/sugarpak.js',
+					'<%= dirs.core %>/extras.js',
+					'<%= dirs.core %>/time.js',
+				],
 				dest: '<%= dirs.build %>/date-core.js',
 			},
 			basic: {
-				src: ['<%= dirs.i18n %>/en-US.js', '<%= dirs.core %>/*.js' ],
+				src: [
+					'<%= dirs.i18n %>/en-US.js',
+					'<%= dirs.core %>/i18n.js',
+					'<%= dirs.core %>/core.js',
+					'<%= dirs.core %>/parser.js',
+					'<%= dirs.core %>/sugarpak.js',
+					'<%= dirs.core %>/extras.js',
+					'<%= dirs.core %>/time.js',
+				],
 				dest: '<%= dirs.build %>/development/date.js',
 			}
 		},
