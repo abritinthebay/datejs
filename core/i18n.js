@@ -255,7 +255,7 @@
 			return __(key);
 		},
 		updateCultureInfo: function () {
-			$D.CultureInfo = CultureInfo();
+			Date.CultureInfo = CultureInfo();
 		}
 	};
 	$D.l18n.updateCultureInfo(); // run automatically

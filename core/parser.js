@@ -456,7 +456,7 @@
 }());
 
 (function () {
-	var $D = Date, $P = $D.prototype, $C = $D.CultureInfo;
+	var $D = Date;
 
 	var flattenAndCompact = function (ax) {
 		var rx = [];
@@ -528,7 +528,7 @@
 			return function () {
 				var n = Number(s);
 				this.year = ((s.length > 2) ? n :
-					(n + (((n + 2000) < $C.twoDigitYearMax) ? 2000 : 1900)));
+					(n + (((n + 2000) < Date.CultureInfo.twoDigitYearMax) ? 2000 : 1900)));
 			};
 		},
 		rday: function (s) {
@@ -752,7 +752,7 @@
 	g.ctoken = function (keys) {
 		var fn = _C[keys];
 		if (! fn) {
-			var c = $C.regexPatterns;
+			var c = Date.CultureInfo.regexPatterns;
 			var kx = keys.split(/\s+/), px = [];
 			for (var i = 0; i < kx.length ; i++) {
 				px.push(_.replace(_.rtoken(c[kx[i]]), kx[i]));
@@ -762,7 +762,7 @@
 		return fn;
 	};
 	g.ctoken2 = function (key) {
-		return _.rtoken($C.regexPatterns[key]);
+		return _.rtoken(Date.CultureInfo.regexPatterns[key]);
 	};
 
 	// hour, minute, second, meridian, timezone
@@ -857,7 +857,7 @@
 	g.ymd = _fn(g.ddd, g.year, g.month, g.day);
 	g.dmy = _fn(g.ddd, g.day, g.month, g.year);
 	g.date = function (s) {
-		return ((g[$C.dateElementOrder] || g.mdy).call(this, s));
+		return ((g[Date.CultureInfo.dateElementOrder] || g.mdy).call(this, s));
 	};
 
 	// parsing date format specifiers - ex: "h:m:s tt" 
