@@ -235,7 +235,7 @@ var TimePeriod = function (years, months, days, hours, minutes, seconds, millise
 		d1.addYears(this.years);
 
 		if (orient === +1) {
-			while (d1 < d2 && d1.clone().addDays(Date.getDaysInMonth(d1.getYear(), d1.getMonth()) ) < d2) {
+			while (d1 < d2 && d1.clone().addMonths(1) <= d2) {
 				d1.addMonths(1);
 				this.months++;
 			}
