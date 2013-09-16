@@ -1079,7 +1079,7 @@
 			return null;
 		}
 		if (s instanceof Date) {
-			return s;
+			return s.clone();
 		}
 
 		try {
