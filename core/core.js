@@ -596,7 +596,31 @@
 		var diff = (month - this.getMonth() + 12 * (orient || +1)) % 12;
 		return this.addMonths((diff === 0) ? diff += 12 * (orient || +1) : diff);
 	};
-
+	/**
+	 * Get the Ordinate of the current day ("th", "st", "rd").
+	 * @return {String} 
+	 */
+	$P.getOrdinate = function () {
+		var num = this.getDate(),
+			numStr = num.toString(),
+			last = numStr.slice(-1),
+			ord = "";
+			switch (last) {
+				case "1":
+					ord = numStr.slice(-2) === "11" ? "th" : "st";
+					break;
+				case "2":
+					ord = numStr.slice(-2) === "12" ? "th" : "nd";
+					break;
+				case "3":
+					ord = numStr.slice(-2) === "13" ? "th" : "rd";
+					break;
+				default:
+					ord = "th";
+					break;
+			}
+		return ord;
+	};
 	/**
 	 * Get the Ordinal day (numeric day number) of the year, adjusted for leap year.
 	 * @return {Number} 1 through 365 (366 in leap years)
