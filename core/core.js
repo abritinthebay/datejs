@@ -399,7 +399,7 @@
 	 * @return {Date}    this
 	 */
 	$P.setWeek = function (n) {
-		return this.moveToDayOfWeek(1).addWeeks(n - this.getWeek());
+		return this.addWeeks(n - this.getWeek()).moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1));
 	};
 
 	// private
