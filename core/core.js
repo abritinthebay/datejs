@@ -601,25 +601,8 @@
 	 * @return {String} 
 	 */
 	$P.getOrdinate = function () {
-		var num = this.getDate(),
-			numStr = num.toString(),
-			last = numStr.slice(-1),
-			ord = "";
-			switch (last) {
-				case "1":
-					ord = numStr.slice(-2) === "11" ? "th" : "st";
-					break;
-				case "2":
-					ord = numStr.slice(-2) === "12" ? "th" : "nd";
-					break;
-				case "3":
-					ord = numStr.slice(-2) === "13" ? "th" : "rd";
-					break;
-				default:
-					ord = "th";
-					break;
-			}
-		return ord;
+		var num = this.getDate();
+		return ord(num);
 	};
 	/**
 	 * Get the Ordinal day (numeric day number) of the year, adjusted for leap year.
@@ -782,6 +765,23 @@
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
 	 * @return {String}  A string representation of the current Date object.
 	 */
+	
+	var ord = function (n) {
+		switch (n * 1) {
+		case 1:
+		case 21:
+		case 31:
+			return "st";
+		case 2:
+		case 22:
+			return "nd";
+		case 3:
+		case 23:
+			return "rd";
+		default:
+			return "th";
+		}
+	};
 	$P.toString = function (format) {
 		var x = this;
 		
@@ -814,22 +814,7 @@
 			}
 		}
 		
-		var ord = function (n) {
-				switch (n * 1) {
-				case 1:
-				case 21:
-				case 31:
-					return "st";
-				case 2:
-				case 22:
-					return "nd";
-				case 3:
-				case 23:
-					return "rd";
-				default:
-					return "th";
-				}
-			};
+
 		
 		return format ? format.replace(/(\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)/g,
 		function (m) {
