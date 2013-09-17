@@ -2,7 +2,7 @@
 	var $D = Date;
 	var __ = function (key) {
 		var output, split, length, last;
-		if (Date.CultureStrings[key]) {
+		if (Date.CultureStrings && Date.CultureStrings[key]) {
 			output = Date.CultureStrings[key];
 		} else {
 			output = key;
