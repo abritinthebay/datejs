@@ -124,7 +124,7 @@
 				fullDateTime: __("dddd, MMMM dd, yyyy h:mm:ss tt"),
 				sortableDateTime: __("yyyy-MM-ddTHH:mm:ss"),
 				universalSortableDateTime: __("yyyy-MM-dd HH:mm:ssZ"),
-				rfc1123: __("ddd, dd MMM yyyy HH:mm:ss GMT"),
+				rfc1123: __("ddd, dd MMM yyyy HH:mm:ss"),
 				monthDay: __("MMMM dd"),
 				yearMonth: __("MMMM, yyyy")
 			},

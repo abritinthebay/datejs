@@ -73,7 +73,7 @@ Date.CultureStrings = {
 	"dddd, MMMM dd, yyyy h:mm:ss tt": "yyyy 'm.' MMMM d 'd.' HH:mm:ss",
 	"yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",
 	"yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",
-	"ddd, dd MMM yyyy HH:mm:ss GMT": "ddd, dd MMM yyyy HH:mm:ss GMT",
+	"ddd, dd MMM yyyy HH:mm:ss": "ddd, dd MMM yyyy HH:mm:ss",
 	"MMMM dd": "MMMM d 'd.'",
 	"MMMM, yyyy": "yyyy 'm.' MMMM",
 	"^jan(uary)?": "^sau(sis)?",

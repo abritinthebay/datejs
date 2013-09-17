@@ -787,7 +787,7 @@
 			case "m":
 				return x.t(c.monthDay);
 			case "r":
-				return x.t(c.rfc1123);
+				return x.t(c.rfc1123) + " GMT";
 			case "s":
 				return x.t(c.sortableDateTime);
 			case "t":
