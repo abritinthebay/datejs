@@ -60,7 +60,6 @@ module.exports = function(grunt) {
 			},
 			basic: {
 				src: [
-					'<%= dirs.i18n %>/en-US.js',
 					'<%= dirs.core %>/i18n.js',
 					'<%= dirs.core %>/core.js',
 					'<%= dirs.core %>/parser.js',

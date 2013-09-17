@@ -1,221 +1,17 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-16
- * Date: 2013-09-16
+ * Version: 1.0-alpha-2013-09-17
+ * Date: 2013-09-17
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
  * URL: https://github.com/abritinthebay/datejs
  */
-/* 
- * DateJS Culture String File
- * Country Code: en-US
- * Name: English (United States)
- * Format: "key" : "value"
- * Key is the en-US term, Value is the Key in the current language.
- */
-Date.CultureStrings = {
-	"name": "en-US",
-	"englishName": "English (United States)",
-	"nativeName": "English (United States)",
-	"Sunday": "Sunday",
-	"Monday": "Monday",
-	"Tuesday": "Tuesday",
-	"Wednesday": "Wednesday",
-	"Thursday": "Thursday",
-	"Friday": "Friday",
-	"Saturday": "Saturday",
-	"Sun": "Sun",
-	"Mon": "Mon",
-	"Tue": "Tue",
-	"Wed": "Wed",
-	"Thu": "Thu",
-	"Fri": "Fri",
-	"Sat": "Sat",
-	"Su": "Su",
-	"Mo": "Mo",
-	"Tu": "Tu",
-	"We": "We",
-	"Th": "Th",
-	"Fr": "Fr",
-	"Sa": "Sa",
-	"S_Sun_Initial": "S",
-	"M_Mon_Initial": "M",
-	"T_Tue_Initial": "T",
-	"W_Wed_Initial": "W",
-	"T_Thu_Initial": "T",
-	"F_Fri_Initial": "F",
-	"S_Sat_Initial": "S",
-	/* Month Name Strings */
-	"January": "January",
-	"February": "February",
-	"March": "March",
-	"April": "April",
-	"May": "May",			// same in English, not in other languages tho.
-	"June": "June",
-	"July": "July",
-	"August": "August",
-	"September": "September",
-	"October": "October",
-	"November": "November",
-	"December": "December",
-	"Jan_Abbr": "Jan",
-	"Feb_Abbr": "Feb",
-	"Mar_Abbr": "Mar",
-	"Apr_Abbr": "Apr",
-	"May_Abbr": "May",
-	"Jun_Abbr": "Jun",
-	"Jul_Abbr": "Jul",
-	"Aug_Abbr": "Aug",
-	"Sep_Abbr": "Sep",
-	"Oct_Abbr": "Oct",
-	"Nov_Abbr": "Nov",
-	"Dec_Abbr": "Dec",
-	/* AM/PM Designators */
-	"AM": "AM",
-	"PM": "PM",
-	"firstDayOfWeek": 0,
-	"twoDigitYearMax": 2029,
-	/*
-     * The dateElementOrder is based on the order of the 
-     * format specifiers in the formatPatterns.DatePattern. 
-     *
-     * Example:
-	 *   shortDatePattern    dateElementOrder
-	 *   ------------------  ---------------- 
-	 *   "M/d/yyyy"          "mdy"
-	 *   "dd/MM/yyyy"        "dmy"
-	 *   "yyyy-MM-dd"        "ymd"
-     *
-     * The correct dateElementOrder is required by the parser to
-     * determine the expected order of the date elements in the
-     * string being parsed.
-     */
-	"mdy": "mdy", //dateElementOrder
-	/* Standard date and time format patterns */
-	"M/d/yyyy": "M/d/yyyy",													//shortDate
-	"dddd, MMMM dd, yyyy": "dddd, MMMM dd, yyyy",							//longDate
-	"h:mm tt": "h:mm tt",													//shortTime
-	"h:mm:ss tt": "h:mm:ss tt",												//longTime
-	"dddd, MMMM dd, yyyy h:mm:ss tt": "dddd, MMMM dd, yyyy h:mm:ss tt",		//fullDateTime
-	"yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",							//sortableDateTime
-	"yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",							//universalSortableDateTime
-	"ddd, dd MMM yyyy HH:mm:ss GMT": "ddd, dd MMM yyyy HH:mm:ss GMT",		//rfc1123
-	"MMMM dd": "MMMM dd",													//monthDay
-	"MMMM, yyyy": "MMMM, yyyy",												//yearMonth
-	/* Regex Patterns
-	 * NOTE: If a string format is not parsing correctly, but you would expect
-	 * it to parse, the problem likely lies below.
-	 *
-	 * Beyond the month and day name patterns are natural language strings.
-	 * Example: "next", "today", "months"
-	 */
-	/* Months */
-	"^jan(uary)?": "^jan(uary)?",
-	"^feb(ruary)?": "^feb(ruary)?",
-	"^mar(ch)?": "^mar(ch)?",
-	"^apr(il)?": "^apr(il)?",
-	"^may": "^may",
-	"^jun(e)?": "^jun(e)?",
-	"^jul(y)?": "^jul(y)?",
-	"^aug(ust)?": "^aug(ust)?",
-	"^sep(t(ember)?)?": "^sep(t(ember)?)?",
-	"^oct(ober)?": "^oct(ober)?",
-	"^nov(ember)?": "^nov(ember)?",
-	"^dec(ember)?": "^dec(ember)?",
-	"^su(n(day)?)?": "^su(n(day)?)?",
-	"^mo(n(day)?)?": "^mo(n(day)?)?",
-	"^tu(e(s(day)?)?)?": "^tu(e(s(day)?)?)?",
-	"^we(d(nesday)?)?": "^we(d(nesday)?)?",
-	"^th(u(r(s(day)?)?)?)?": "^th(u(r(s(day)?)?)?)?",
-	"^fr(i(day)?)?": "^fr(i(day)?)?",
-	"^sa(t(urday)?)?": "^sa(t(urday)?)?",
-	"^next": "^next",
-	"^last|past|prev(ious)?": "^last|past|prev(ious)?",
-	"^(\\+|aft(er)?|from|hence)": "^(\\+|aft(er)?|from|hence)",
-	"^(\\-|bef(ore)?|ago)": "^(\\-|bef(ore)?|ago)",
-	"^yes(terday)?": "^yes(terday)?",
-	"^t(od(ay)?)?": "^t(od(ay)?)?",
-	"^tom(orrow)?": "^tom(orrow)?",
-	"^n(ow)?": "^n(ow)?",
-	"^ms|milli(second)?s?": "^ms|milli(second)?s?",
-	"^sec(ond)?s?": "^sec(ond)?s?",
-	"^mn|min(ute)?s?": "^mn|min(ute)?s?",
-	"^h(our)?s?": "^h(our)?s?",
-	"^w(eek)?s?": "^w(eek)?s?",
-	"^m(onth)?s?": "^m(onth)?s?",
-	"^d(ay)?s?": "^d(ay)?s?",
-	"^y(ear)?s?": "^y(ear)?s?",
-	"^(a|p)": "^(a|p)",
-	"^(a\\.?m?\\.?|p\\.?m?\\.?)": "^(a\\.?m?\\.?|p\\.?m?\\.?)",
-	"^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)": "^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)",
-	"^\\s*(st|nd|rd|th)": "^\\s*(st|nd|rd|th)",
-	"^\\s*(\\:|a(?!u|p)|p)": "^\\s*(\\:|a(?!u|p)|p)",
-	/* Non-DST Timezones */
-	"LINT": "LINT",		// UTC +1400
-	"TOT": "TOT",		// UTC +1300
-	"CHAST": "CHAST",	// UTC +1245
-	"NZST": "NZST",		// UTC +1200
-	"NFT": "NFT",		// UTC +1130
-	"SBT": "SBT",		// UTC +1100
-	"AEST": "AEST",		// UTC +1000
-	"ACST": "ACST",		// UTC +0930
-	"JST": "JST",		// UTC +0900
-	"CWST": "CWST",		// UTC +0845
-	"CT": "CT",			// UTC +0800
-	"ICT": "ICT",		// UTC +0700
-	"MMT": "MMT",		// UTC +0630
-	"BIOT": "BST",		// UTC +0600
-	"NPT": "NPT",		// UTC +0545
-	"IST": "IST",		// UTC +0530
-	"PKT": "PKT",		// UTC +0500
-	"AFT": "AFT",		// UTC +0430
-	"MSK": "MSK",		// UTC +0400
-	"IRST": "IRST",		// UTC +0330
-	"FET": "FET",		// UTC +0300
-	"EET": "EET",		// UTC +0200
-	"CET": "CET",		// UTC +0100
-	"UTC": "UTC",		// UTC +000
-	"GMT": "GMT",		// UTC +000
-	"CVT": "CVT",		// UTC -0100
-	"GST": "GST",		// UTC -0200
-	"BRT": "BRT",		// UTC -0300
-	"NST": "NST",		// UTC -0330
-	"AST": "AST",		// UTC -0400
-	"EST": "EST",		// UTC -0500
-	"CST": "CST",		// UTC -0600
-	"MST": "MST",		// UTC -0700
-	"PST": "PST",		// UTC -0800
-	"AKST": "AKST",		// UTC -0900
-	"MIT": "MIT",		// UTC -0930
-	"HST": "HST",		// UTC -1000
-	"SST": "SST",		// UTC -1100
-	"BIT": "BIT",		// UTC -1200
-	/* DST Timezones */
-	"CHADT": "CHADT",	// UTC +1345 ( +1245's Daylight Savings Time) 
-	"NZDT": "NZDT",		// UTC +1300 ( +1200's Daylight Savings Time) 
-	"AEDT": "AEDT",		// UTC +1100 ( +1000's Daylight Savings Time) 
-	"ACDT": "ACDT",		// UTC +1030 ( +0930's Daylight Savings Time)
-	"AZST": "AZST",		// UTC +0500 ( +0400's Daylight Savings Time) 
-	"IRDT": "IRDT",		// UTC +0430 ( +0330's Daylight Savings Time) 
-	"EEST": "EEST",		// UTC +0300 ( +0200's Daylight Savings Time) 
-	"CEST": "CEST",		// UTC +0200 ( +0100's Daylight Savings Time)
-	"BST": "BST",		// UTC +0100 ( -0000's Daylight Savings Time) 
-	"PMDT": "PMDT",		// UTC -0200 ( -0300's Daylight Savings Time) 
-	"ADT": "ADT",		// UTC -0300 ( -0400's Daylight Savings Time)
-	"NDT": "NDT",		// UTC -0230 ( -0230's Daylight Savings Time) 
-	"EDT": "EDT",		// UTC -0400 ( -0500's Daylight Savings Time) 
-	"CDT": "CDT",		// UTC -0500 ( -0600's Daylight Savings Time)
-	"MDT": "MDT",		// UTC -0600 ( -0700's Daylight Savings Time)
-	"PDT": "PDT",		// UTC -0700 ( -0800's Daylight Savings Time)
-	"AKDT": "AKDT",		// UTC -0800 ( -0900's Daylight Savings Time)
-	"HADT": "HADT"		// UTC -0900 ( -1000's Daylight Savings Time)
-};
 (function () {
 	var $D = Date;
 	var __ = function (key) {
 		var output, split, length, last;
-		if (Date.CultureStrings[key]) {
+		if (Date.CultureStrings && Date.CultureStrings[key]) {
 			output = Date.CultureStrings[key];
 		} else {
 			output = key;
@@ -816,44 +612,34 @@ Date.CultureStrings = {
 	 * The .getWeek() function does NOT convert the date to UTC. The local datetime is used. Please use .getISOWeek() to get the week of the UTC converted date.
 	 * @return {Number}  1 to 53
 	 */
-	$P.getWeek = function () {
-		var a, b, c, d, e, f, g, n, s, w;
-		
-		$y = (!$y) ? this.getFullYear() : $y;
-		$m = (!$m) ? this.getMonth() + 1 : $m;
-		$d = (!$d) ? this.getDate() : $d;
-
-		if ($m <= 2) {
-			a = $y - 1;
-			b = (a / 4 | 0) - (a / 100 | 0) + (a / 400 | 0);
-			c = ((a - 1) / 4 | 0) - ((a - 1) / 100 | 0) + ((a - 1) / 400 | 0);
-			s = b - c;
-			e = 0;
-			f = $d - 1 + (31 * ($m - 1));
+	$P.getWeek = function (utc) {
+		// Create a copy of this date object  
+		var self, target = new Date(this.valueOf());
+		if (utc) {
+			target.addMinutes(target.getTimezoneOffset());
+			self = target.clone();
 		} else {
-			a = $y;
-			b = (a / 4 | 0) - (a / 100 | 0) + (a / 400 | 0);
-			c = ((a - 1) / 4 | 0) - ((a - 1) / 100 | 0) + ((a - 1) / 400 | 0);
-			s = b - c;
-			e = s + 1;
-			f = $d + ((153 * ($m - 3) + 2) / 5) + 58 + s;
+			self = this;
 		}
-		
-		g = (a + b) % 7;
-		d = (f + g - e) % 7;
-		n = (f + 3 - d) | 0;
-
-		if (n < 0) {
-			w = 53 - ((g - s) / 5 | 0);
-		} else if (n > 364 + s) {
-			w = 1;
-		} else {
-			w = (n / 7 | 0) + 1;
+		// ISO week date weeks start on monday  
+		// so correct the day number  
+		var dayNr = (self.getDay() + 6) % 7;
+		// ISO 8601 states that week 1 is the week  
+		// with the first thursday of that year.  
+		// Set the target date to the thursday in the target week  
+		target.setDate(target.getDate() - dayNr + 3);
+		// Store the millisecond value of the target date  
+		var firstThursday = target.valueOf();
+		// Set the target to the first thursday of the year  
+		// First set the target to january first  
+		target.setMonth(0, 1);
+		// Not a thursday? Correct the date to the next thursday  
+		if (target.getDay() !== 4) {
+			target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
 		}
-		
-		$y = $m = $d = null;
-		
-		return w;
+		// The weeknumber is the number of weeks between the   
+		// first thursday of the year and the thursday in the target week  
+		return 1 + Math.ceil((firstThursday - target) / 604800000); // 604800000 = 7 * 24 * 3600 * 1000  
 	};
 	
 	/**
@@ -862,10 +648,7 @@ Date.CultureStrings = {
 	 * @return {String}  "01" to "53"
 	 */
 	$P.getISOWeek = function () {
-		$y = this.getUTCFullYear();
-		$m = this.getUTCMonth() + 1;
-		$d = this.getUTCDate();
-		return p(this.getWeek());
+		return p(this.getWeek(true));
 	};
 
 	/**
@@ -1076,25 +859,8 @@ Date.CultureStrings = {
 	 * @return {String} 
 	 */
 	$P.getOrdinate = function () {
-		var num = this.getDate(),
-			numStr = num.toString(),
-			last = numStr.slice(-1),
-			ord = "";
-			switch (last) {
-				case "1":
-					ord = numStr.slice(-2) === "11" ? "th" : "st";
-					break;
-				case "2":
-					ord = numStr.slice(-2) === "12" ? "th" : "nd";
-					break;
-				case "3":
-					ord = numStr.slice(-2) === "13" ? "th" : "rd";
-					break;
-				default:
-					ord = "th";
-					break;
-			}
-		return ord;
+		var num = this.getDate();
+		return ord(num);
 	};
 	/**
 	 * Get the Ordinal day (numeric day number) of the year, adjusted for leap year.
@@ -1257,6 +1023,23 @@ Date.CultureStrings = {
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
 	 * @return {String}  A string representation of the current Date object.
 	 */
+	
+	var ord = function (n) {
+		switch (n * 1) {
+		case 1:
+		case 21:
+		case 31:
+			return "st";
+		case 2:
+		case 22:
+			return "nd";
+		case 3:
+		case 23:
+			return "rd";
+		default:
+			return "th";
+		}
+	};
 	$P.toString = function (format) {
 		var x = this;
 		
@@ -1289,22 +1072,7 @@ Date.CultureStrings = {
 			}
 		}
 		
-		var ord = function (n) {
-				switch (n * 1) {
-				case 1:
-				case 21:
-				case 31:
-					return "st";
-				case 2:
-				case 22:
-					return "nd";
-				case 3:
-				case 23:
-					return "rd";
-				default:
-					return "th";
-				}
-			};
+
 		
 		return format ? format.replace(/(\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)/g,
 		function (m) {
