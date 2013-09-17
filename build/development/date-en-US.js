@@ -101,7 +101,7 @@ Date.CultureStrings = {
 	"dddd, MMMM dd, yyyy h:mm:ss tt": "dddd, MMMM dd, yyyy h:mm:ss tt",		//fullDateTime
 	"yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",							//sortableDateTime
 	"yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",							//universalSortableDateTime
-	"ddd, dd MMM yyyy HH:mm:ss GMT": "ddd, dd MMM yyyy HH:mm:ss GMT",		//rfc1123
+	"ddd, dd MMM yyyy HH:mm:ss": "ddd, dd MMM yyyy HH:mm:ss",				//rfc1123 (GMT is added after parsing)
 	"MMMM dd": "MMMM dd",													//monthDay
 	"MMMM, yyyy": "MMMM, yyyy",												//yearMonth
 	/* Regex Patterns
@@ -347,7 +347,7 @@ Date.CultureStrings = {
 				fullDateTime: __("dddd, MMMM dd, yyyy h:mm:ss tt"),
 				sortableDateTime: __("yyyy-MM-ddTHH:mm:ss"),
 				universalSortableDateTime: __("yyyy-MM-dd HH:mm:ssZ"),
-				rfc1123: __("ddd, dd MMM yyyy HH:mm:ss GMT"),
+				rfc1123: __("ddd, dd MMM yyyy HH:mm:ss"),
 				monthDay: __("MMMM dd"),
 				yearMonth: __("MMMM, yyyy")
 			},
@@ -1272,7 +1272,7 @@ Date.CultureStrings = {
 			case "m":
 				return x.t(c.monthDay);
 			case "r":
-				return x.t(c.rfc1123);
+				return x.t(c.rfc1123) + " GMT";
 			case "s":
 				return x.t(c.sortableDateTime);
 			case "t":
