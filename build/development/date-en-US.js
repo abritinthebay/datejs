@@ -1,7 +1,7 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-16
- * Date: 2013-09-16
+ * Version: 1.0-alpha-2013-09-17
+ * Date: 2013-09-17
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -214,8 +214,8 @@ Date.CultureStrings = {
 };
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-16
- * Date: 2013-09-16
+ * Version: 1.0-alpha-2013-09-17
+ * Date: 2013-09-17
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -225,7 +225,7 @@ Date.CultureStrings = {
 	var $D = Date;
 	var __ = function (key) {
 		var output, split, length, last;
-		if (Date.CultureStrings[key]) {
+		if (Date.CultureStrings && Date.CultureStrings[key]) {
 			output = Date.CultureStrings[key];
 		} else {
 			output = key;
@@ -826,44 +826,34 @@ Date.CultureStrings = {
 	 * The .getWeek() function does NOT convert the date to UTC. The local datetime is used. Please use .getISOWeek() to get the week of the UTC converted date.
 	 * @return {Number}  1 to 53
 	 */
-	$P.getWeek = function () {
-		var a, b, c, d, e, f, g, n, s, w;
-		
-		$y = (!$y) ? this.getFullYear() : $y;
-		$m = (!$m) ? this.getMonth() + 1 : $m;
-		$d = (!$d) ? this.getDate() : $d;
-
-		if ($m <= 2) {
-			a = $y - 1;
-			b = (a / 4 | 0) - (a / 100 | 0) + (a / 400 | 0);
-			c = ((a - 1) / 4 | 0) - ((a - 1) / 100 | 0) + ((a - 1) / 400 | 0);
-			s = b - c;
-			e = 0;
-			f = $d - 1 + (31 * ($m - 1));
+	$P.getWeek = function (utc) {
+		// Create a copy of this date object  
+		var self, target = new Date(this.valueOf());
+		if (utc) {
+			target.addMinutes(target.getTimezoneOffset());
+			self = target.clone();
 		} else {
-			a = $y;
-			b = (a / 4 | 0) - (a / 100 | 0) + (a / 400 | 0);
-			c = ((a - 1) / 4 | 0) - ((a - 1) / 100 | 0) + ((a - 1) / 400 | 0);
-			s = b - c;
-			e = s + 1;
-			f = $d + ((153 * ($m - 3) + 2) / 5) + 58 + s;
+			self = this;
 		}
-		
-		g = (a + b) % 7;
-		d = (f + g - e) % 7;
-		n = (f + 3 - d) | 0;
-
-		if (n < 0) {
-			w = 53 - ((g - s) / 5 | 0);
-		} else if (n > 364 + s) {
-			w = 1;
-		} else {
-			w = (n / 7 | 0) + 1;
+		// ISO week date weeks start on monday  
+		// so correct the day number  
+		var dayNr = (self.getDay() + 6) % 7;
+		// ISO 8601 states that week 1 is the week  
+		// with the first thursday of that year.  
+		// Set the target date to the thursday in the target week  
+		target.setDate(target.getDate() - dayNr + 3);
+		// Store the millisecond value of the target date  
+		var firstThursday = target.valueOf();
+		// Set the target to the first thursday of the year  
+		// First set the target to january first  
+		target.setMonth(0, 1);
+		// Not a thursday? Correct the date to the next thursday  
+		if (target.getDay() !== 4) {
+			target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
 		}
-		
-		$y = $m = $d = null;
-		
-		return w;
+		// The weeknumber is the number of weeks between the   
+		// first thursday of the year and the thursday in the target week  
+		return 1 + Math.ceil((firstThursday - target) / 604800000); // 604800000 = 7 * 24 * 3600 * 1000  
 	};
 	
 	/**
@@ -872,10 +862,7 @@ Date.CultureStrings = {
 	 * @return {String}  "01" to "53"
 	 */
 	$P.getISOWeek = function () {
-		$y = this.getUTCFullYear();
-		$m = this.getUTCMonth() + 1;
-		$d = this.getUTCDate();
-		return p(this.getWeek());
+		return p(this.getWeek(true));
 	};
 
 	/**
@@ -1086,25 +1073,8 @@ Date.CultureStrings = {
 	 * @return {String} 
 	 */
 	$P.getOrdinate = function () {
-		var num = this.getDate(),
-			numStr = num.toString(),
-			last = numStr.slice(-1),
-			ord = "";
-			switch (last) {
-				case "1":
-					ord = numStr.slice(-2) === "11" ? "th" : "st";
-					break;
-				case "2":
-					ord = numStr.slice(-2) === "12" ? "th" : "nd";
-					break;
-				case "3":
-					ord = numStr.slice(-2) === "13" ? "th" : "rd";
-					break;
-				default:
-					ord = "th";
-					break;
-			}
-		return ord;
+		var num = this.getDate();
+		return ord(num);
 	};
 	/**
 	 * Get the Ordinal day (numeric day number) of the year, adjusted for leap year.
@@ -1267,6 +1237,23 @@ Date.CultureStrings = {
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
 	 * @return {String}  A string representation of the current Date object.
 	 */
+	
+	var ord = function (n) {
+		switch (n * 1) {
+		case 1:
+		case 21:
+		case 31:
+			return "st";
+		case 2:
+		case 22:
+			return "nd";
+		case 3:
+		case 23:
+			return "rd";
+		default:
+			return "th";
+		}
+	};
 	$P.toString = function (format) {
 		var x = this;
 		
@@ -1299,22 +1286,7 @@ Date.CultureStrings = {
 			}
 		}
 		
-		var ord = function (n) {
-				switch (n * 1) {
-				case 1:
-				case 21:
-				case 31:
-					return "st";
-				case 2:
-				case 22:
-					return "nd";
-				case 3:
-				case 23:
-					return "rd";
-				default:
-					return "th";
-				}
-			};
+
 		
 		return format ? format.replace(/(\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)/g,
 		function (m) {
