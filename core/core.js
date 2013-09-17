@@ -214,7 +214,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addMilliseconds = function (value) {
-		this.setMilliseconds(this.getMilliseconds() + value * 1);
+		this.setTime(this.getTime() + value * 1);
 		return this;
 	};
 
