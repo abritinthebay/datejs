@@ -527,6 +527,24 @@
 	};
 
 	/**
+	 * Adds the specified number of weekdays (ie - not sat or sun) to this instance. 
+	 * @param {Number}   The number of days to add. The number can be positive or negative [Required]
+	 * @return {Date}    this
+	 */
+	$P.addWeekdays = function (value) {
+		var day = this.getDay();
+		var weeks = (Math.ceil(value/7));
+		if (day === 0 || day === 6) {
+			this.next().monday();
+		}
+		if (value > 5 || (6-day) <= value) {
+			value = value + (weeks * 2);
+		}
+		// this.setDate(this.getDate() + value * 1);
+		return this.addDays(value);
+	};
+
+	/**
 	 * Adds the specified number of weeks to this instance. 
 	 * @param {Number}   The number of weeks to add. The number can be positive or negative [Required]
 	 * @return {Date}    this
@@ -2543,7 +2561,7 @@
 	// All culture-specific strings can be found in the CultureInfo files. See /trunk/src/globalization/.
 	var dx = ("sunday monday tuesday wednesday thursday friday saturday").split(/\s/),
 		mx = ("january february march april may june july august september october november december").split(/\s/),
-		px = ("Millisecond Second Minute Hour Day Week Month Year").split(/\s/),
+		px = ("Millisecond Second Minute Hour Day Week Month Year Weekday").split(/\s/),
 		pxf = ("Milliseconds Seconds Minutes Hours Date Week Month FullYear").split(/\s/),
 		nth = ("final first second third fourth fifth").split(/\s/),
 		de;
