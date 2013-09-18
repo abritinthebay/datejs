@@ -247,7 +247,7 @@
 	// All culture-specific strings can be found in the CultureInfo files. See /trunk/src/globalization/.
 	var dx = ("sunday monday tuesday wednesday thursday friday saturday").split(/\s/),
 		mx = ("january february march april may june july august september october november december").split(/\s/),
-		px = ("Millisecond Second Minute Hour Day Week Month Year").split(/\s/),
+		px = ("Millisecond Second Minute Hour Day Week Month Year Weekday").split(/\s/),
 		pxf = ("Milliseconds Seconds Minutes Hours Date Week Month FullYear").split(/\s/),
 		nth = ("final first second third fourth fifth").split(/\s/),
 		de;
