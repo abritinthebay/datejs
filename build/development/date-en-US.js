@@ -2428,11 +2428,13 @@ Date.CultureStrings = {
 		if (s instanceof Date) {
 			return s.clone();
 		}
-
-		try {
-			testDate = new Date(Date._parse(s));
-			time = testDate.getTime();
-		} catch (e) {}
+		// If it's not an arithmetic string (because JS WILL parse those, just not how we want it to) 
+		if (s[0] !== "+" && s[0] !== "-") {
+			try {
+				testDate = new Date(Date._parse(s));
+				time = testDate.getTime();
+			} catch (e) {}
+		}
 		// The following will be FALSE if time is NaN which happens if date is an Invalid Date or it err'd
 		// (yes, invalid dates are still date objects. Go figure.)
 		if (time !== undefined && time === time) {
