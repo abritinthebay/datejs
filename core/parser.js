@@ -285,7 +285,6 @@
 					// we can get any more matches from the remaining (unmatched)
 					// elements ...
 					if (!last) {
-
 						// build a list of the remaining rules we can match against,
 						// i.e., all but the one we just matched against
 						var qx = [];
@@ -604,7 +603,9 @@
 			}
 
 			var r = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second, this.millisecond);
-
+			if (this.year < 100) {
+				r.setFullYear(this.year); // means years less that 100 are process correctly. JS will parse it otherwise as 1900-1999.
+			}
 			if (this.timezone) {
 				r.set({ timezone: this.timezone });
 			} else if (this.timezoneOffset) {
