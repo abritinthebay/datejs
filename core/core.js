@@ -769,12 +769,12 @@
 			return "th";
 		}
 	};
-	$P.toString = function (format) {
+	$P.toString = function (format, ignoreStandards) {
 		var x = this;
 		
 		// Standard Date and Time Format Strings. Formats pulled from CultureInfo file and
 		// may vary by culture. 
-		if (format && format.length === 1) {
+		if (!ignoreStandards && format && format.length === 1) {
 			var c = Date.CultureInfo.formatPatterns;
 			x.t = x.toString;
 			switch (format) {
