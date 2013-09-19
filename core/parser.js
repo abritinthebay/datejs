@@ -516,11 +516,17 @@
 			var s = x[0];
 			return function () {
 				this.day = Number(s.match(/\d+/)[0]);
+				if (this.day < 1) {
+					throw "invalid day";
+				}
 			};
 		},
 		month: function (s) {
 			return function () {
-				this.month = (s.length == 3) ? "jan feb mar apr may jun jul aug sep oct nov dec".indexOf(s)/4 : Number(s) - 1;
+				this.month = (s.length === 3) ? "jan feb mar apr may jun jul aug sep oct nov dec".indexOf(s)/4 : Number(s) - 1;
+				if (this.month < 0) {
+					throw "invalid month";
+				}
 			};
 		},
 		year: function (s) {
@@ -559,7 +565,6 @@
 			}
 			
 			var now = new Date();
-			
 			if ((this.hour || this.minute) && (!this.month && !this.year && !this.day)) {
 				this.day = now.getDate();
 			}
