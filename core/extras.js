@@ -170,9 +170,9 @@
 	 */
 	$P.$format = function (format) {
 		var x = this, y,
-			t = function (v) {
+			t = function (v, overrideStandardFormats) {
 				$f.push(v);
-				return x.toString(v);
+				return x.toString(v, overrideStandardFormats);
 			};
 		return format ? format.replace(/(%|\\)?.|%%/g,
 		function (m) {
@@ -188,7 +188,7 @@
 				return t("ddd");
 			case "j":
 			case "%e":
-				return t("d");
+				return t("d", true);
 			case "l":
 			case "%A":
 				return t("dddd");
