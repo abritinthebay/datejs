@@ -247,8 +247,8 @@
 	// All culture-specific strings can be found in the CultureInfo files. See /trunk/src/globalization/.
 	var dx = ("sunday monday tuesday wednesday thursday friday saturday").split(/\s/),
 		mx = ("january february march april may june july august september october november december").split(/\s/),
-		px = ("Millisecond Second Minute Hour Day Week Month Year Weekday").split(/\s/),
-		pxf = ("Milliseconds Seconds Minutes Hours Date Week Month FullYear").split(/\s/),
+		px = ("Millisecond Second Minute Hour Day Week Month Year Quarter Weekday").split(/\s/),
+		pxf = ("Milliseconds Seconds Minutes Hours Date Week Month FullYear Quarter").split(/\s/),
 		nth = ("final first second third fourth fifth").split(/\s/),
 		de;
 
@@ -271,7 +271,9 @@
 	$P.toObject = function () {
 		var o = {};
 		for (var i = 0; i < px.length; i++) {
-			o[px[i].toLowerCase()] = this["get" + pxf[i]]();
+			if (this["get" + pxf[i]]) {
+				o[px[i].toLowerCase()] = this["get" + pxf[i]]();
+			}
 		}
 		return o;
 	};

@@ -139,6 +139,19 @@
 		return null;
 	};
 
+	$D.getQuarter = function (d) {
+		d = d || new Date(); // If no date supplied, use today
+		var q = [1,2,3,4];
+		return q[Math.floor(d.getMonth() / 3)];
+	};
+
+	$D.getDaysLeftInQuarter = function (d) {
+		d = d || new Date();
+		var qEnd = new Date(d);
+		qEnd.setMonth(qEnd.getMonth() + 3 - qEnd.getMonth() % 3, 0);
+		return Math.floor((qEnd - d) / 8.64e7);
+	};
+
 	/**
 	 * Returns a new Date object that is an exact date and time copy of the original instance.
 	 * @return {Date}    A new Date instance
@@ -295,6 +308,13 @@
 		return this;
 	};
 
+	$P.addQuarters = function (value) {
+		// note this will take you to the same point in the quarter as you are now.
+		// i.e. - if you are 15 days into the quarter you'll be 15 days into the resulting one.
+		// bonus: this allows adding fractional quarters
+		return this.addMonths(value * 3);
+	};
+
 	/**
 	 * Adds the specified number of years to this instance. 
 	 * @param {Number}   The number of years to add. The number can be positive or negative [Required]
@@ -405,6 +425,19 @@
 	 */
 	$P.setWeek = function (n) {
 		return this.addWeeks(n - this.getWeek()).moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1));
+	};
+
+	$P.setQuarter = function (qtr) {
+		var month = Math.abs(((qtr-1) * 3) + 1);
+		return this.setMonth(month, 1);
+	};
+
+	$P.getQuarter = function () {
+		return Date.getQuarter(this);
+	};
+
+	$P.getDaysLeftInQuarter = function () {
+		return Date.getDaysLeftInQuarter(this);
 	};
 
 	// private
