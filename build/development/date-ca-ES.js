@@ -1,7 +1,7 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-18
- * Date: 2013-09-18
+ * Version: 1.0-alpha-2013-09-30
+ * Date: 2013-09-30
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -187,8 +187,8 @@ Date.CultureStrings = {
 
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-18
- * Date: 2013-09-18
+ * Version: 1.0-alpha-2013-09-30
+ * Date: 2013-09-30
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -597,6 +597,19 @@ Date.CultureStrings = {
 		return null;
 	};
 
+	$D.getQuarter = function (d) {
+		d = d || new Date(); // If no date supplied, use today
+		var q = [1,2,3,4];
+		return q[Math.floor(d.getMonth() / 3)];
+	};
+
+	$D.getDaysLeftInQuarter = function (d) {
+		d = d || new Date();
+		var qEnd = new Date(d);
+		qEnd.setMonth(qEnd.getMonth() + 3 - qEnd.getMonth() % 3, 0);
+		return Math.floor((qEnd - d) / 8.64e7);
+	};
+
 	/**
 	 * Returns a new Date object that is an exact date and time copy of the original instance.
 	 * @return {Date}    A new Date instance
@@ -753,6 +766,13 @@ Date.CultureStrings = {
 		return this;
 	};
 
+	$P.addQuarters = function (value) {
+		// note this will take you to the same point in the quarter as you are now.
+		// i.e. - if you are 15 days into the quarter you'll be 15 days into the resulting one.
+		// bonus: this allows adding fractional quarters
+		return this.addMonths(value * 3);
+	};
+
 	/**
 	 * Adds the specified number of years to this instance. 
 	 * @param {Number}   The number of years to add. The number can be positive or negative [Required]
@@ -863,6 +883,19 @@ Date.CultureStrings = {
 	 */
 	$P.setWeek = function (n) {
 		return this.addWeeks(n - this.getWeek()).moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1));
+	};
+
+	$P.setQuarter = function (qtr) {
+		var month = Math.abs(((qtr-1) * 3) + 1);
+		return this.setMonth(month, 1);
+	};
+
+	$P.getQuarter = function () {
+		return Date.getQuarter(this);
+	};
+
+	$P.getDaysLeftInQuarter = function () {
+		return Date.getDaysLeftInQuarter(this);
 	};
 
 	// private
@@ -1853,11 +1886,17 @@ Date.CultureStrings = {
 			var s = x[0];
 			return function () {
 				this.day = Number(s.match(/\d+/)[0]);
+				if (this.day < 1) {
+					throw "invalid day";
+				}
 			};
 		},
 		month: function (s) {
 			return function () {
-				this.month = (s.length == 3) ? "jan feb mar apr may jun jul aug sep oct nov dec".indexOf(s)/4 : Number(s) - 1;
+				this.month = (s.length === 3) ? "jan feb mar apr may jun jul aug sep oct nov dec".indexOf(s)/4 : Number(s) - 1;
+				if (this.month < 0) {
+					throw "invalid month";
+				}
 			};
 		},
 		year: function (s) {
@@ -1896,7 +1935,6 @@ Date.CultureStrings = {
 			}
 			
 			var now = new Date();
-			
 			if ((this.hour || this.minute) && (!this.month && !this.year && !this.day)) {
 				this.day = now.getDate();
 			}
@@ -2205,7 +2243,7 @@ Date.CultureStrings = {
 		_.any(
 		// translate format specifiers into grammar rules
 		_.process(
-		_.rtoken(/^(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|zz?z?)/),
+		_.rtoken(/^(dd?d?d?(?!e)|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|zz?z?)/),
 		function (fmt) {
 		if (g[fmt]) {
 			return g[fmt];
@@ -2748,8 +2786,8 @@ Date.CultureStrings = {
 	// All culture-specific strings can be found in the CultureInfo files. See /trunk/src/globalization/.
 	var dx = ("sunday monday tuesday wednesday thursday friday saturday").split(/\s/),
 		mx = ("january february march april may june july august september october november december").split(/\s/),
-		px = ("Millisecond Second Minute Hour Day Week Month Year Weekday").split(/\s/),
-		pxf = ("Milliseconds Seconds Minutes Hours Date Week Month FullYear").split(/\s/),
+		px = ("Millisecond Second Minute Hour Day Week Month Year Quarter Weekday").split(/\s/),
+		pxf = ("Milliseconds Seconds Minutes Hours Date Week Month FullYear Quarter").split(/\s/),
 		nth = ("final first second third fourth fifth").split(/\s/),
 		de;
 
@@ -2772,7 +2810,9 @@ Date.CultureStrings = {
 	$P.toObject = function () {
 		var o = {};
 		for (var i = 0; i < px.length; i++) {
-			o[px[i].toLowerCase()] = this["get" + pxf[i]]();
+			if (this["get" + pxf[i]]) {
+				o[px[i].toLowerCase()] = this["get" + pxf[i]]();
+			}
 		}
 		return o;
 	};
@@ -3136,9 +3176,9 @@ Date.CultureStrings = {
 	 */
 	$P.$format = function (format) {
 		var x = this, y,
-			t = function (v) {
+			t = function (v, overrideStandardFormats) {
 				$f.push(v);
-				return x.toString(v);
+				return x.toString(v, overrideStandardFormats);
 			};
 		return format ? format.replace(/(%|\\)?.|%%/g,
 		function (m) {
@@ -3154,7 +3194,7 @@ Date.CultureStrings = {
 				return t("ddd");
 			case "j":
 			case "%e":
-				return t("d");
+				return t("d", true);
 			case "l":
 			case "%A":
 				return t("dddd");
