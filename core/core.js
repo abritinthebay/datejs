@@ -42,6 +42,41 @@
 		return new Date().clearTime();
 	};
 
+	/** 
+	 * Gets a date that is set to the current date and time (same as new Date, but chainable)
+	 * @return {Date}    The current date.
+	 */
+	$D.present = function () {
+		return new Date();
+	};
+
+	/** 
+	 * Overload of Date.now. Allows an alternate call for Date.now where it returns the 
+	 * current Date as an object rather than just milliseconds since the Unix Epoch.
+	 *
+	 * Also provides an implementation of now() for browsers (IE<9) that don't have it.
+	 * 
+	 * Backwards compatible so with work with either:
+	 *  Date.now() [returns ms]
+	 * or
+	 *  Date.now(true) [returns Date]
+	 */
+	if (!$D.now) {
+		$D._now = function now() {
+			return new Date().getTime();
+		};
+	} else {
+		$D._now = $D.now;
+	}
+
+	$D.now = function (returnObj) {
+		if (returnObj) {
+			return $D.present();
+		} else {
+			return $D._now();
+		}
+	};
+
 	/**
 	 * Compares the first date to the second date and returns an number indication of their relative values.  
 	 * @param {Date}     First Date object to compare [Required].
