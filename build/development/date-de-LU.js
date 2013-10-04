@@ -1,7 +1,7 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-30
- * Date: 2013-09-30
+ * Version: 1.0-alpha-2013-10-04
+ * Date: 2013-10-04
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -187,8 +187,8 @@ Date.CultureStrings = {
 
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-09-30
- * Date: 2013-09-30
+ * Version: 1.0-alpha-2013-10-04
+ * Date: 2013-10-04
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -2177,8 +2177,7 @@ Date.CultureStrings = {
 	));
 	g.M = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d|\d)/), t.month));
 	g.MM = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d)/), t.month));
-	g.MMM = g.MMMM = _.cache(_.process(
-		g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
+	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join("")), t.month));
 	g.y = _.cache(_.process(_.rtoken(/^(\d\d?)/), t.year));
 	g.yy = _.cache(_.process(_.rtoken(/^(\d\d)/), t.year));
 	g.yyy = _.cache(_.process(_.rtoken(/^(\d\d?\d?\d?)/), t.year));
