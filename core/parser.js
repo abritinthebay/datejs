@@ -807,8 +807,7 @@
 	));
 	g.M = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d|\d)/), t.month));
 	g.MM = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d)/), t.month));
-	g.MMM = g.MMMM = _.cache(_.process(
-		g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
+	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join("")), t.month));
 	g.y = _.cache(_.process(_.rtoken(/^(\d\d?)/), t.year));
 	g.yy = _.cache(_.process(_.rtoken(/^(\d\d)/), t.year));
 	g.yyy = _.cache(_.process(_.rtoken(/^(\d\d?\d?\d?)/), t.year));
