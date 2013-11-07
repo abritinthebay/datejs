@@ -975,8 +975,6 @@
 		} catch (e) {}
 		return g._start.call({}, s);
 	};
-	
-	$D._parse = $D.parse;
 
 	/**
 	 * Converts the specified string value into its JavaScript Date equivalent using CultureInfo specific format information.
@@ -1078,7 +1076,7 @@
 	 * @param {String}   The string value to convert into a Date object [Required]
 	 * @return {Date}    A Date object or null if the string cannot be converted into a Date.
 	 */
-	$D.parse = function (s) {
+	var parse = function (s) {
 		var testDate, time, r = null;
 		if (!s) {
 			return null;
@@ -1107,6 +1105,11 @@
 		}
 	};
 
+	if (!$D._parse) {
+		$D._parse = $D.parse;
+	}
+	$D.parse = parse;
+	
 	// $D.getParseFunction = function (fx) {
 	// 	var fn = $D.Grammar.formats(fx);
 	// 	return function (s) {

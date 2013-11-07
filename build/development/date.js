@@ -1,7 +1,7 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-10-04
- * Date: 2013-10-04
+ * Version: 1.0-alpha-2013-11-07
+ * Date: 2013-11-07
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -179,18 +179,7 @@
 				ordinalSuffix: __("^\\s*(st|nd|rd|th)"),
 				timeContext: __("^\\s*(\\:|a(?!u|p)|p)")
 			},
-			timezones: [
-				// { name: "UTC", offset: "-000"},
-				// { name: "GMT", offset: "-000"},
-				// { name: "EST", offset: "-0500"},
-				// { name: "EDT", offset: "-0400"},
-				// { name: "CST", offset: "-0600"},
-				// { name: "CDT", offset: "-0500"},
-				// { name: "MST", offset: "-0700"},
-				// { name: "MDT", offset: "-0600"},
-				// { name: "PST", offset: "-0800"},
-				// { name: "PDT", offset: "-0700"}
-			],
+			timezones: [],
 			abbreviatedTimeZoneDST: {},
 			abbreviatedTimeZoneStandard: {}
 		};
@@ -237,8 +226,8 @@
 		info.abbreviatedTimeZoneStandard[__("FET")] = "+0300";
 		info.abbreviatedTimeZoneStandard[__("EET")] = "+0200";
 		info.abbreviatedTimeZoneStandard[__("CET")] = "+0100";
-		info.abbreviatedTimeZoneStandard[__("UTC")] = "+000";
-		info.abbreviatedTimeZoneStandard[__("GMT")] = "+000";
+		info.abbreviatedTimeZoneStandard[__("GMT")] = "+0000";
+		info.abbreviatedTimeZoneStandard[__("UTC")] = "+0000";
 		info.abbreviatedTimeZoneStandard[__("CVT")] = "-0100";
 		info.abbreviatedTimeZoneStandard[__("GST")] = "-0200";
 		info.abbreviatedTimeZoneStandard[__("BRT")] = "-0300";
@@ -311,6 +300,41 @@
 	 */
 	$D.today = function () {
 		return new Date().clearTime();
+	};
+
+	/** 
+	 * Gets a date that is set to the current date and time (same as new Date, but chainable)
+	 * @return {Date}    The current date.
+	 */
+	$D.present = function () {
+		return new Date();
+	};
+
+	/** 
+	 * Overload of Date.now. Allows an alternate call for Date.now where it returns the 
+	 * current Date as an object rather than just milliseconds since the Unix Epoch.
+	 *
+	 * Also provides an implementation of now() for browsers (IE<9) that don't have it.
+	 * 
+	 * Backwards compatible so with work with either:
+	 *  Date.now() [returns ms]
+	 * or
+	 *  Date.now(true) [returns Date]
+	 */
+	if (!$D.now) {
+		$D._now = function now() {
+			return new Date().getTime();
+		};
+	} else if (!$D._now) {
+		$D._now = $D.now;
+	}
+
+	$D.now = function (returnObj) {
+		if (returnObj) {
+			return $D.present();
+		} else {
+			return $D._now();
+		}
 	};
 
 	/**
@@ -2158,8 +2182,6 @@
 		} catch (e) {}
 		return g._start.call({}, s);
 	};
-	
-	$D._parse = $D.parse;
 
 	/**
 	 * Converts the specified string value into its JavaScript Date equivalent using CultureInfo specific format information.
@@ -2261,7 +2283,7 @@
 	 * @param {String}   The string value to convert into a Date object [Required]
 	 * @return {Date}    A Date object or null if the string cannot be converted into a Date.
 	 */
-	$D.parse = function (s) {
+	var parse = function (s) {
 		var testDate, time, r = null;
 		if (!s) {
 			return null;
@@ -2290,6 +2312,11 @@
 		}
 	};
 
+	if (!$D._parse) {
+		$D._parse = $D.parse;
+	}
+	$D.parse = parse;
+	
 	// $D.getParseFunction = function (fx) {
 	// 	var fn = $D.Grammar.formats(fx);
 	// 	return function (s) {

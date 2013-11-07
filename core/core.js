@@ -65,7 +65,7 @@
 		$D._now = function now() {
 			return new Date().getTime();
 		};
-	} else {
+	} else if (!$D._now) {
 		$D._now = $D.now;
 	}
 
