@@ -104,7 +104,7 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['concat:basic']);
+	grunt.registerTask('default', ['build_dev']);
 	grunt.registerMultiTask('i18n', 'Wraps DateJS core with Internationalization info.', function() {
 		var data = this.data,
 			path = require('path'),
