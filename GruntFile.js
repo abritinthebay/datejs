@@ -10,15 +10,15 @@ var getI18NFiles = function () {
 	return fs.readdirSync(dirs.i18n);
 };
 
-var buildUglifyFileList = function (dev) {
+var buildMinifyFileList = function (dev) {
 	var output_path = dev ? 'development' : 'production';
 	var output_ext = dev ? '.' : '.min.';
 	var files = getI18NFiles();
 	var output = {};
 	files.map(function(item){
 		var file_core_name = 'date-' + item.replace('.js', '');
-		var dest = dirs.build + '/'+output_path+'/' + file_core_name.toLowerCase() + output_ext+'js';
-		output[dest] = [dirs.build + '/development/' + file_core_name.toLowerCase() + output_ext+'js'];
+		var dest = dirs.build + '/'+output_path+'/' + file_core_name + output_ext + 'js';
+		output[dest] = [dirs.build + '/development/' + file_core_name + '.js'];
 		return dest;
 	});
 	output[dirs.build + '/'+output_path+'/' + 'date'+output_ext+'js'] = [dirs.build + '/development/' + 'date.js'];
@@ -27,20 +27,29 @@ var buildUglifyFileList = function (dev) {
 
 var banner = '/* \n' +
 			' * Name: <%= pkg.name %>\n' +
-			' * Version: <%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+			' * Version: <%= pkg.version %>-<%= pkg.state %>-<%= grunt.template.today("yyyy-mm-dd") %>\n' +
 			' * Date: <%= grunt.template.today("yyyy-mm-dd") %>\n' +
 			' * Copyright: <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
 			' * Original Project: 2008 <%= pkg.originator %>\n' +
 			' * Licence: <%= pkg.license %>\n' +
 			' * URL: <%= pkg.homepage %>\n' +
-			' */\n';
+			' */';
 
-// console.log(buildUglifyFileList());
 module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		dirs: dirs,
+		closurecompiler: {
+			minify: {
+				files: buildMinifyFileList(),
+				options: {
+					'compilation_level': 'SIMPLE_OPTIMIZATIONS',
+					'max_processes': 5,
+					'banner': banner
+				}
+			}
+		},
 		concat: {
 			options: {
 				separator: '\n',
@@ -54,9 +63,9 @@ module.exports = function(grunt) {
 					'<%= dirs.core %>/parser.js',
 					'<%= dirs.core %>/sugarpak.js',
 					'<%= dirs.core %>/extras.js',
-					'<%= dirs.core %>/time.js',
+					'<%= dirs.core %>/time.js'
 				],
-				dest: '<%= dirs.build %>/date-core.js',
+				dest: '<%= dirs.build %>/date-core.js'
 			},
 			basic: {
 				src: [
@@ -65,27 +74,9 @@ module.exports = function(grunt) {
 					'<%= dirs.core %>/parser.js',
 					'<%= dirs.core %>/sugarpak.js',
 					'<%= dirs.core %>/extras.js',
-					'<%= dirs.core %>/time.js',
+					'<%= dirs.core %>/time.js'
 				],
-				dest: '<%= dirs.build %>/development/date.js',
-			}
-		},
-		uglify: {
-			options: {
-				mangle: true,
-				compress: true,
-				preserveComments: false,
-				banner: banner,
-			},
-			development: {
-				options: {
-					compress: false,
-					mangle: false
-				},
-				files: buildUglifyFileList('dev')
-			},
-			production: {
-				files: buildUglifyFileList()
+				dest: '<%= dirs.build %>/development/date.js'
 			}
 		},
 		i18n: {
@@ -104,7 +95,6 @@ module.exports = function(grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['build_dev']);
 	grunt.registerMultiTask('i18n', 'Wraps DateJS core with Internationalization info.', function() {
 		var data = this.data,
 			path = require('path'),
@@ -123,115 +113,12 @@ module.exports = function(grunt) {
 		});
 		grunt.file.delete(dirs.build+'/date-core.js');
 	});
+	grunt.registerTask('minify', ['closurecompiler:minify']);
 	grunt.registerTask('build_dev', ['concat:core', 'concat:basic', 'i18n:core']);
-	grunt.registerTask('build_prod', ['concat:core', 'concat:basic', 'i18n:core', 'uglify:production']);
-
+	grunt.registerTask('build_prod', ['concat:core', 'concat:basic', 'i18n:core', 'minify']);
+	// now set the default
+	grunt.registerTask('default', ['build_dev']);
 	// Load the plugin that provides the "uglify" task.
-	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-closurecompiler');
 	grunt.loadNpmTasks('grunt-contrib-concat');
-	// grunt.registerMultiTask('convert', 'converts old DateJS format i18n into new format', function() {
-	// 	var data = this.data,
-	// 		path = require('path'),
-	// 		dest = grunt.template.process(data.dest),
-	// 		files = grunt.file.expand(data.src);
-	// 	require('./'+data.core);
-	// 	grunt.log.subhead('Loaded CultureStrings template file');
-	// 	var base_data = Date.CultureInfo;
-	// 	//     sep = grunt.util.linefeed,
-	// 	//     banner_compiled = grunt.template.process(banner);
-	// 	grunt.log.subhead('Processing i18n files...');
-	// 	var banner = '/* \n' +
-	// 		' * DateJS Culture String File\n' +
-	// 		' * Country Code: <%= name %>\n' +
-	// 		' * Name: <%= englishName %>\n' +
-	// 		' * Format: "key" : "value"\n' +
-	// 		' * Key is the en-US term, Value is the Key in the current language.\n' +
-	// 		' */\n';
-	// 	files.forEach(function(f) {
-	// 		require('./'+f);
-	// 		grunt.log.ok('Loaded: ' + path.basename(f).replace('.js', ''));
-	// 		if (path.basename(f).replace('.js', '') === 'en-US') {
-	// 			Date.CultureInfo = base_data;
-	// 		}
-	// 		var i, key, pattern,
-	// 			name = Date.CultureInfo.name,
-	// 			englishName = Date.CultureInfo.englishName,
-	// 			output = {};
-	// 		grunt.log.ok(name);
-	// 		var banner_compiled = grunt.template.process(banner, {data:{name: name, englishName: englishName}});
-	// 		for (var item in Date.CultureInfo) {
-	// 			if (Date.CultureInfo.hasOwnProperty(item)) {
-	// 				// grunt.log.writeln(Date.CultureInfo[item]);
-	// 				if (item === 'name' || item === 'englishName' || item === 'nativeName') {
-	// 					grunt.log.writeln(Date.CultureInfo[item]);
-	// 					output[item] = Date.CultureInfo[item];
-	// 				} else {
-	// 					switch(item){
-	// 						case 'dayNames':
-	// 						case 'abbreviatedDayNames':
-	// 						case 'shortestDayNames':
-	// 						case 'monthNames':
-	// 							for (i=0;i<Date.CultureInfo[item].length;i++) {
-	// 								// grunt.log.writeln(base_data[item][i]);
-	// 								output[base_data[item][i]] = Date.CultureInfo[item][i];
-	// 							}
-	// 							break;
-	// 						case 'firstLetterDayNames':
-	// 						case 'abbreviatedMonthNames':
-	// 							var suffix = '_Abbr';
-	// 							if (item === 'firstLetterDayNames') {
-	// 								suffix = '_Initial';
-	// 							}
-	// 							for (i=0;i<Date.CultureInfo[item].length;i++) {
-	// 								if (item === 'firstLetterDayNames') {
-	// 									key = base_data[item][i]+'_'+base_data.abbreviatedDayNames[i]+suffix;
-	// 								} else {
-	// 									key = base_data.abbreviatedMonthNames[i]+suffix;
-	// 								}
-	// 								output[key] = Date.CultureInfo[item][i];
-	// 							}
-	// 							break;
-	// 						case 'firstDayOfWeek':
-	// 						case 'twoDigitYearMax':
-	// 							output[item] = Date.CultureInfo[item];
-	// 							break;
-	// 						case 'formatPatterns':
-	// 							for (pattern in Date.CultureInfo[item]) {
-	// 								if (Date.CultureInfo[item].hasOwnProperty(pattern)) {
-	// 									output[base_data[item][pattern]] = Date.CultureInfo[item][pattern];
-	// 								}
-	// 							}
-	// 							break;
-	// 						case 'regexPatterns':
-	// 							for (pattern in Date.CultureInfo[item]) {
-	// 								if (Date.CultureInfo[item].hasOwnProperty(pattern)) {
-	// 									output[base_data[item][pattern].source] = Date.CultureInfo[item][pattern].source;
-	// 								}
-	// 							}
-	// 							break;
-	// 						case 'timezones':
-	// 							for (var zone in base_data[item]) {
-	// 								if (base_data[item].hasOwnProperty(zone)) {
-	// 									output[zone] = base_data[item][zone];
-	// 								}
-	// 							}
-	// 							break;
-	// 						default:
-	// 							if (typeof Date.CultureInfo[item] === 'string') {
-	// 								output[base_data[item]] = Date.CultureInfo[item];
-	// 							}
-	// 							break;
-	// 					}
-						
-	// 				}
-	// 			}
-	// 		}
-
-	// 		// grunt.log.writeln(banner_compiled);
-	// 		// grunt.log.writeln(JSON.stringify(output, null, '	'));
-	// 	    var p = dest + '/' + path.basename(f);
-	// 	    grunt.file.write(p, banner_compiled + 'Date.CultureStrings = ' + JSON.stringify(output, null, '	') + ';\n');
-	// 	    grunt.log.writeln('File "' + p + '" converted.');
-	// 	});
-	// });
 };
