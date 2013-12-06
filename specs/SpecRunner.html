@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>DateJS Spec Runner</title>
+	<link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+	<script type="text/javascript">
+		function require() {}; // stub out a dummy require for node compatibility with the specs
+	</script>
+	<script type="text/javascript" src="jasmine/jasmine.js"></script>
+	<script type="text/javascript" src="jasmine/jasmine-html.js"></script>
+
+	<!-- include source files here... -->
+	<script type="text/javascript" src="../core/i18n.js"></script>
+	<script type="text/javascript" src="../core/core.js"></script>
+	<script type="text/javascript" src="../core/parser.js"></script>
+	<script type="text/javascript" src="../core/sugarpak.js"></script>
+	<script type="text/javascript" src="../core/extras.js"></script>
+	<script type="text/javascript" src="../core/time.js"></script>
+	<!-- include spec files here... -->
+	<script type="text/javascript" src="Core-spec.js"></script>
+	<script type="text/javascript" src="Sugarpak-spec.js"></script>
+
+	<script type="text/javascript">
+		(function() {
+			var jasmineEnv = jasmine.getEnv();
+			jasmineEnv.updateInterval = 1000;
+			var htmlReporter = new jasmine.HtmlReporter();
+			jasmineEnv.addReporter(htmlReporter);
+			jasmineEnv.specFilter = function(spec) {
+				return htmlReporter.specFilter(spec);
+			};
+			var currentWindowOnload = window.onload;
+			window.onload = function() {
+				if (currentWindowOnload) {
+					currentWindowOnload();
+				}
+				execJasmine();
+			};
+			function execJasmine() {
+				jasmineEnv.execute();
+			}
+		})();
+	</script>
+</head>
+<body>
+	
+</body>
+</html>
