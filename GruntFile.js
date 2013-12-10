@@ -27,7 +27,7 @@ var buildMinifyFileList = function (dev) {
 
 var banner = '/* \n' +
 			' * Name: <%= pkg.name %>\n' +
-			' * Version: <%= pkg.version %>-<%= pkg.state %>-<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+			' * Version: <%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>\n' +
 			' * Date: <%= grunt.template.today("yyyy-mm-dd") %>\n' +
 			' * Copyright: <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
 			' * Original Project: 2008 <%= pkg.originator %>\n' +

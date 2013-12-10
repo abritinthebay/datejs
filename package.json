@@ -1,13 +1,12 @@
 {
   "name": "Date-JS",
-  "version": "1.0",
-  "state": "alpha",
+  "version": "1.0.0alpha",
   "description": "Datejs is an open-source JavaScript Date Library.",
   "main": "GruntFile.js",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-closurecompiler": "~0.9.6"
+    "grunt-closurecompiler": "~0.9.8"
   },
   "dependencies": {},
   "repository": {
