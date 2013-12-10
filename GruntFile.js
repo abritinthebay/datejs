@@ -40,6 +40,12 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		dirs: dirs,
+		build_dev: {
+			description: 'Builds files designed for easy debugging on dev enviroments (non-minified)'
+		},
+		build_prod: {
+			description: 'Builds production ready files (minified)'
+		},
 		closurecompiler: {
 			minify: {
 				files: buildMinifyFileList(),
@@ -113,12 +119,15 @@ module.exports = function(grunt) {
 		});
 		grunt.file.delete(dirs.build+'/date-core.js');
 	});
-	grunt.registerTask('minify', ['closurecompiler:minify']);
-	grunt.registerTask('build_dev', ['concat:core', 'concat:basic', 'i18n:core']);
-	grunt.registerTask('build_prod', ['concat:core', 'concat:basic', 'i18n:core', 'minify']);
+	grunt.registerMultiTask('build_dev', 'Builds compiled, non-minfied, files for development enviroments', function() {
+		grunt.task.run(['concat:core', 'concat:basic', 'i18n:core']);
+	});
+	grunt.registerMultiTask('build_prod', 'Rebuilds dev and minifies files for production enviroments', function() {
+		grunt.task.run(['concat:core', 'concat:basic', 'i18n:core', 'closurecompiler:minify']);
+	});
 	// now set the default
 	grunt.registerTask('default', ['build_dev']);
-	// Load the plugin that provides the "uglify" task.
+	// Load the plugin that provides the "minify" task.
 	grunt.loadNpmTasks('grunt-closurecompiler');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 };
