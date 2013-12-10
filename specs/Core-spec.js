@@ -216,7 +216,35 @@ describe("Core Library", function() {
 			expect(Date.today().equals(Date.today().addDays(1))).not.toBe(true);
 		});
 	});
-	describe("can use Set date attributes like",function (){
+	describe("can check relativity like if a Date",function (){
+		it("is between dates", function() {
+			var d = new Date(1995,11,4);
+			var b = d.between(new Date(1994, 0), new Date(1996, 0));
+			expect(b).toBe(true);
+		});
+		it("is after a date", function() {
+			var d = new Date(1995,11,4);
+			var a = d.isAfter(new Date(1996, 0));
+			var b = d.isAfter(new Date(1994, 0));
+			expect(a).toBe(false);
+			expect(b).toBe(true);
+		});
+		it("is before a date", function() {
+			var d = new Date(1995,11,4);
+			var a = d.isBefore(new Date(1996, 0));
+			var b = d.isBefore(new Date(1994, 0));
+			expect(a).toBe(true);
+			expect(b).toBe(false);
+		});
+	});
+	describe("can set Date attributes like",function (){
+		// millisecond
+		// second
+		// minute
+		// hour
+		// week
+		// timezone
+		// timezoneOffset
 		it("day", function() {
 			var d1 = new Date(2010, 1, 1);
 			var d2 = new Date(2010, 1, 10);
@@ -234,6 +262,10 @@ describe("Core Library", function() {
 			var d2 = new Date(2011, 1, 1);
 			d2.set({year: 2010});
 			expect(d1.equals(d2)).toBe(true);
+		});
+		it("year, but throws an exception when type is wrong", function() {
+			var d = new Date(2010, 1, 1);
+			expect(d.set.bind(d, {year: "string"})).toThrow(new TypeError("string is not a Number."));
 		});
 		it("year from leap day and preserve the month", function() {
 			var d1 = new Date(2009, 1, 28);
@@ -269,6 +301,12 @@ describe("Core Library", function() {
 			var d1 = new Date(2008, 1, 29);
 			var d2 = new Date(2008, 1, 29);
 			d2.set({year: 2008});
+			expect(d1.equals(d2)).toBe(true);
+		});
+		it("day, ignoring invalid month, year, and milliseconds", function() {
+			var d1 = new Date(2010, 1, 1);
+			var d2 = new Date(2010, 1, 10);
+			d2.set({day: 1, month: 24, year: -271823, milliseconds: 20000});
 			expect(d1.equals(d2)).toBe(true);
 		});
 	});
