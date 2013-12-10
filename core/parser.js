@@ -410,15 +410,16 @@
 	// not(cache(foo, bar))
 	
 	var _generator = function (op) {
-		return function () {
-			var args = null, rx = [];
+		function gen() {
+			var args, rx = [], px, i;
 			if (arguments.length > 1) {
 				args = Array.prototype.slice.call(arguments);
 			} else if (arguments[0] instanceof Array) {
 				args = arguments[0];
 			}
 			if (args) {
-				for (var i = 0, px = args.shift() ; i < px.length ; i++) {
+				px = args.shift();
+				if (px.length > 0) {
 					args.unshift(px[i]);
 					rx.push(op.apply(null, args));
 					args.shift();
@@ -427,7 +428,9 @@
 			} else {
 				return op.apply(null, arguments);
 			}
-		};
+		}
+
+		return gen;
 	};
 	
 	var gx = "optional not ignore cache".split(/\s/);
@@ -1077,14 +1080,17 @@
 	 * @return {Date}    A Date object or null if the string cannot be converted into a Date.
 	 */
 	var parse = function (s) {
-		var testDate, time, r = null;
+		var ords, testDate, time, r = null;
 		if (!s) {
 			return null;
 		}
 		if (s instanceof Date) {
 			return s.clone();
 		}
-		// If it's not an arithmetic string (because JS WILL parse those, just not how we want it to) 
+		// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
+		ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
+		s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
+		// If it's not an arithmetic string (because JS WILL parse those, just not how we want it to)
 		if (s[0] !== "+" && s[0] !== "-") {
 			try {
 				testDate = new Date(Date._parse(s));
@@ -1094,6 +1100,7 @@
 		// The following will be FALSE if time is NaN which happens if date is an Invalid Date or it err'd
 		// (yes, invalid dates are still date objects. Go figure.)
 		if (time !== undefined && time === time) {
+			// TODO - make sure that parser parses all dates so we don't have to rely on this testDate logic.
 			return testDate;
 		} else {
 			try {
