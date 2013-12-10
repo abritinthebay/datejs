@@ -6,7 +6,6 @@
   "main": "GruntFile.js",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-closurecompiler": "~0.9.6"
   },
@@ -17,8 +16,7 @@
   },
   "homepage": "https://github.com/abritinthebay/datejs",
   "bugs": {
-    "url": "http://github.com/abritinthebay/datejs/issues",
-    "email": "project@hostname.com"
+    "url": "http://github.com/abritinthebay/datejs/issues"
   },
   "keywords": [
     "date",
