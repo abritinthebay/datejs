@@ -149,6 +149,10 @@
 	 * @return {Number}  The number of days in the month.
 	 */
 	$D.getDaysInMonth = function (year, month) {
+		if (!month && $D.validateMonth(year)) {
+				month = year;
+				year = Date.today().getFullYear();
+		}
 		return [31, ($D.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 	};
  
@@ -164,11 +168,20 @@
 		return null;
 	};
 	
-	$D.getTimezoneOffset = function (name) {
-		var z = Date.CultureInfo.timezones;
-		for (var i = 0; i < z.length; i++) {
+	$D.getTimezoneOffset = function (name, dst) {
+		var i, a =[], z = Date.CultureInfo.timezones;
+		for (i = 0; i < z.length; i++) {
 			if (z[i].name === name.toUpperCase()) {
-				return z[i].offset;
+				a.push(i);
+			}
+		}
+		if (a.length === 1 || !dst) {
+			return z[a[0]].offset;
+		} else {
+			for (i=0; i < a.length; i++) {
+				if (z[a[i]].dst) {
+					return z[a[i]].offset;
+				}
 			}
 		}
 		return null;
@@ -210,7 +223,7 @@
 	 * @return {Boolean} true if dates are equal. false if they are not equal.
 	 */
 	$P.equals = function (date) {
-		return Date.equals(this, date || new Date());
+		return Date.equals(this, (date !== undefined ? date : new Date()));
 	};
 
 	/**
@@ -405,13 +418,10 @@
 		return this;
 	};
 	
-	var $y, $m, $d;
-	
 	/**
 	 * Get the week number. Week one (1) is the week which contains the first Thursday of the year. Monday is considered the first day of the week.
-	 * This algorithm is a JavaScript port of the work presented by Claus Tondering at http://www.tondering.dk/claus/cal/node8.html
-	 * .getWeek() Algorithm Copyright (c) 2008 Claus Tondering.
-	 * The .getWeek() function does NOT convert the date to UTC. The local datetime is used. Please use .getISOWeek() to get the week of the UTC converted date.
+	 * The .getWeek() function does NOT convert the date to UTC. The local datetime is used. 
+	 * Please use .getISOWeek() to get the week of the UTC converted date.
 	 * @return {Number}  1 to 53
 	 */
 	$P.getWeek = function (utc) {
@@ -541,6 +551,15 @@
 	 * @param {Number}   The number to check if within range.
 	 * @return {Boolean} true if within range, otherwise false.
 	 */
+	$D.validateWeek = function (value) {
+		return validate(value, 0, 53, "week");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for months [0-11].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
 	$D.validateMonth = function (value) {
 		return validate(value, 0, 11, "month");
 	};
@@ -551,7 +570,18 @@
 	 * @return {Boolean} true if within range, otherwise false.
 	 */
 	$D.validateYear = function (value) {
-		return validate(value, 0, 9999, "year");
+		/**
+		 * Per ECMAScript spec the range of times supported by Date objects is 
+		 * exactly –100,000,000 days to 100,000,000 days measured relative to 
+		 * midnight at the beginning of 01 January, 1970 UTC. 
+		 * This gives a range of 8,640,000,000,000,000 milliseconds to either 
+		 * side of 01 January, 1970 UTC.
+		 *
+		 * Earliest possible date: Tue, 20 Apr 271,822 B.C. 00:00:00 UTC
+		 * Latest possible date: Sat, 13 Sep 275,760 00:00:00 UTC
+		 */
+
+		return validate(value, -271822, 275760, "year");
 	};
 
 	/**
@@ -604,7 +634,7 @@
 			this.setTimezoneOffset(config.timezoneOffset);
 		}
 
-		if (config.week && validate(config.week, 0, 53, "week")) {
+		if (config.week && $D.validateWeek(config.week)) {
 			this.setWeek(config.week);
 		}
 		
