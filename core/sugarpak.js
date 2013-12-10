@@ -244,7 +244,7 @@
 	};
 
 	// Do NOT modify the following string tokens. These tokens are used to build dynamic functions.
-	// All culture-specific strings can be found in the CultureInfo files. See /trunk/src/globalization/.
+	// All culture-specific strings can be found in the CultureInfo files.
 	var dx = ("sunday monday tuesday wednesday thursday friday saturday").split(/\s/),
 		mx = ("january february march april may june july august september october november december").split(/\s/),
 		px = ("Millisecond Second Minute Hour Day Week Month Year Quarter Weekday").split(/\s/),
