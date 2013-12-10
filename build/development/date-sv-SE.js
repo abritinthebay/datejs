@@ -1,6 +1,6 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-12-09
+ * Version: 1.0.0alpha-2013-12-09
  * Date: 2013-12-09
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
@@ -191,7 +191,7 @@ Date.CultureStrings = {
 
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-12-09
+ * Version: 1.0.0alpha-2013-12-09
  * Date: 2013-12-09
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
