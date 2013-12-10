@@ -1,13 +1,12 @@
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-11-07
- * Date: 2013-11-07
+ * Version: 1.0-alpha-2013-12-09
+ * Date: 2013-12-09
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
  * URL: https://github.com/abritinthebay/datejs
  */
-
 /* 
  * DateJS Culture String File
  * Country Code: es-UY
@@ -187,14 +186,13 @@ Date.CultureStrings = {
 
 /* 
  * Name: Date-JS
- * Version: 1.0-alpha-2013-11-07
- * Date: 2013-11-07
+ * Version: 1.0-alpha-2013-12-09
+ * Date: 2013-12-09
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
  * URL: https://github.com/abritinthebay/datejs
- */
-(function () {
+ */(function () {
 	var $D = Date;
 	var __ = function (key) {
 		var output, split, length, last;
@@ -229,7 +227,7 @@ Date.CultureStrings = {
 			}
 			for (zone in data.abbreviatedTimeZoneDST) {
 				if (data.abbreviatedTimeZoneDST.hasOwnProperty(zone)) {
-					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneDST[zone]});
+					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneDST[zone], dst: true});
 				}
 			}
 			return data.timezones;
@@ -596,6 +594,10 @@ Date.CultureStrings = {
 	 * @return {Number}  The number of days in the month.
 	 */
 	$D.getDaysInMonth = function (year, month) {
+		if (!month && $D.validateMonth(year)) {
+				month = year;
+				year = Date.today().getFullYear();
+		}
 		return [31, ($D.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 	};
  
@@ -611,11 +613,20 @@ Date.CultureStrings = {
 		return null;
 	};
 	
-	$D.getTimezoneOffset = function (name) {
-		var z = Date.CultureInfo.timezones;
-		for (var i = 0; i < z.length; i++) {
+	$D.getTimezoneOffset = function (name, dst) {
+		var i, a =[], z = Date.CultureInfo.timezones;
+		for (i = 0; i < z.length; i++) {
 			if (z[i].name === name.toUpperCase()) {
-				return z[i].offset;
+				a.push(i);
+			}
+		}
+		if (a.length === 1 || !dst) {
+			return z[a[0]].offset;
+		} else {
+			for (i=0; i < a.length; i++) {
+				if (z[a[i]].dst) {
+					return z[a[i]].offset;
+				}
 			}
 		}
 		return null;
@@ -657,7 +668,7 @@ Date.CultureStrings = {
 	 * @return {Boolean} true if dates are equal. false if they are not equal.
 	 */
 	$P.equals = function (date) {
-		return Date.equals(this, date || new Date());
+		return Date.equals(this, (date !== undefined ? date : new Date()));
 	};
 
 	/**
@@ -852,13 +863,10 @@ Date.CultureStrings = {
 		return this;
 	};
 	
-	var $y, $m, $d;
-	
 	/**
 	 * Get the week number. Week one (1) is the week which contains the first Thursday of the year. Monday is considered the first day of the week.
-	 * This algorithm is a JavaScript port of the work presented by Claus Tondering at http://www.tondering.dk/claus/cal/node8.html
-	 * .getWeek() Algorithm Copyright (c) 2008 Claus Tondering.
-	 * The .getWeek() function does NOT convert the date to UTC. The local datetime is used. Please use .getISOWeek() to get the week of the UTC converted date.
+	 * The .getWeek() function does NOT convert the date to UTC. The local datetime is used. 
+	 * Please use .getISOWeek() to get the week of the UTC converted date.
 	 * @return {Number}  1 to 53
 	 */
 	$P.getWeek = function (utc) {
@@ -988,6 +996,15 @@ Date.CultureStrings = {
 	 * @param {Number}   The number to check if within range.
 	 * @return {Boolean} true if within range, otherwise false.
 	 */
+	$D.validateWeek = function (value) {
+		return validate(value, 0, 53, "week");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for months [0-11].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
 	$D.validateMonth = function (value) {
 		return validate(value, 0, 11, "month");
 	};
@@ -998,7 +1015,18 @@ Date.CultureStrings = {
 	 * @return {Boolean} true if within range, otherwise false.
 	 */
 	$D.validateYear = function (value) {
-		return validate(value, 0, 9999, "year");
+		/**
+		 * Per ECMAScript spec the range of times supported by Date objects is 
+		 * exactly –100,000,000 days to 100,000,000 days measured relative to 
+		 * midnight at the beginning of 01 January, 1970 UTC. 
+		 * This gives a range of 8,640,000,000,000,000 milliseconds to either 
+		 * side of 01 January, 1970 UTC.
+		 *
+		 * Earliest possible date: Tue, 20 Apr 271,822 B.C. 00:00:00 UTC
+		 * Latest possible date: Sat, 13 Sep 275,760 00:00:00 UTC
+		 */
+
+		return validate(value, -271822, 275760, "year");
 	};
 
 	/**
@@ -1051,7 +1079,7 @@ Date.CultureStrings = {
 			this.setTimezoneOffset(config.timezoneOffset);
 		}
 
-		if (config.week && validate(config.week, 0, 53, "week")) {
+		if (config.week && $D.validateWeek(config.week)) {
 			this.setWeek(config.week);
 		}
 		
@@ -1804,15 +1832,16 @@ Date.CultureStrings = {
 	// not(cache(foo, bar))
 	
 	var _generator = function (op) {
-		return function () {
-			var args = null, rx = [];
+		function gen() {
+			var args, rx = [], px, i;
 			if (arguments.length > 1) {
 				args = Array.prototype.slice.call(arguments);
 			} else if (arguments[0] instanceof Array) {
 				args = arguments[0];
 			}
 			if (args) {
-				for (var i = 0, px = args.shift() ; i < px.length ; i++) {
+				px = args.shift();
+				if (px.length > 0) {
 					args.unshift(px[i]);
 					rx.push(op.apply(null, args));
 					args.shift();
@@ -1821,7 +1850,9 @@ Date.CultureStrings = {
 			} else {
 				return op.apply(null, arguments);
 			}
-		};
+		}
+
+		return gen;
 	};
 	
 	var gx = "optional not ignore cache".split(/\s/);
@@ -2471,14 +2502,17 @@ Date.CultureStrings = {
 	 * @return {Date}    A Date object or null if the string cannot be converted into a Date.
 	 */
 	var parse = function (s) {
-		var testDate, time, r = null;
+		var ords, testDate, time, r = null;
 		if (!s) {
 			return null;
 		}
 		if (s instanceof Date) {
 			return s.clone();
 		}
-		// If it's not an arithmetic string (because JS WILL parse those, just not how we want it to) 
+		// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
+		ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
+		s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
+		// If it's not an arithmetic string (because JS WILL parse those, just not how we want it to)
 		if (s[0] !== "+" && s[0] !== "-") {
 			try {
 				testDate = new Date(Date._parse(s));
@@ -2488,6 +2522,7 @@ Date.CultureStrings = {
 		// The following will be FALSE if time is NaN which happens if date is an Invalid Date or it err'd
 		// (yes, invalid dates are still date objects. Go figure.)
 		if (time !== undefined && time === time) {
+			// TODO - make sure that parser parses all dates so we don't have to rely on this testDate logic.
 			return testDate;
 		} else {
 			try {
@@ -2809,7 +2844,7 @@ Date.CultureStrings = {
 	};
 
 	// Do NOT modify the following string tokens. These tokens are used to build dynamic functions.
-	// All culture-specific strings can be found in the CultureInfo files. See /trunk/src/globalization/.
+	// All culture-specific strings can be found in the CultureInfo files.
 	var dx = ("sunday monday tuesday wednesday thursday friday saturday").split(/\s/),
 		mx = ("january february march april may june july august september october november december").split(/\s/),
 		px = ("Millisecond Second Minute Hour Day Week Month Year Quarter Weekday").split(/\s/),
