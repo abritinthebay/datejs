@@ -33,7 +33,7 @@
 			}
 			for (zone in data.abbreviatedTimeZoneDST) {
 				if (data.abbreviatedTimeZoneDST.hasOwnProperty(zone)) {
-					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneDST[zone]});
+					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneDST[zone], dst: true});
 				}
 			}
 			return data.timezones;
