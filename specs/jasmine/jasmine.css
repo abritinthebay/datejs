@@ -1,3 +1,14 @@
+#datejs #blanket-main {
+	font-size: 14px;
+}
+#datejs .bl-source {
+	font-size: 10px;
+	width:70%;
+}
+#datejs .bl-source > div > span:first-child {
+	font-size: 12px;
+}
+
 body { background-color: #eeeeee; padding: 0; margin: 5px; overflow-y: scroll; }
 
 #HTMLReporter { font-size: 11px; font-family: Monaco, "Lucida Console", monospace; line-height: 14px; color: #333333; }

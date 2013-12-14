@@ -9,10 +9,12 @@
 	</script>
 	<script type="text/javascript" src="jasmine/jasmine.js"></script>
 	<script type="text/javascript" src="jasmine/jasmine-html.js"></script>
+	<script type="text/javascript" src="jasmine/blanket.js"></script>
+	<script type="text/javascript" src="jasmine/jasmine-blanket.js"></script>
 
 	<!-- include source files here... -->
 	<script type="text/javascript" src="../core/i18n.js"></script>
-	<script type="text/javascript" src="../core/core.js"></script>
+	<script type="text/javascript" src="../core/core.js" data-cover></script>
 	<script type="text/javascript" src="../core/parser.js"></script>
 	<script type="text/javascript" src="../core/sugarpak.js"></script>
 	<script type="text/javascript" src="../core/extras.js"></script>
@@ -20,6 +22,8 @@
 	<!-- include spec files here... -->
 	<script type="text/javascript" src="Core-spec.js"></script>
 	<script type="text/javascript" src="Sugarpak-spec.js"></script>
+	<script type="text/javascript" src="Parsing-spec.js"></script>
+	<script type="text/javascript" src="ISOparsing-spec.js"></script>
 
 	<script type="text/javascript">
 		(function() {
@@ -43,7 +47,7 @@
 		})();
 	</script>
 </head>
-<body>
-	
+<body id="datejs">
+	<div id="blanket-main"></div>
 </body>
 </html>
