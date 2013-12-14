@@ -1,7 +1,7 @@
 /*globals require, jasmine, describe, it, expect, spyOn */
 require("../build/developement/date.js");
 
-describe("Core Library", function() {
+describe("Core Module", function() {
 	describe("has Exception handling for when", function() {
 		it("no params are passed to Date.parse()", function() {
 			var d = Date.parse();
@@ -55,6 +55,37 @@ describe("Core Library", function() {
 		});
 	});
 	describe("has basic functionality that",function (){
+		it("sets up (and creates if required) overloaded Date.now", function(){
+			var n = Date._now;
+			Date.now = undefined;
+			Date._now = undefined;
+			Date.initOverloads();
+			expect(typeof Date.now).toBe("function");
+			expect(typeof Date._now).toBe("function");
+			expect(typeof Date._now()).toBe("number");
+			Date.now = n;
+			Date._now = undefined;
+			Date.initOverloads(); // will now only created _now with our date.now
+			expect(typeof Date.now).toBe("function");
+			expect(typeof Date._now).toBe("function");
+		});
+		it("creates toISOString if no browser support", function(){
+			var s = Date.prototype.toISOString;
+			Date.prototype.toISOString = undefined;
+			Date.initOverloads();
+			expect(typeof Date.prototype.toISOString).toBe("function");
+			var d = new Date();
+			var i = d.toISOString();
+			expect(typeof i).toBe("string");
+			Date.toISOString = s;
+		});
+		it("aliases native toString if present", function(){
+			var s = Date.prototype._toString;
+			Date.prototype._toString = undefined;
+			Date.initOverloads();
+			expect(typeof Date.prototype._toString).toBe("function");
+			Date.prototype._toString = s;
+		});
 		it("zeros the time", function(){
 			var d = new Date();
 			d.clearTime();
@@ -122,6 +153,7 @@ describe("Core Library", function() {
 			expect(Date.getDayNumberFromName("Saturday")).toBe(6);
 			expect(Date.getDayNumberFromName("Sat")).toBe(6);
 			expect(Date.getDayNumberFromName("Sa")).toBe(6);
+			expect(Date.getDayNumberFromName("NotARealDay")).toBe(-1);
 		});
 		it("gets the Month Number from the Month Name", function(){
 			expect(Date.getMonthNumberFromName("January")).toBe(0);
@@ -147,6 +179,8 @@ describe("Core Library", function() {
 			expect(Date.getMonthNumberFromName("Nov")).toBe(10);
 			expect(Date.getMonthNumberFromName("December")).toBe(11);
 			expect(Date.getMonthNumberFromName("Dec")).toBe(11);
+			expect(Date.getMonthNumberFromName("NotARealMonth")).toBe(-1);
+
 		});
 		it("can check if a year is a leap year or not", function() {
 			expect(Date.isLeapYear(2008)).toBe(true);
@@ -174,11 +208,13 @@ describe("Core Library", function() {
 		it("can get the Timezone abbrivation with or without Daylight Savings Time", function() {
 			expect(Date.getTimezoneAbbreviation("+0100", false)).toBe("CET");
 			expect(Date.getTimezoneAbbreviation("+0100", true)).toBe("BST");
+			expect(Date.getTimezoneAbbreviation("NotARealOffset")).toBeNull();
 		});
 		it("can get the Timezone offset from the abbrivation", function() {
 			expect(Date.getTimezoneOffset("CET")).toBe("+0100");
 			expect(Date.getTimezoneOffset("BST", true)).toBe("+0100"); // forces dst priority
 			expect(Date.getTimezoneOffset("BST")).toBe("+0600"); // Bangladesh Standard Time
+			expect(Date.getTimezoneOffset("NotARealTimeZone")).toBeNull();
 		});
 		it("can get the correct Quarter a Date is in", function() {
 			var d = new Date(1995, 11, 4, 0, 0, 0, 0);
@@ -236,20 +272,137 @@ describe("Core Library", function() {
 			expect(a).toBe(true);
 			expect(b).toBe(false);
 		});
+		it("is today", function() {
+			var d = Date.today();
+			expect(d.isToday()).toBe(true);
+		});
+		it("is same day", function() {
+			var d = new Date(1995,11,4);
+			var d2 = new Date(1995,11,4);
+			expect(d.isSameDay(d2)).toBe(true);
+		});
+	});
+	describe("can get and set Date attributes like",function (){
+		it("get the week number", function() {
+			var d = new Date(1995,11,4);
+			expect(d.getWeek()).toBe(49);
+		});
+		it("get the ISO week number", function() {
+			var d = new Date(1995,11,4);
+			expect(d.getISOWeek()).toBe("49");
+		});
+		it("get the days left in the Quarter", function() {
+			var d = new Date(1995,11,4);
+			expect(d.getDaysLeftInQuarter()).toBe(27);
+		});
+		it("get the ordinate of the current date", function() {
+			var d = new Date(1995,11,4);
+			expect(d.getOrdinate()).toBe("th");
+		});
+		it("get the ordinal day number of the current date", function() {
+			var d = new Date(1995,11,4);
+			expect(d.getOrdinalNumber()).toBe(338);
+		});
+		it("get the UTCOffset of a date", function() {
+			var d = new Date(1995,11,4);
+			expect(d.getUTCOffset(480)).toBe("-0800");
+			expect(d.getUTCOffset(-480)).toBe("+0800");
+		});
+		it("get the time elapsed between current date and supplied date", function() {
+			var d = new Date(1995,11,4);
+			var d2 = new Date(1995,11,4,0,0,0,250);
+			expect(d.getElapsed(d2)).toBe(250);
+		});
+		it("move to the first day of the month", function() {
+			var d = new Date(1995,1,3);
+			d.moveToFirstDayOfMonth();
+			expect(d.getDate()).toBe(1);
+		});
+		it("move to the last day of the month", function() {
+			var d = new Date(1995,1,3);
+			var d2 = new Date(2004,1,3);
+			d.moveToLastDayOfMonth();
+			d2.moveToLastDayOfMonth();
+			expect(d.getDate()).toBe(28);
+			expect(d2.getDate()).toBe(29);
+		});
+		it("move to the nth occurance of a weekday in the month", function() {
+			var d = new Date(1995,11,4);
+			d.moveToNthOccurrence(0, -1); // sunday, last occurrence
+			expect(d.getDate()).toBe(31);
+			d.moveToNthOccurrence(6, -1); // saturday, last occurrence
+			expect(d.getDate()).toBe(30);
+			d.moveToNthOccurrence(0, 1); // sunday, 1st occurrence
+			expect(d.getDate()).toBe(3);
+			d.moveToNthOccurrence(0, 2); // sunday, 2nd occurrence
+			expect(d.getDate()).toBe(10);
+			d.moveToNthOccurrence(0, 3); // sunday, 3rd occurrence
+			expect(d.getDate()).toBe(17);
+			d.moveToNthOccurrence(0, 4); // sunday, 4th occurrence
+			expect(d.getDate()).toBe(24);
+			d.moveToNthOccurrence(0, 5); // sunday, 5th occurrence
+			expect(d.getDate()).toBe(31);
+		});
+		it("move to a month - changing year if appropriate", function() {
+			var d = new Date(1995,11,4);
+			d.moveToMonth(3);
+			expect(d.getMonth()).toBe(3);
+			expect(d.getFullYear()).toBe(1996);
+			d.moveToMonth(11, -1);
+			expect(d.getMonth()).toBe(11);
+			expect(d.getFullYear()).toBe(1995);
+		});
 	});
 	describe("can set Date attributes like",function (){
-		// millisecond
-		// second
-		// minute
-		// hour
-		// week
-		// timezone
-		// timezoneOffset
+		it("milliseconds", function() {
+			var d = new Date(2010, 1, 1);
+			var t = d.getTime();
+			d.set({millisecond: 250});
+			expect(d.getTime()).toBe(t+250);
+		});
+		it("seconds", function() {
+			var d = new Date(2010, 1, 1);
+			var t = d.getTime();
+			d.set({second: 3});
+			expect(d.getTime()).toBe(t+3000);
+		});
+		it("minutes", function() {
+			var d = new Date(2010, 1, 1);
+			d.set({minute: 30});
+			expect(d.getMinutes()).toBe(30);
+		});
+		it("hours", function() {
+			var d = new Date(2010, 1, 1);
+			d.set({hour: 1});
+			expect(d.getHours()).toBe(1);
+		});
+		it("add weekdays", function() {
+			var d = new Date(2010, 1, 1);
+			d.addWeekdays(4);
+			expect(d.getDay()).toBe(5);
+			d.addWeekdays(1);
+			expect(d.getDay()).toBe(1);
+			d.next().sunday();
+			d.addWeekdays(1);
+			expect(d.getDay()).toBe(2);
+		});
 		it("day", function() {
 			var d1 = new Date(2010, 1, 1);
 			var d2 = new Date(2010, 1, 10);
 			d2.set({day: 1});
 			expect(d1.equals(d2)).toBe(true);
+		});
+		it("weeks", function() {
+			var d = new Date(2013, 1, 1);
+			var w = d.getWeek();
+			d.addWeeks(1);
+			expect(d.getWeek()).toBe(w+1);
+			d.setWeek(16);
+			expect(d.getDate()).toBe(15);
+			expect(d.getMonth()).toBe(3);
+			d.set({week: 5});
+			expect(d.getDate()).toBe(28);
+			expect(d.getMonth()).toBe(0);
 		});
 		it("month", function() {
 			var d1 = new Date(2010, 1, 1);
@@ -257,6 +410,33 @@ describe("Core Library", function() {
 			d2.set({month: 1});
 			expect(d1.equals(d2)).toBe(true);
 		});
+		it("quarter", function() {
+			var d1 = new Date(2010, 1, 1);
+			var d2 = new Date(2010, 4, 1);
+			var d3 = new Date(2010, 1, 1);
+			d1.addQuarters(1);
+			expect(d1.equals(d2)).toBe(true);
+			expect(d1.getQuarter()).toBe(2);
+			d1.setQuarter(1);
+			expect(d1.equals(d3)).toBe(true);
+			expect(d1.getQuarter()).toBe(1);
+		});
+		it("timezone", function() {
+			// note - this just sets the date *relative* to the offset. 
+			// As if it's that time. It doesn't change the browsers representation of timezone.
+			var d1 = new Date(2010, 1, 1);
+			var d2 = new Date(2010, 1, 1, 8);
+			d1.set({timezone: "GMT"});
+			expect(d1.equals(d2)).toBe(true);
+		});
+		it("timezone offset", function() {
+			// note - as above this just sets the date *relative* to the offset.
+			var d1 = new Date(2010, 1, 1);
+			var d2 = new Date(2010, 1, 1, 3);
+			d1.set({timezoneOffset: "-0500"});
+			expect(d1.equals(d2)).toBe(true);
+		});
+		// timezoneOffset
 		it("year", function() {
 			var d1 = new Date(2010, 1, 1);
 			var d2 = new Date(2011, 1, 1);
@@ -308,6 +488,120 @@ describe("Core Library", function() {
 			var d2 = new Date(2010, 1, 10);
 			d2.set({day: 1, month: 24, year: -271823, milliseconds: 20000});
 			expect(d1.equals(d2)).toBe(true);
+		});
+		it("can add to any property", function() {
+			var d = new Date(2010, 0, 1);
+			var d2 = new Date(2011, 1, 9, 10, 10, 10, 10);
+			d.add({
+				milliseconds: 10,
+				seconds: 10,
+				minutes: 10,
+				hours: 10,
+				weeks: 1,
+				months: 1,
+				years: 1,
+				days: 1
+			});
+			expect(d.equals(d2)).toBe(true);
+			d.add(1).day();
+			d2 = new Date(2011, 1, 10, 10, 10, 10, 10);
+			expect(d.equals(d2)).toBe(true);
+		});
+
+	});
+	describe("has Timezone support that", function() {
+		it("can check if the current location has Daylight Savings Time", function() {
+			var d = Date.today();
+			expect(d.hasDaylightSavingTime()).toBe(true);
+		});
+		it("can check if a date is in Daylight Savings Time", function() {
+			var d = new Date(2013, 6, 1);
+			expect(d.isDaylightSavingTime()).toBe(true);
+			d.set({month: 11});
+			expect(d.isDaylightSavingTime()).toBe(false);
+		});
+		it("can get the current timezone", function() {
+			var d = Date.today();
+			if (d.isDaylightSavingTime()) {
+				expect(d.getTimezone()).toBe("PST");
+			} else {
+				expect(d.getTimezone()).toBe("PST");
+			}
+		});
+	});
+	describe("can convert Date toString in various formats", function(){
+		var d = new Date(1995, 11, 4, 0, 0, 0, 0);
+		describe("has CultureInfo defined standard formats", function(){
+			it("d == shortDate", function() {
+				expect(d.toString("d")).toBe("12/4/1995");
+			});
+			it("D == longDate", function() {
+				expect(d.toString("D")).toBe("Monday, December 04, 1995");
+			});
+			it("F == fullDateTime", function() {
+				expect(d.toString("F")).toBe("Monday, December 04, 1995 12:00:00 AM");
+			});
+			it("m == monthDay", function() {
+				expect(d.toString("m")).toBe("December 04");
+			});
+			it("r == RFC1123", function() {
+				expect(d.toString("r")).toBe("Mon, 04 Dec 1995 08:00:00 GMT");
+				expect(d.toString("R")).toBe("Mon, 04 Dec 1995 08:00:00 GMT");
+			});
+			it("s == sortableDateTime", function() {
+				expect(d.toString("s")).toBe("1995-12-04T00:00:00");
+			});
+			it("t == shortTime", function() {
+				expect(d.toString("t")).toBe("12:00 AM");
+			});
+			it("T == longTime", function() {
+				expect(d.toString("T")).toBe("12:00:00 AM");
+			});
+			it("u == universalSortableDateTime", function() {
+				expect(d.toString("u")).toBe("1995-12-04 08:00:00Z");
+			});
+			it("y == yearMonth", function() {
+				expect(d.toString("y")).toBe("December, 1995");
+			});
+		});
+
+		it("doesn't parse strings betwee < and >", function() {
+			expect(d.toString("<the date is> MM/dd/yyyy")).toBe("the date is 12/04/1995");
+		});
+		it("hh:mm tt", function() {
+			expect(d.toString("hh:mm tt")).toBe("12:00 AM");
+		});
+		it("MMMM dddd, yyyy - hh:mm:ss tt", function() {
+			expect(d.toString("MMMM dd, yyyy - hh:mm:ss tt")).toBe("December 04, 1995 - 12:00:00 AM");
+		});
+		it("MMM dS, 'yy - HH:mm", function() {
+			expect(d.toString("MMM dS, 'yy - HH:mm")).toBe("Dec 4th, '95 - 00:00");
+		});
+		it("ddd dS @ h:mmt", function() {
+			expect(d.toString("ddd dS @ h:mmt")).toBe("Mon 4th @ 12:00A");
+		});
+		it("MM/dd/yyyy", function() {
+			expect(d.toString("MM/dd/yyyy")).toBe("12/04/1995");
+		});
+		it("dddd H m s", function() {
+			var d2 = d.clone();
+			d2.set({minute: 14, second: 12});
+			expect(d2.toString("dddd H m s")).toBe("Monday 0 14 12");
+		});
+		it("fixes incorrectly escaped characters", function() {
+			expect(d.toString("\\MM/\\dd/\\yyyy")).toBe("MM/dd/yyyy");
+		});
+		it("returns unknown string unchanged", function() {
+			expect(d.toString("xxxxxzxz")).toBe("xxxxxzxz");
+		});
+		it("works with different ordinal suffixes (1st,2nd,3rd,4th..)", function() {
+			expect(d.toString("S")).toBe("th");
+			d.addDays(-1);
+			expect(d.toString("S")).toBe("rd");
+			d.addDays(-1);
+			expect(d.toString("S")).toBe("nd");
+			d.addDays(-1);
+			expect(d.toString("S")).toBe("st");
 		});
 	});
 });
