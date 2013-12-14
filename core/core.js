@@ -7,7 +7,56 @@
 			}
 			return ("000" + s).slice(l * -1);
 		};
-			
+		
+	$D.initOverloads = function() {
+		/** 
+		 * Overload of Date.now. Allows an alternate call for Date.now where it returns the 
+		 * current Date as an object rather than just milliseconds since the Unix Epoch.
+		 *
+		 * Also provides an implementation of now() for browsers (IE<9) that don't have it.
+		 * 
+		 * Backwards compatible so with work with either:
+		 *  Date.now() [returns ms]
+		 * or
+		 *  Date.now(true) [returns Date]
+		 */
+		if (!$D.now) {
+			$D._now = function now() {
+				return new Date().getTime();
+			};
+		} else if (!$D._now) {
+			$D._now = $D.now;
+		}
+
+		$D.now = function (returnObj) {
+			if (returnObj) {
+				return $D.present();
+			} else {
+				return $D._now();
+			}
+		};
+
+		if ( !$P.toISOString ) {
+			$P.toISOString = function() {
+				return this.getUTCFullYear() +
+				"-" + p(this.getUTCMonth() + 1) +
+				"-" + p(this.getUTCDate()) +
+				"T" + p(this.getUTCHours()) +
+				":" + p(this.getUTCMinutes()) +
+				":" + p(this.getUTCSeconds()) +
+				"." + String( (this.getUTCMilliseconds()/1000).toFixed(3)).slice(2, 5) +
+				"Z";
+			};
+		}
+		
+		// private
+		if ( $P._toString === undefined ){
+			$P._toString = $P.toString;
+		}
+
+	};
+	$D.initOverloads();
+
 	/**
 	 * Resets the time of this Date object to 12:00 AM (00:00), which is the start of the day.
 	 * @param {Boolean}  .clone() this date instance before clearing Time
@@ -48,33 +97,6 @@
 	 */
 	$D.present = function () {
 		return new Date();
-	};
-
-	/** 
-	 * Overload of Date.now. Allows an alternate call for Date.now where it returns the 
-	 * current Date as an object rather than just milliseconds since the Unix Epoch.
-	 *
-	 * Also provides an implementation of now() for browsers (IE<9) that don't have it.
-	 * 
-	 * Backwards compatible so with work with either:
-	 *  Date.now() [returns ms]
-	 * or
-	 *  Date.now(true) [returns Date]
-	 */
-	if (!$D.now) {
-		$D._now = function now() {
-			return new Date().getTime();
-		};
-	} else if (!$D._now) {
-		$D._now = $D.now;
-	}
-
-	$D.now = function (returnObj) {
-		if (returnObj) {
-			return $D.present();
-		} else {
-			return $D._now();
-		}
 	};
 
 	/**
@@ -175,6 +197,9 @@
 				a.push(i);
 			}
 		}
+		if (!z[a[0]]) {
+			return null;
+		}
 		if (a.length === 1 || !dst) {
 			return z[a[0]].offset;
 		} else {
@@ -184,7 +209,6 @@
 				}
 			}
 		}
-		return null;
 	};
 
 	$D.getQuarter = function (d) {
@@ -469,7 +493,7 @@
 	 * @return {Date}    this
 	 */
 	$P.setWeek = function (n) {
-		return this.addWeeks(n - this.getWeek()).moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1));
+		return this.moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1)).addWeeks(n - this.getWeek());
 	};
 
 	$P.setQuarter = function (qtr) {
@@ -725,7 +749,7 @@
 
 	$P.setTimezoneOffset = function (offset) {
 		var here = this.getTimezoneOffset(), there = Number(offset) * -6 / 10;
-		return this.addMinutes(here - there);
+		return (there || there === 0) ? this.addMinutes(here - there) : this;
 	};
 
 	$P.setTimezone = function (offset) {
@@ -752,8 +776,8 @@
 	 * Get the offset from UTC of the current date.
 	 * @return {String} The 4-character offset string prefixed with + or - (e.g. "-0500")
 	 */
-	$P.getUTCOffset = function () {
-		var n = this.getTimezoneOffset() * -10 / 6, r;
+	$P.getUTCOffset = function (offset) {
+		var n = (offset || this.getTimezoneOffset()) * -10 / 6, r;
 		if (n < 0) {
 			r = (n - 10000).toString();
 			return r.charAt(0) + r.substr(2);
@@ -771,33 +795,6 @@
 	$P.getElapsed = function (date) {
 		return (date || new Date()) - this;
 	};
-
-	if ( !$P.toISOString ) {
-		(function() {
-			function pad(number) {
-				var r = String(number);
-				if (r.length === 1) {
-					r = "0" + r;
-				}
-				return r;
-			}
-			$P.toISOString = function() {
-				return this.getUTCFullYear() +
-				"-" + pad(this.getUTCMonth() + 1) +
-				"-" + pad(this.getUTCDate()) +
-				"T" + pad(this.getUTCHours()) +
-				":" + pad(this.getUTCMinutes()) +
-				":" + pad(this.getUTCSeconds()) +
-				"." + String( (this.getUTCMilliseconds()/1000).toFixed(3)).slice(2, 5) +
-				"Z";
-			};
-		}());
-	}
-	
-	// private
-	if ( $P._toString === undefined ){
-		$P._toString = $P.toString;
-	}
 
 	/**
 	 * Converts the value of the current Date object to its equivalent string representation.
@@ -891,7 +888,7 @@
 		// Standard Date and Time Format Strings. Formats pulled from CultureInfo file and
 		// may vary by culture. 
 		if (!ignoreStandards && format && format.length === 1) {
-			var c = Date.CultureInfo.formatPatterns;
+			var y, c = Date.CultureInfo.formatPatterns;
 			x.t = x.toString;
 			switch (format) {
 			case "d":
@@ -903,7 +900,9 @@
 			case "m":
 				return x.t(c.monthDay);
 			case "r":
-				return x.t(c.rfc1123) + " GMT";
+			case "R":
+				y = x.clone().addMinutes(x.getTimezoneOffset());
+				return y.toString(c.rfc1123) + " GMT";
 			case "s":
 				return x.t(c.sortableDateTime);
 			case "t":
@@ -911,15 +910,14 @@
 			case "T":
 				return x.t(c.longTime);
 			case "u":
-				return x.t(c.universalSortableDateTime);
+				y = x.clone().addMinutes(x.getTimezoneOffset());
+				return y.toString(c.universalSortableDateTime);
 			case "y":
 				return x.t(c.yearMonth);
 			}
 		}
-		
 
-		
-		return format ? format.replace(/(\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)/g,
+		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)(?![^<>]*>))/g,
 		function (m) {
 			if (m.charAt(0) === "\\") {
 				return m.replace("\\", "");
@@ -968,9 +966,8 @@
 				return x.h() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
 			case "S":
 				return ord(x.getDate());
-			default:
-				return m;
 			}
-		}) : this._toString();
+		}).replace(/<|>/g, "") : this._toString();
 	};
+
 }());
