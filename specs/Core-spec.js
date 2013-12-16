@@ -131,6 +131,9 @@ describe("Core Module", function() {
 			expect(d).toEqual(jasmine.any(Number));
 			expect(d2).toEqual(jasmine.any(Date));
 		});
+		it("gets the Day Name from the Day Number", function(){
+			expect(Date.getDayName(5)).toBe("Friday");
+		});
 		it("gets the Day Number from the Day Name", function(){
 			expect(Date.getDayNumberFromName("Sunday")).toBe(0);
 			expect(Date.getDayNumberFromName("Sun")).toBe(0);
@@ -154,6 +157,9 @@ describe("Core Module", function() {
 			expect(Date.getDayNumberFromName("Sat")).toBe(6);
 			expect(Date.getDayNumberFromName("Sa")).toBe(6);
 			expect(Date.getDayNumberFromName("NotARealDay")).toBe(-1);
+		});
+		it("gets the Month Name from the Month Number", function(){
+			expect(Date.getMonthName(5)).toBe("June");
 		});
 		it("gets the Month Number from the Month Name", function(){
 			expect(Date.getMonthNumberFromName("January")).toBe(0);
