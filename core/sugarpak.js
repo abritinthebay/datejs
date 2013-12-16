@@ -183,6 +183,22 @@
 		}
 		return false;
 	};
+	/** 
+	 * Determines if the current date is on the weekend. This function must be preceded by the .is() function.
+	 * Example
+	<pre><code>
+	Date.today().is().weekend(); // true|false
+	</code></pre>
+	 *  
+	 * @return {Boolean}    true|false
+	 */
+	$P.weekend = function () {
+		if (this._is) {
+			this._is = false;
+			return (this.is().sat() || this.is().sun());
+		}
+		return false;
+	};
 
 	/** 
 	 * Sets the Time of the current Date instance. A string "6:15 pm" or config object {hour:18, minute:15} are accepted.
@@ -238,8 +254,9 @@
 	 * @return {Date}    A new Date instance
 	 */
 	$N.ago = $N.before = function (date) {
-		var c = {};
-		c[this._dateElement + "s"] = this * -1;
+		var c = {},
+		s = (this._dateElement[this._dateElement.length-1] !== "s") ? this._dateElement + "s" : this._dateElement;
+		c[s] = this * -1;
 		return ((!date) ? new Date() : date.clone()).add(c);
 	};
 
@@ -401,6 +418,9 @@
 					o2 = (arguments[0] || new Date()).toObject(),
 					v = "",
 					k = j.toLowerCase();
+
+				// the substr trick with -1 doesn't work in IE8 or less
+				k = (k[k.length-1] === "s") ? k.substring(0,k.length-1) : k;
 					
 				for (var m = (px.length - 1); m > -1; m--) {
 					v = px[m].toLowerCase();
@@ -431,12 +451,13 @@
    
 	for (var k = 0; k < px.length; k++) {
 		de = px[k].toLowerCase();
-	
-		// Create date element functions and plural date element functions used with Date (eg. day(), days(), months()).
-		$P[de] = $P[de + "s"] = ef(px[k]);
-		
-		// Create date element functions and plural date element functions used with Number (eg. day(), days(), months()).
-		$N[de] = $N[de + "s"] = nf(de + "s");
+		if(de !== "weekday") {
+			// Create date element functions and plural date element functions used with Date (eg. day(), days(), months()).
+			$P[de] = $P[de + "s"] = ef(px[k]);
+			
+			// Create date element functions and plural date element functions used with Number (eg. day(), days(), months()).
+			$N[de] = $N[de + "s"] = nf(de + "s");
+		}
 	}
 	
 	$P._ss = ef("Second");
