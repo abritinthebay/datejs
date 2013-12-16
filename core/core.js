@@ -126,6 +126,15 @@
 	};
 
 	/**
+	 * Gets the language appropriate day name when given the day number(0-6)
+	 * eg - 0 == Sunday
+	 * @return {String}  The day name
+	 */
+	$D.getDayName = function (n) {
+		return Date.CultureInfo.dayNames[n];
+	};
+
+	/**
 	 * Gets the day number (0-6) if given a CultureInfo specific string which is a valid dayName, abbreviatedDayName or shortestDayName (two char).
 	 * @param {String}   The name of the day (eg. "Monday, "Mon", "tuesday", "tue", "We", "we").
 	 * @return {Number}  The day number
@@ -153,6 +162,15 @@
 			}
 		}
 		return -1;
+	};
+
+	/**
+	 * Gets the language appropriate month name when given the month number(0-11)
+	 * eg - 0 == January
+	 * @return {String}  The month name
+	 */
+	$D.getMonthName = function (n) {
+		return Date.CultureInfo.monthNames[n];
 	};
 
 	/**
