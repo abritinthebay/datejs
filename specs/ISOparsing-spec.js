@@ -1,5 +1,5 @@
 /*globals require, jasmine, describe, it, expect, spyOn */
-require("../core/new-parser.js");
+require("../core/parser.js");
 
 describe("ISO 8601 Date Parser", function() {
 	var correctDate = new Date(1995, 11, 4, 0, 0, 0, 0);
