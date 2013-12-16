@@ -49,13 +49,7 @@
 			obj.dayOfYear = dayOffset[obj.month] + obj.day;
 		}
 		date = new Date(obj.year, obj.month, obj.day, obj.hours, obj.minutes, obj.seconds, obj.milliseconds);
-		
-		if (!obj.weekDay) {
-			obj.weekDay = date.getDay();
-		}
-		if (!obj.week) {
-			obj.week = Math.floor((obj.dayOfYear - obj.weekDay + 10)/7);
-		}
+
 		if (obj.zone) {
 			// adjust (and calculate) for timezone here
 			if (obj.zone.toUpperCase() === "Z" || (obj.zone_hours === 0 && obj.zone_minutes === 0)) {
