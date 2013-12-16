@@ -239,7 +239,7 @@
 		return info;
 	};
 
-	$D.l18n = {
+	$D.i18n = {
 		__: function (key) {
 			return __(key);
 		},
@@ -247,5 +247,5 @@
 			Date.CultureInfo = CultureInfo();
 		}
 	};
-	$D.l18n.updateCultureInfo(); // run automatically
+	$D.i18n.updateCultureInfo(); // run automatically
 }());
