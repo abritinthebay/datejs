@@ -1,7 +1,7 @@
 /* 
- * Name: Date-JS
- * Version: 1.0.0alpha-2013-12-09
- * Date: 2013-12-09
+ * Name: DateJS
+ * Version: 1.0.0alpha-2013-12-16
+ * Date: 2013-12-16
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -247,7 +247,7 @@
 		return info;
 	};
 
-	$D.l18n = {
+	$D.i18n = {
 		__: function (key) {
 			return __(key);
 		},
@@ -255,7 +255,7 @@
 			Date.CultureInfo = CultureInfo();
 		}
 	};
-	$D.l18n.updateCultureInfo(); // run automatically
+	$D.i18n.updateCultureInfo(); // run automatically
 }());
 (function () {
 	var $D = Date,
@@ -266,7 +266,56 @@
 			}
 			return ("000" + s).slice(l * -1);
 		};
-			
+		
+	$D.initOverloads = function() {
+		/** 
+		 * Overload of Date.now. Allows an alternate call for Date.now where it returns the 
+		 * current Date as an object rather than just milliseconds since the Unix Epoch.
+		 *
+		 * Also provides an implementation of now() for browsers (IE<9) that don't have it.
+		 * 
+		 * Backwards compatible so with work with either:
+		 *  Date.now() [returns ms]
+		 * or
+		 *  Date.now(true) [returns Date]
+		 */
+		if (!$D.now) {
+			$D._now = function now() {
+				return new Date().getTime();
+			};
+		} else if (!$D._now) {
+			$D._now = $D.now;
+		}
+
+		$D.now = function (returnObj) {
+			if (returnObj) {
+				return $D.present();
+			} else {
+				return $D._now();
+			}
+		};
+
+		if ( !$P.toISOString ) {
+			$P.toISOString = function() {
+				return this.getUTCFullYear() +
+				"-" + p(this.getUTCMonth() + 1) +
+				"-" + p(this.getUTCDate()) +
+				"T" + p(this.getUTCHours()) +
+				":" + p(this.getUTCMinutes()) +
+				":" + p(this.getUTCSeconds()) +
+				"." + String( (this.getUTCMilliseconds()/1000).toFixed(3)).slice(2, 5) +
+				"Z";
+			};
+		}
+		
+		// private
+		if ( $P._toString === undefined ){
+			$P._toString = $P.toString;
+		}
+
+	};
+	$D.initOverloads();
+
 	/**
 	 * Resets the time of this Date object to 12:00 AM (00:00), which is the start of the day.
 	 * @param {Boolean}  .clone() this date instance before clearing Time
@@ -309,33 +358,6 @@
 		return new Date();
 	};
 
-	/** 
-	 * Overload of Date.now. Allows an alternate call for Date.now where it returns the 
-	 * current Date as an object rather than just milliseconds since the Unix Epoch.
-	 *
-	 * Also provides an implementation of now() for browsers (IE<9) that don't have it.
-	 * 
-	 * Backwards compatible so with work with either:
-	 *  Date.now() [returns ms]
-	 * or
-	 *  Date.now(true) [returns Date]
-	 */
-	if (!$D.now) {
-		$D._now = function now() {
-			return new Date().getTime();
-		};
-	} else if (!$D._now) {
-		$D._now = $D.now;
-	}
-
-	$D.now = function (returnObj) {
-		if (returnObj) {
-			return $D.present();
-		} else {
-			return $D._now();
-		}
-	};
-
 	/**
 	 * Compares the first date to the second date and returns an number indication of their relative values.  
 	 * @param {Date}     First Date object to compare [Required].
@@ -360,6 +382,15 @@
 	 */
 	$D.equals = function (date1, date2) {
 		return (date1.compareTo(date2) === 0);
+	};
+
+	/**
+	 * Gets the language appropriate day name when given the day number(0-6)
+	 * eg - 0 == Sunday
+	 * @return {String}  The day name
+	 */
+	$D.getDayName = function (n) {
+		return Date.CultureInfo.dayNames[n];
 	};
 
 	/**
@@ -390,6 +421,15 @@
 			}
 		}
 		return -1;
+	};
+
+	/**
+	 * Gets the language appropriate month name when given the month number(0-11)
+	 * eg - 0 == January
+	 * @return {String}  The month name
+	 */
+	$D.getMonthName = function (n) {
+		return Date.CultureInfo.monthNames[n];
 	};
 
 	/**
@@ -434,6 +474,9 @@
 				a.push(i);
 			}
 		}
+		if (!z[a[0]]) {
+			return null;
+		}
 		if (a.length === 1 || !dst) {
 			return z[a[0]].offset;
 		} else {
@@ -443,7 +486,6 @@
 				}
 			}
 		}
-		return null;
 	};
 
 	$D.getQuarter = function (d) {
@@ -534,6 +576,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addMilliseconds = function (value) {
+		if (!value) { return this; }
 		this.setTime(this.getTime() + value * 1);
 		return this;
 	};
@@ -544,6 +587,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addSeconds = function (value) {
+		if (!value) { return this; }
 		return this.addMilliseconds(value * 1000);
 	};
 
@@ -553,6 +597,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addMinutes = function (value) {
+		if (!value) { return this; }
 		return this.addMilliseconds(value * 60000); /* 60*1000 */
 	};
 
@@ -562,6 +607,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addHours = function (value) {
+		if (!value) { return this; }
 		return this.addMilliseconds(value * 3600000); /* 60*60*1000 */
 	};
 
@@ -571,6 +617,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addDays = function (value) {
+		if (!value) { return this; }
 		this.setDate(this.getDate() + value * 1);
 		return this;
 	};
@@ -581,15 +628,29 @@
 	 * @return {Date}    this
 	 */
 	$P.addWeekdays = function (value) {
+		if (!value) { return this; }
 		var day = this.getDay();
-		var weeks = (Math.ceil(value/7));
+		var weeks = (Math.ceil(Math.abs(value)/7));
 		if (day === 0 || day === 6) {
-			this.next().monday();
+			if (value > 0) {
+				this.next().monday();
+				this.addDays(-1);
+			}
 		}
-		if (value > 5 || (6-day) <= value) {
+
+		if (value < 0) {
+			while (value < 0) {
+				this.addDays(-1);
+				day = this.getDay();
+				if (day !== 0 && day !== 6) {
+					value++;
+				}
+			}
+			return this;
+		} else if (value > 5 || (6-day) <= value) {
 			value = value + (weeks * 2);
 		}
-		// this.setDate(this.getDate() + value * 1);
+
 		return this.addDays(value);
 	};
 
@@ -599,6 +660,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addWeeks = function (value) {
+		if (!value) { return this; }
 		return this.addDays(value * 7);
 	};
 
@@ -608,6 +670,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addMonths = function (value) {
+		if (!value) { return this; }
 		var n = this.getDate();
 		this.setDate(1);
 		this.setMonth(this.getMonth() + value * 1);
@@ -616,6 +679,7 @@
 	};
 
 	$P.addQuarters = function (value) {
+		if (!value) { return this; }
 		// note this will take you to the same point in the quarter as you are now.
 		// i.e. - if you are 15 days into the quarter you'll be 15 days into the resulting one.
 		// bonus: this allows adding fractional quarters
@@ -628,6 +692,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addYears = function (value) {
+		if (!value) { return this; }
 		return this.addMonths(value * 12);
 	};
 
@@ -728,7 +793,7 @@
 	 * @return {Date}    this
 	 */
 	$P.setWeek = function (n) {
-		return this.addWeeks(n - this.getWeek()).moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1));
+		return this.moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1)).addWeeks(n - this.getWeek());
 	};
 
 	$P.setQuarter = function (qtr) {
@@ -923,6 +988,22 @@
 	 * @return {Date}    this
 	 */
 	$P.moveToNthOccurrence = function (dayOfWeek, occurrence) {
+		if (dayOfWeek === "Weekday") {
+			if (occurrence > 0) {
+				this.moveToFirstDayOfMonth();
+				if (this.is().weekday()) {
+					occurrence -= 1;
+				}
+			} else if (occurrence < 0) {
+				this.moveToLastDayOfMonth();
+				if (this.is().weekday()) {
+					occurrence += 1;
+				}
+			} else {
+				return this;
+			}
+			return this.addWeekdays(occurrence);
+		}
 		var shift = 0;
 		if (occurrence > 0) {
 			shift = occurrence - 1;
@@ -984,7 +1065,7 @@
 
 	$P.setTimezoneOffset = function (offset) {
 		var here = this.getTimezoneOffset(), there = Number(offset) * -6 / 10;
-		return this.addMinutes(here - there);
+		return (there || there === 0) ? this.addMinutes(here - there) : this;
 	};
 
 	$P.setTimezone = function (offset) {
@@ -1011,8 +1092,8 @@
 	 * Get the offset from UTC of the current date.
 	 * @return {String} The 4-character offset string prefixed with + or - (e.g. "-0500")
 	 */
-	$P.getUTCOffset = function () {
-		var n = this.getTimezoneOffset() * -10 / 6, r;
+	$P.getUTCOffset = function (offset) {
+		var n = (offset || this.getTimezoneOffset()) * -10 / 6, r;
 		if (n < 0) {
 			r = (n - 10000).toString();
 			return r.charAt(0) + r.substr(2);
@@ -1030,33 +1111,6 @@
 	$P.getElapsed = function (date) {
 		return (date || new Date()) - this;
 	};
-
-	if ( !$P.toISOString ) {
-		(function() {
-			function pad(number) {
-				var r = String(number);
-				if (r.length === 1) {
-					r = "0" + r;
-				}
-				return r;
-			}
-			$P.toISOString = function() {
-				return this.getUTCFullYear() +
-				"-" + pad(this.getUTCMonth() + 1) +
-				"-" + pad(this.getUTCDate()) +
-				"T" + pad(this.getUTCHours()) +
-				":" + pad(this.getUTCMinutes()) +
-				":" + pad(this.getUTCSeconds()) +
-				"." + String( (this.getUTCMilliseconds()/1000).toFixed(3)).slice(2, 5) +
-				"Z";
-			};
-		}());
-	}
-	
-	// private
-	if ( $P._toString === undefined ){
-		$P._toString = $P.toString;
-	}
 
 	/**
 	 * Converts the value of the current Date object to its equivalent string representation.
@@ -1150,7 +1204,7 @@
 		// Standard Date and Time Format Strings. Formats pulled from CultureInfo file and
 		// may vary by culture. 
 		if (!ignoreStandards && format && format.length === 1) {
-			var c = Date.CultureInfo.formatPatterns;
+			var y, c = Date.CultureInfo.formatPatterns;
 			x.t = x.toString;
 			switch (format) {
 			case "d":
@@ -1162,7 +1216,9 @@
 			case "m":
 				return x.t(c.monthDay);
 			case "r":
-				return x.t(c.rfc1123) + " GMT";
+			case "R":
+				y = x.clone().addMinutes(x.getTimezoneOffset());
+				return y.toString(c.rfc1123) + " GMT";
 			case "s":
 				return x.t(c.sortableDateTime);
 			case "t":
@@ -1170,15 +1226,14 @@
 			case "T":
 				return x.t(c.longTime);
 			case "u":
-				return x.t(c.universalSortableDateTime);
+				y = x.clone().addMinutes(x.getTimezoneOffset());
+				return y.toString(c.universalSortableDateTime);
 			case "y":
 				return x.t(c.yearMonth);
 			}
 		}
-		
 
-		
-		return format ? format.replace(/(\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)/g,
+		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S|q|Q)(?![^\[]*\]))/g,
 		function (m) {
 			if (m.charAt(0) === "\\") {
 				return m.replace("\\", "");
@@ -1227,20 +1282,159 @@
 				return x.h() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
 			case "S":
 				return ord(x.getDate());
-			default:
-				return m;
+			case "Q":
+				return "Q" + x.getQuarter();
+			case "q":
+				return String(x.getQuarter());
 			}
-		}) : this._toString();
+		}).replace(/\[|\]/g, "") : this._toString();
 	};
+
 }());
 
 (function () {
+	"use strict";
 	Date.Parsing = {
 		Exception: function (s) {
 			this.message = "Parse error at '" + s.substring(0, 10) + " ...'";
 		}
 	};
+	var $P = Date.Parsing;
+	var dayOffsets = {
+		standard: [0,31,59,90,120,151,181,212,243,273,304,334],
+		leap: [0,31,60,91,121,152,182,213,244,274,305,335]
+	};
+
+	$P.isLeapYear = function(year) {
+		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+	};
+
+	$P.processTimeObject = function (obj) {
+		var d, jan4, date, offset, dayOffset;
+		d = new Date();
+		dayOffset = ($P.isLeapYear(obj.year)) ? dayOffsets.leap : dayOffsets.standard;
+		obj.hours = obj.hours ? obj.hours : 0;
+		obj.minutes = obj.minutes ? obj.minutes : 0;
+		obj.seconds = obj.seconds ? obj.seconds : 0;
+		obj.milliseconds = obj.milliseconds ? obj.milliseconds : 0;
+		if (!obj.year) {
+			obj.year = d.getFullYear();
+		}
+		if (!obj.month && (obj.week || obj.dayOfYear)) {
+			// work out the day of the year...
+			if (!obj.dayOfYear) {
+				obj.weekDay = (!obj.weekDay && obj.weekDay !== 0) ? 1 : obj.weekDay;
+				d = new Date(obj.year, 0, 4);
+				jan4 = d.getDay() === 0 ? 7 : d.getDay(); // JS is 0 indexed on Sunday.
+				offset = jan4+3;
+				obj.dayOfYear = ((obj.week * 7) + (obj.weekDay === 0 ? 7 : obj.weekDay))-offset;
+			}
+			for (var i=0;i <= dayOffset.length;i++) {
+				if (obj.dayOfYear < dayOffset[i] || i === dayOffset.length) {
+					obj.day = obj.day ? obj.day : (obj.dayOfYear - dayOffset[i-1]);
+					break;
+				} else {
+					obj.month = i;
+				}
+			}
+		} else {
+			obj.month = obj.month ? obj.month : 0;
+			obj.day = obj.day ? obj.day : 1;
+			obj.dayOfYear = dayOffset[obj.month] + obj.day;
+		}
+		date = new Date(obj.year, obj.month, obj.day, obj.hours, obj.minutes, obj.seconds, obj.milliseconds);
+
+		if (obj.zone) {
+			// adjust (and calculate) for timezone here
+			if (obj.zone.toUpperCase() === "Z" || (obj.zone_hours === 0 && obj.zone_minutes === 0)) {
+				// it's UTC/GML so work out the current timeszone offset
+				offset = -(new Date()).getTimezoneOffset();
+				// offset *= -1;
+			} else {
+				offset = (obj.zone_hours*60) + (obj.zone_minutes ? obj.zone_minutes : 0);
+				if (obj.zone_sign === "+") {
+					offset *= -1;
+				}
+				offset -= (new Date()).getTimezoneOffset();
+			}
+			date.setMinutes(date.getMinutes()+offset);
+		}
+		return date;
+	};
 	
+	$P.ISO = {
+		regex : /^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-3])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-4])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?\s?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/,
+		parse : function (s) {
+			var data = s.match(this.regex);
+			if (!data || !data.length) {
+				return null;
+			}
+			var time = {
+				year : data[1] ? Number(data[1]) : data[1],
+				month : data[5] ? (Number(data[5])-1) : data[5],
+				day : data[7] ? Number(data[7]) : data[7],
+				week : data[8] ? Number(data[8]) : data[8],
+				weekDay : data[9] ? (Math.abs(Number(data[9])) === 7 ? 0 : Math.abs(Number(data[9]))) : data[9], // 1-7, starts on Monday. Convert to JS's 0-6 index.
+				dayOfYear : data[10] ? Number(data[10]) : data[10],
+				hours : data[15] ? Number(data[15]) : data[15],
+				minutes : data[16] ? Number(data[16].replace(":","")) : data[16],
+				seconds : data[19] ? Math.floor(Number(data[19].replace(":","").replace(",","."))) : data[19],
+				milliseconds : data[20] ? (Number(data[20].replace(",","."))*1000) : data[20],
+				zone : data[21],
+				zone_sign : data[22],
+				zone_hours : (data[23] && typeof data[23] !== "undefined") ? Number(data[23]) : data[23],
+				zone_minutes : (data[24] && typeof data[23] !== "undefined") ? Number(data[24]) : data[24]
+			};
+			if (data[18]) {
+				data[18] = 60 * Number(data[18].replace(",", "."));
+				if (!time.minutes) {
+					time.minutes = data[18];
+				} else if (!time.seconds) {
+					time.seconds = data[18];
+				}
+			}
+			if (!time.year || (!time.year && (!time.month && !time.day) && (!time.week && !time.dayOfYear)) ) {
+				return null;
+			}
+			return $P.processTimeObject(time);
+		}
+	};
+	$P.Numeric = {
+		regex: /\b([0-1]?[0-9])([0-3]?[0-9])([0-2]?[0-9]?[0-9][0-9])\b/i,
+		parse: function (s) {
+			var data, i,
+				time = {},
+				order = Date.CultureInfo.dateElementOrder.split("");
+			if (!(!isNaN(parseFloat(s)) && isFinite(s)) ||	// if it's non-numeric OR
+				(s[0] === "+" && s[0] === "-")) {			// It's an arithmatic string (eg +/-1000)
+				return null;
+			}
+			if (s.length < 5) { // assume it's just a year.
+				time.year = s;
+				return $P.processTimeObject(time);
+			}
+			data = s.match(this.regex);
+			if (!data || !data.length) {
+				return null;
+			}
+			for (i=0; i < order.length; i++) {
+				switch(order[i]) {
+					case "d":
+						time.day = data[i+1];
+						break;
+					case "m":
+						time.month = (data[i+1]-1);
+						break;
+					case "y":
+						time.year = data[i+1];
+						break;
+				}
+			}
+			return $P.processTimeObject(time);
+		}
+	};
+}());
+(function () {
 	var $P = Date.Parsing;
 	var _ = $P.Operators = {
 		//
@@ -2315,56 +2509,50 @@
 	 * @param {String}   The string value to convert into a Date object [Required]
 	 * @return {Date}    A Date object or null if the string cannot be converted into a Date.
 	 */
-	var parse = function (s) {
-		var ords, testDate, time, r = null;
+	function parse (s) {
+		var ords, d, t, r = null;
 		if (!s) {
 			return null;
 		}
 		if (s instanceof Date) {
 			return s.clone();
 		}
-		// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
-		ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
-		s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
-		// If it's not an arithmetic string (because JS WILL parse those, just not how we want it to)
-		if (s[0] !== "+" && s[0] !== "-") {
-			try {
-				testDate = new Date(Date._parse(s));
-				time = testDate.getTime();
-			} catch (e) {}
-		}
-		// The following will be FALSE if time is NaN which happens if date is an Invalid Date or it err'd
-		// (yes, invalid dates are still date objects. Go figure.)
-		if (time !== undefined && time === time) {
-			// TODO - make sure that parser parses all dates so we don't have to rely on this testDate logic.
-			return testDate;
+		//  Start with specific formats
+		d = $D.Parsing.ISO.parse(s) || $D.Parsing.Numeric.parse(s);
+
+		if (d instanceof Date && !isNaN(d.getTime())) {
+			return d;
 		} else {
+			// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
+			ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
+			s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
+
 			try {
 				r = $D.Grammar.start.call({}, s.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
 			} catch (e) {
 				return null;
 			}
-			return ((r[1].length === 0) ? r[0] : null);
+
+			d = ((r[1].length === 0) ? r[0] : null);
+			
+			if (d !== null) {
+				return d;
+			} else {
+				try {
+					// ok we haven't parsed it, last ditch attempt with the built-in parser.
+					t = Date._parse(s);
+					return (t || t === 0) ? new Date(t) : null;
+				} catch (e) {
+					return null;
+				}
+			}
 		}
-	};
+	}
 
 	if (!$D._parse) {
 		$D._parse = $D.parse;
 	}
 	$D.parse = parse;
-	
-	// $D.getParseFunction = function (fx) {
-	// 	var fn = $D.Grammar.formats(fx);
-	// 	return function (s) {
-	// 		var r = null;
-	// 		try {
-	// 			r = fn.call({}, s);
-	// 		} catch (e) {
-	// 			return null;
-	// 		}
-	// 		return ((r[1].length === 0) ? r[0] : null);
-	// 	};
-	// };
 
 	Date.getParseFunction = function (fx) {
 		var fns = Date.Grammar.allformats(fx);
@@ -2451,6 +2639,7 @@
 	 * @return {Date}    date
 	 */
 	$P.next = function () {
+		this._move = true;
 		this._orient = +1;
 		return this;
 	};
@@ -2486,6 +2675,7 @@
 	 * @return {Date}    date
 	 */
 	$P.last = $P.prev = $P.previous = function () {
+		this._move = true;
 		this._orient = -1;
 		return this;
 	};
@@ -2591,9 +2781,31 @@
 	 * @return {Boolean}    true|false
 	 */
 	$P.weekday = function () {
+		if (this._nth) {
+			return df("Weekday").call(this);
+		}
+		if (this._move) {
+			return this.addWeekdays(this._orient);
+		}
 		if (this._is) {
 			this._is = false;
 			return (!this.is().sat() && !this.is().sun());
+		}
+		return false;
+	};
+	/** 
+	 * Determines if the current date is on the weekend. This function must be preceded by the .is() function.
+	 * Example
+	<pre><code>
+	Date.today().is().weekend(); // true|false
+	</code></pre>
+	 *  
+	 * @return {Boolean}    true|false
+	 */
+	$P.weekend = function () {
+		if (this._is) {
+			this._is = false;
+			return (this.is().sat() || this.is().sun());
 		}
 		return false;
 	};
@@ -2652,8 +2864,9 @@
 	 * @return {Date}    A new Date instance
 	 */
 	$N.ago = $N.before = function (date) {
-		var c = {};
-		c[this._dateElement + "s"] = this * -1;
+		var c = {},
+		s = (this._dateElement[this._dateElement.length-1] !== "s") ? this._dateElement + "s" : this._dateElement;
+		c[s] = this * -1;
 		return ((!date) ? new Date() : date.clone()).add(c);
 	};
 
@@ -2712,6 +2925,7 @@
 	};
 		
 	// Create day name functions and abbreviated day name functions (eg. monday(), friday(), fri()).
+	
 	var df = function (n) {
 		return function () {
 			if (this._is) {
@@ -2772,7 +2986,7 @@
 	}
 	
 	// Create month name functions and abbreviated month name functions (eg. january(), march(), mar()).
-	var mf = function (n) {
+	var month_instance_functions = function (n) {
 		return function () {
 			if (this._is) {
 				this._is = false;
@@ -2782,7 +2996,7 @@
 		};
 	};
 	
-	var smf = function (n) {
+	var month_static_functions = function (n) {
 		return function () {
 			return $D.today().set({ month: n, day: 1 });
 		};
@@ -2793,10 +3007,10 @@
 		$D[mx[j].toUpperCase()] = $D[mx[j].toUpperCase().substring(0, 3)] = j;
 
 		// Create Month Name functions. Example: Date.march() or Date.mar()
-		$D[mx[j]] = $D[mx[j].substring(0, 3)] = smf(j);
+		$D[mx[j]] = $D[mx[j].substring(0, 3)] = month_static_functions(j);
 
 		// Create Month Name instance functions. Example: Date.today().next().march()
-		$P[mx[j]] = $P[mx[j].substring(0, 3)] = mf(j);
+		$P[mx[j]] = $P[mx[j].substring(0, 3)] = month_instance_functions(j);
 	}
 	
 	// Create date element functions and plural date element functions used with Date (eg. day(), days(), months()).
@@ -2815,6 +3029,9 @@
 					o2 = (arguments[0] || new Date()).toObject(),
 					v = "",
 					k = j.toLowerCase();
+
+				// the substr trick with -1 doesn't work in IE8 or less
+				k = (k[k.length-1] === "s") ? k.substring(0,k.length-1) : k;
 					
 				for (var m = (px.length - 1); m > -1; m--) {
 					v = px[m].toLowerCase();
@@ -2845,12 +3062,13 @@
    
 	for (var k = 0; k < px.length; k++) {
 		de = px[k].toLowerCase();
-	
-		// Create date element functions and plural date element functions used with Date (eg. day(), days(), months()).
-		$P[de] = $P[de + "s"] = ef(px[k]);
-		
-		// Create date element functions and plural date element functions used with Number (eg. day(), days(), months()).
-		$N[de] = $N[de + "s"] = nf(de + "s");
+		if(de !== "weekday") {
+			// Create date element functions and plural date element functions used with Date (eg. day(), days(), months()).
+			$P[de] = $P[de + "s"] = ef(px[k]);
+			
+			// Create date element functions and plural date element functions used with Number (eg. day(), days(), months()).
+			$N[de] = $N[de + "s"] = nf(de + "s");
+		}
 	}
 	
 	$P._ss = ef("Second");
