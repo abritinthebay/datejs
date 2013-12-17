@@ -348,6 +348,16 @@ describe("Core Module", function() {
 			expect(d.getDate()).toBe(24);
 			d.moveToNthOccurrence(0, 5); // sunday, 5th occurrence
 			expect(d.getDate()).toBe(31);
+			d.moveToNthOccurrence("Weekday", 1); // first weekday
+			expect(d.getDate()).toBe(1);
+			d.moveToNthOccurrence("Weekday", -1); // last weekday
+			expect(d.getDate()).toBe(29);
+			d = new Date(1995,11,4);
+			d.moveToNthOccurrence("Weekday", 0); // does nothing
+			expect(d.getDate()).toBe(4);
+			d = new Date(1995,10,4);
+			d.moveToNthOccurrence("Weekday", -1); // last weekday, when last day is weekday
+			expect(d.getDate()).toBe(30);
 		});
 		it("move to a month - changing year if appropriate", function() {
 			var d = new Date(1995,11,4);
@@ -390,7 +400,13 @@ describe("Core Module", function() {
 			expect(d.getDay()).toBe(1);
 			d.next().sunday();
 			d.addWeekdays(1);
-			expect(d.getDay()).toBe(2);
+			expect(d.getDay()).toBe(1);
+			d.next().monday();
+			d.addWeekdays(-1);
+			expect(d.getDay()).toBe(5);
+			d.next().sunday();
+			d.addWeekdays(-1);
+			expect(d.getDay()).toBe(5);
 		});
 		it("day", function() {
 			var d1 = new Date(2010, 1, 1);
@@ -571,8 +587,8 @@ describe("Core Module", function() {
 			});
 		});
 
-		it("doesn't parse strings betwee < and >", function() {
-			expect(d.toString("<the date is> MM/dd/yyyy")).toBe("the date is 12/04/1995");
+		it("doesn't parse strings between [ and ]", function() {
+			expect(d.toString("[the date is] MM/dd/yyyy")).toBe("the date is 12/04/1995");
 		});
 		it("hh:mm tt", function() {
 			expect(d.toString("hh:mm tt")).toBe("12:00 AM");

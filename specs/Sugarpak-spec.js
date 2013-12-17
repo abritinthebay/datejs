@@ -14,6 +14,23 @@ describe("Sugarpak Extensions", function() {
 			expect(d.getDate()).toBe(10);
 			expect(d.getDay()).toBe(1);
 			expect(d.getSeconds()).toBe(1);
+			d = new Date(2013, 0);
+			d.second().weekday();
+			expect(d.getDate()).toBe(2);
+		});
+		it("like month names", function() {
+			expect(Date.today().jan().getMonth()).toBe(0);
+			expect(Date.today().feb().getMonth()).toBe(1);
+			expect(Date.today().mar().getMonth()).toBe(2);
+			expect(Date.today().apr().getMonth()).toBe(3);
+			expect(Date.today().may().getMonth()).toBe(4);
+			expect(Date.today().jun().getMonth()).toBe(5);
+			expect(Date.today().jul().getMonth()).toBe(6);
+			expect(Date.today().aug().getMonth()).toBe(7);
+			expect(Date.today().sep().getMonth()).toBe(8);
+			expect(Date.today().oct().getMonth()).toBe(9);
+			expect(Date.today().nov().getMonth()).toBe(10);
+			expect(Date.today().dec().getMonth()).toBe(11);
 		});
 		it("will throw an exception when nth instance doesn't exist", function() {
 			var d = new Date(2013, 0);
@@ -111,6 +128,16 @@ describe("Sugarpak Extensions", function() {
 			expect(elapsed).toBeLessThan(8);
 			expect(elapsed).toBeGreaterThan(0);
 		});
+		it("weekday", function() {
+			var d1 = new Date(1995, 11, 5);
+			var d2 = new Date(1995, 11, 4);
+			d2.next().weekday();
+			expect(d1.equals(d2)).toBe(true);
+			d1 = new Date(1995, 11, 4);
+			d2 = new Date(1995, 11, 1);
+			d2.next().weekday();
+			expect(d1.equals(d2)).toBe(true);
+		});
 	});
 	describe("can move to last",function (){
 		it("monday", function() {
@@ -190,6 +217,16 @@ describe("Sugarpak Extensions", function() {
 			expect(elapsed).toBeLessThan(0);
 			expect(elapsed).toBeGreaterThan(-8);
 		});
+		it("weekday", function() {
+			var d1 = new Date(1995, 11, 5);
+			var d2 = new Date(1995, 11, 4);
+			d1.last().weekday();
+			expect(d1.equals(d2)).toBe(true);
+			d1 = new Date(1995, 11, 1);
+			d2 = new Date(1995, 11, 4);
+			d2.last().weekday();
+			expect(d1.equals(d2)).toBe(true);
+		});
 	});
 	describe("can can check if a date is",function (){
 		it("a specific day", function() {
@@ -249,6 +286,20 @@ describe("Sugarpak Extensions", function() {
 			expect(d.getDate()).toBe(17);
 			expect(d.getMonth()).toBe(3);
 			expect(d.getHours()).toBe(13);
+		});
+		it("like month names", function() {
+			expect(Date.jan().getMonth()).toBe(0);
+			expect(Date.feb().getMonth()).toBe(1);
+			expect(Date.mar().getMonth()).toBe(2);
+			expect(Date.apr().getMonth()).toBe(3);
+			expect(Date.may().getMonth()).toBe(4);
+			expect(Date.jun().getMonth()).toBe(5);
+			expect(Date.jul().getMonth()).toBe(6);
+			expect(Date.aug().getMonth()).toBe(7);
+			expect(Date.sep().getMonth()).toBe(8);
+			expect(Date.oct().getMonth()).toBe(9);
+			expect(Date.nov().getMonth()).toBe(10);
+			expect(Date.dec().getMonth()).toBe(11);
 		});
 	});
 });
