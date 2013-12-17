@@ -37,6 +37,7 @@
 	 * @return {Date}    date
 	 */
 	$P.next = function () {
+		this._move = true;
 		this._orient = +1;
 		return this;
 	};
@@ -72,6 +73,7 @@
 	 * @return {Date}    date
 	 */
 	$P.last = $P.prev = $P.previous = function () {
+		this._move = true;
 		this._orient = -1;
 		return this;
 	};
@@ -177,6 +179,12 @@
 	 * @return {Boolean}    true|false
 	 */
 	$P.weekday = function () {
+		if (this._nth) {
+			return df("Weekday").call(this);
+		}
+		if (this._move) {
+			return this.addWeekdays(this._orient);
+		}
 		if (this._is) {
 			this._is = false;
 			return (!this.is().sat() && !this.is().sun());
@@ -315,6 +323,7 @@
 	};
 		
 	// Create day name functions and abbreviated day name functions (eg. monday(), friday(), fri()).
+	
 	var df = function (n) {
 		return function () {
 			if (this._is) {
@@ -375,7 +384,7 @@
 	}
 	
 	// Create month name functions and abbreviated month name functions (eg. january(), march(), mar()).
-	var mf = function (n) {
+	var month_instance_functions = function (n) {
 		return function () {
 			if (this._is) {
 				this._is = false;
@@ -385,7 +394,7 @@
 		};
 	};
 	
-	var smf = function (n) {
+	var month_static_functions = function (n) {
 		return function () {
 			return $D.today().set({ month: n, day: 1 });
 		};
@@ -396,10 +405,10 @@
 		$D[mx[j].toUpperCase()] = $D[mx[j].toUpperCase().substring(0, 3)] = j;
 
 		// Create Month Name functions. Example: Date.march() or Date.mar()
-		$D[mx[j]] = $D[mx[j].substring(0, 3)] = smf(j);
+		$D[mx[j]] = $D[mx[j].substring(0, 3)] = month_static_functions(j);
 
 		// Create Month Name instance functions. Example: Date.today().next().march()
-		$P[mx[j]] = $P[mx[j].substring(0, 3)] = mf(j);
+		$P[mx[j]] = $P[mx[j].substring(0, 3)] = month_instance_functions(j);
 	}
 	
 	// Create date element functions and plural date element functions used with Date (eg. day(), days(), months()).

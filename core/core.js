@@ -317,6 +317,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addMilliseconds = function (value) {
+		if (!value) { return this; }
 		this.setTime(this.getTime() + value * 1);
 		return this;
 	};
@@ -327,6 +328,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addSeconds = function (value) {
+		if (!value) { return this; }
 		return this.addMilliseconds(value * 1000);
 	};
 
@@ -336,6 +338,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addMinutes = function (value) {
+		if (!value) { return this; }
 		return this.addMilliseconds(value * 60000); /* 60*1000 */
 	};
 
@@ -345,6 +348,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addHours = function (value) {
+		if (!value) { return this; }
 		return this.addMilliseconds(value * 3600000); /* 60*60*1000 */
 	};
 
@@ -354,6 +358,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addDays = function (value) {
+		if (!value) { return this; }
 		this.setDate(this.getDate() + value * 1);
 		return this;
 	};
@@ -364,15 +369,29 @@
 	 * @return {Date}    this
 	 */
 	$P.addWeekdays = function (value) {
+		if (!value) { return this; }
 		var day = this.getDay();
-		var weeks = (Math.ceil(value/7));
+		var weeks = (Math.ceil(Math.abs(value)/7));
 		if (day === 0 || day === 6) {
-			this.next().monday();
+			if (value > 0) {
+				this.next().monday();
+				this.addDays(-1);
+			}
 		}
-		if (value > 5 || (6-day) <= value) {
+
+		if (value < 0) {
+			while (value < 0) {
+				this.addDays(-1);
+				day = this.getDay();
+				if (day !== 0 && day !== 6) {
+					value++;
+				}
+			}
+			return this;
+		} else if (value > 5 || (6-day) <= value) {
 			value = value + (weeks * 2);
 		}
-		// this.setDate(this.getDate() + value * 1);
+
 		return this.addDays(value);
 	};
 
@@ -382,6 +401,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addWeeks = function (value) {
+		if (!value) { return this; }
 		return this.addDays(value * 7);
 	};
 
@@ -391,6 +411,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addMonths = function (value) {
+		if (!value) { return this; }
 		var n = this.getDate();
 		this.setDate(1);
 		this.setMonth(this.getMonth() + value * 1);
@@ -399,6 +420,7 @@
 	};
 
 	$P.addQuarters = function (value) {
+		if (!value) { return this; }
 		// note this will take you to the same point in the quarter as you are now.
 		// i.e. - if you are 15 days into the quarter you'll be 15 days into the resulting one.
 		// bonus: this allows adding fractional quarters
@@ -411,6 +433,7 @@
 	 * @return {Date}    this
 	 */
 	$P.addYears = function (value) {
+		if (!value) { return this; }
 		return this.addMonths(value * 12);
 	};
 
@@ -706,6 +729,22 @@
 	 * @return {Date}    this
 	 */
 	$P.moveToNthOccurrence = function (dayOfWeek, occurrence) {
+		if (dayOfWeek === "Weekday") {
+			if (occurrence > 0) {
+				this.moveToFirstDayOfMonth();
+				if (this.is().weekday()) {
+					occurrence -= 1;
+				}
+			} else if (occurrence < 0) {
+				this.moveToLastDayOfMonth();
+				if (this.is().weekday()) {
+					occurrence += 1;
+				}
+			} else {
+				return this;
+			}
+			return this.addWeekdays(occurrence);
+		}
 		var shift = 0;
 		if (occurrence > 0) {
 			shift = occurrence - 1;
@@ -935,7 +974,7 @@
 			}
 		}
 
-		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)(?![^<>]*>))/g,
+		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)(?![^\[]*\]))/g,
 		function (m) {
 			if (m.charAt(0) === "\\") {
 				return m.replace("\\", "");
@@ -985,7 +1024,7 @@
 			case "S":
 				return ord(x.getDate());
 			}
-		}).replace(/<|>/g, "") : this._toString();
+		}).replace(/\[|\]/g, "") : this._toString();
 	};
 
 }());
