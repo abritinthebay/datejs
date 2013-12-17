@@ -974,7 +974,7 @@
 			}
 		}
 
-		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S)(?![^\[]*\]))/g,
+		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S|q|Q)(?![^\[]*\]))/g,
 		function (m) {
 			if (m.charAt(0) === "\\") {
 				return m.replace("\\", "");
@@ -1023,6 +1023,10 @@
 				return x.h() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
 			case "S":
 				return ord(x.getDate());
+			case "Q":
+				return "Q" + x.getQuarter();
+			case "q":
+				return String(x.getQuarter());
 			}
 		}).replace(/\[|\]/g, "") : this._toString();
 	};
