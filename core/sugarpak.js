@@ -330,6 +330,7 @@
 				this._is = false;
 				return this.getDay() === n;
 			}
+			if (this._move) { this._move = null; }
 			if (this._nth !== null) {
 				// If the .second() function was called earlier, remove the _orient 
 				// from the date, and then continue.
@@ -446,6 +447,7 @@
 			if (j.substring(j.length - 1) !== "s") {
 				j += "s";
 			}
+			if (this._move) { this._move = null; }
 			return this["add" + j](this._orient);
 		};
 	};

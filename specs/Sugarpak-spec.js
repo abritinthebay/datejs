@@ -240,6 +240,7 @@ describe("Sugarpak Extensions", function() {
 			expect(d.weekday()).toBe(false);
 			d = new Date(1995, 10, 26);
 			expect(d.is().weekday()).toBe(false);
+			expect(Date.today().next().sunday().is().weekday()).toBe(false);
 		});
 		it("a weekend", function() {
 			var d = new Date(1995, 10, 27);
