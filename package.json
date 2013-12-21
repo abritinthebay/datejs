@@ -5,6 +5,7 @@
   "main": "GruntFile.js",
   "devDependencies": {
     "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.11",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-closurecompiler": "~0.9.8"
   },
@@ -26,6 +27,5 @@
   "author": "Gregory Wild-Smith",
   "originator": "Geoffrey McGill",
   "license": "MIT",
-  "readmeFilename": "README.md",
-  "gitHead": "6c7b201a7379360b40b6c3aa84069dd3277134e9"
+  "readmeFilename": "README.md"
 }
