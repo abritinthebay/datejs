@@ -3,7 +3,7 @@
 var fs = require('fs');
 var dirs = {
 	core: 'core',
-	i18n: 'i18n',
+	i18n: 'core/i18n',
 	build: 'build'
 };
 var getI18NFiles = function () {
