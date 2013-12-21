@@ -1,7 +1,7 @@
 /* 
  * Name: DateJS
- * Version: 1.0.0alpha-2013-12-16
- * Date: 2013-12-16
+ * Version: 1.0.0alpha-2013-12-20
+ * Date: 2013-12-20
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
@@ -14,206 +14,287 @@
  * Format: "key" : "value"
  * Key is the en-US term, Value is the Key in the current language.
  */
-Date.CultureStrings = {
-	"name": "da-DK",
-	"englishName": "Danish (Denmark)",
-	"nativeName": "dansk (Danmark)",
-	"Sunday": "søndag",
-	"Monday": "mandag",
-	"Tuesday": "tirsdag",
-	"Wednesday": "onsdag",
-	"Thursday": "torsdag",
-	"Friday": "fredag",
-	"Saturday": "lørdag",
-	"Sun": "sø",
-	"Mon": "ma",
-	"Tue": "ti",
-	"Wed": "on",
-	"Thu": "to",
-	"Fri": "fr",
-	"Sat": "lø",
-	"Su": "sø",
-	"Mo": "ma",
-	"Tu": "ti",
-	"We": "on",
-	"Th": "to",
-	"Fr": "fr",
-	"Sa": "lø",
-	"S_Sun_Initial": "s",
-	"M_Mon_Initial": "m",
-	"T_Tue_Initial": "t",
-	"W_Wed_Initial": "o",
-	"T_Thu_Initial": "t",
-	"F_Fri_Initial": "f",
-	"S_Sat_Initial": "l",
-	"January": "januar",
-	"February": "februar",
-	"March": "marts",
-	"April": "april",
-	"May": "maj",
-	"June": "juni",
-	"July": "juli",
-	"August": "august",
-	"September": "september",
-	"October": "oktober",
-	"November": "november",
-	"December": "december",
-	"Jan_Abbr": "jan",
-	"Feb_Abbr": "feb",
-	"Mar_Abbr": "mar",
-	"Apr_Abbr": "apr",
-	"May_Abbr": "maj",
-	"Jun_Abbr": "jun",
-	"Jul_Abbr": "jul",
-	"Aug_Abbr": "aug",
-	"Sep_Abbr": "sep",
-	"Oct_Abbr": "okt",
-	"Nov_Abbr": "nov",
-	"Dec_Abbr": "dec",
-	"AM": "",
-	"PM": "",
-	"firstDayOfWeek": 1,
-	"twoDigitYearMax": 2029,
-	"mdy": "dmy",
-	"M/d/yyyy": "dd-MM-yyyy",
-	"dddd, MMMM dd, yyyy": "d. MMMM yyyy",
-	"h:mm tt": "HH:mm",
-	"h:mm:ss tt": "HH:mm:ss",
-	"dddd, MMMM dd, yyyy h:mm:ss tt": "d. MMMM yyyy HH:mm:ss",
-	"yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",
-	"yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",
-	"ddd, dd MMM yyyy HH:mm:ss": "ddd, dd MMM yyyy HH:mm:ss",
-	"MMMM dd": "d. MMMM",
-	"MMMM, yyyy": "MMMM yyyy",
-	"^jan(uary)?": "^jan(uar)?",
-	"^feb(ruary)?": "^feb(ruar)?",
-	"^mar(ch)?": "^mar(ts)?",
-	"^apr(il)?": "^apr(il)?",
-	"^may": "^maj",
-	"^jun(e)?": "^jun(i)?",
-	"^jul(y)?": "^jul(i)?",
-	"^aug(ust)?": "^aug(ust)?",
-	"^sep(t(ember)?)?": "^sep(t(ember)?)?",
-	"^oct(ober)?": "^okt(ober)?",
-	"^nov(ember)?": "^nov(ember)?",
-	"^dec(ember)?": "^dec(ember)?",
-	"^su(n(day)?)?": "^søndag",
-	"^mo(n(day)?)?": "^mandag",
-	"^tu(e(s(day)?)?)?": "^tirsdag",
-	"^we(d(nesday)?)?": "^onsdag",
-	"^th(u(r(s(day)?)?)?)?": "^torsdag",
-	"^fr(i(day)?)?": "^fredag",
-	"^sa(t(urday)?)?": "^lørdag",
-	"^next": "^next",
-	"^last|past|prev(ious)?": "^last|past|prev(ious)?",
-	"^(\\+|aft(er)?|from|hence)": "^(\\+|aft(er)?|from|hence)",
-	"^(\\-|bef(ore)?|ago)": "^(\\-|bef(ore)?|ago)",
-	"^yes(terday)?": "^yes(terday)?",
-	"^t(od(ay)?)?": "^t(od(ay)?)?",
-	"^tom(orrow)?": "^tom(orrow)?",
-	"^n(ow)?": "^n(ow)?",
-	"^ms|milli(second)?s?": "^ms|milli(second)?s?",
-	"^sec(ond)?s?": "^sec(ond)?s?",
-	"^mn|min(ute)?s?": "^mn|min(ute)?s?",
-	"^h(our)?s?": "^h(our)?s?",
-	"^w(eek)?s?": "^w(eek)?s?",
-	"^m(onth)?s?": "^m(onth)?s?",
-	"^d(ay)?s?": "^d(ay)?s?",
-	"^y(ear)?s?": "^y(ear)?s?",
-	"^(a|p)": "^(a|p)",
-	"^(a\\.?m?\\.?|p\\.?m?\\.?)": "^(a\\.?m?\\.?|p\\.?m?\\.?)",
-	"^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)": "^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)",
-	"^\\s*(st|nd|rd|th)": "^\\s*(st|nd|rd|th)",
-	"^\\s*(\\:|a(?!u|p)|p)": "^\\s*(\\:|a(?!u|p)|p)",
-	"LINT": "LINT",
-	"TOT": "TOT",
-	"CHAST": "CHAST",
-	"NZST": "NZST",
-	"NFT": "NFT",
-	"SBT": "SBT",
-	"AEST": "AEST",
-	"ACST": "ACST",
-	"JST": "JST",
-	"CWST": "CWST",
-	"CT": "CT",
-	"ICT": "ICT",
-	"MMT": "MMT",
-	"BIOT": "BST",
-	"NPT": "NPT",
-	"IST": "IST",
-	"PKT": "PKT",
-	"AFT": "AFT",
-	"MSK": "MSK",
-	"IRST": "IRST",
-	"FET": "FET",
-	"EET": "EET",
-	"CET": "CET",
-	"UTC": "UTC",
-	"GMT": "GMT",
-	"CVT": "CVT",
-	"GST": "GST",
-	"BRT": "BRT",
-	"NST": "NST",
-	"AST": "AST",
-	"EST": "EST",
-	"CST": "CST",
-	"MST": "MST",
-	"PST": "PST",
-	"AKST": "AKST",
-	"MIT": "MIT",
-	"HST": "HST",
-	"SST": "SST",
-	"BIT": "BIT",
-	"CHADT": "CHADT",
-	"NZDT": "NZDT",
-	"AEDT": "AEDT",
-	"ACDT": "ACDT",
-	"AZST": "AZST",
-	"IRDT": "IRDT",
-	"EEST": "EEST",
-	"CEST": "CEST",
-	"BST": "BST",
-	"PMDT": "PMDT",
-	"ADT": "ADT",
-	"NDT": "NDT",
-	"EDT": "EDT",
-	"CDT": "CDT",
-	"MDT": "MDT",
-	"PDT": "PDT",
-	"AKDT": "AKDT",
-	"HADT": "HADT"
+Date.CultureStrings = Date.CultureStrings || {};
+Date.CultureStrings["da-DK"] = {
+        "name": "da-DK",
+        "englishName": "Danish (Denmark)",
+        "nativeName": "dansk (Danmark)",
+        "Sunday": "søndag",
+        "Monday": "mandag",
+        "Tuesday": "tirsdag",
+        "Wednesday": "onsdag",
+        "Thursday": "torsdag",
+        "Friday": "fredag",
+        "Saturday": "lørdag",
+        "Sun": "sø",
+        "Mon": "ma",
+        "Tue": "ti",
+        "Wed": "on",
+        "Thu": "to",
+        "Fri": "fr",
+        "Sat": "lø",
+        "Su": "sø",
+        "Mo": "ma",
+        "Tu": "ti",
+        "We": "on",
+        "Th": "to",
+        "Fr": "fr",
+        "Sa": "lø",
+        "S_Sun_Initial": "s",
+        "M_Mon_Initial": "m",
+        "T_Tue_Initial": "t",
+        "W_Wed_Initial": "o",
+        "T_Thu_Initial": "t",
+        "F_Fri_Initial": "f",
+        "S_Sat_Initial": "l",
+        "January": "januar",
+        "February": "februar",
+        "March": "marts",
+        "April": "april",
+        "May": "maj",
+        "June": "juni",
+        "July": "juli",
+        "August": "august",
+        "September": "september",
+        "October": "oktober",
+        "November": "november",
+        "December": "december",
+        "Jan_Abbr": "jan",
+        "Feb_Abbr": "feb",
+        "Mar_Abbr": "mar",
+        "Apr_Abbr": "apr",
+        "May_Abbr": "maj",
+        "Jun_Abbr": "jun",
+        "Jul_Abbr": "jul",
+        "Aug_Abbr": "aug",
+        "Sep_Abbr": "sep",
+        "Oct_Abbr": "okt",
+        "Nov_Abbr": "nov",
+        "Dec_Abbr": "dec",
+        "AM": "",
+        "PM": "",
+        "firstDayOfWeek": 1,
+        "twoDigitYearMax": 2029,
+        "mdy": "dmy",
+        "M/d/yyyy": "dd-MM-yyyy",
+        "dddd, MMMM dd, yyyy": "d. MMMM yyyy",
+        "h:mm tt": "HH:mm",
+        "h:mm:ss tt": "HH:mm:ss",
+        "dddd, MMMM dd, yyyy h:mm:ss tt": "d. MMMM yyyy HH:mm:ss",
+        "yyyy-MM-ddTHH:mm:ss": "yyyy-MM-ddTHH:mm:ss",
+        "yyyy-MM-dd HH:mm:ssZ": "yyyy-MM-dd HH:mm:ssZ",
+        "ddd, dd MMM yyyy HH:mm:ss": "ddd, dd MMM yyyy HH:mm:ss",
+        "MMMM dd": "d. MMMM",
+        "MMMM, yyyy": "MMMM yyyy",
+        "/jan(uary)?/": "jan(uar)?",
+        "/feb(ruary)?/": "feb(ruar)?",
+        "/mar(ch)?/": "mar(ts)?",
+        "/apr(il)?/": "apr(il)?",
+        "/may/": "maj",
+        "/jun(e)?/": "jun(i)?",
+        "/jul(y)?/": "jul(i)?",
+        "/aug(ust)?/": "aug(ust)?",
+        "/sep(t(ember)?)?/": "sep(t(ember)?)?",
+        "/oct(ober)?/": "okt(ober)?",
+        "/nov(ember)?/": "nov(ember)?",
+        "/dec(ember)?/": "dec(ember)?",
+        "/^su(n(day)?)?/": "^søndag",
+        "/^mo(n(day)?)?/": "^mandag",
+        "/^tu(e(s(day)?)?)?/": "^tirsdag",
+        "/^we(d(nesday)?)?/": "^onsdag",
+        "/^th(u(r(s(day)?)?)?)?/": "^torsdag",
+        "/^fr(i(day)?)?/": "^fredag",
+        "/^sa(t(urday)?)?/": "^lørdag",
+        "/^next/": "^next",
+        "/^last|past|prev(ious)?/": "^last|past|prev(ious)?",
+        "/^(\\+|aft(er)?|from|hence)/": "^(\\+|aft(er)?|from|hence)",
+        "/^(\\-|bef(ore)?|ago)/": "^(\\-|bef(ore)?|ago)",
+        "/^yes(terday)?/": "^yes(terday)?",
+        "/^t(od(ay)?)?/": "^t(od(ay)?)?",
+        "/^tom(orrow)?/": "^tom(orrow)?",
+        "/^n(ow)?/": "^n(ow)?",
+        "/^ms|milli(second)?s?/": "^ms|milli(second)?s?",
+        "/^sec(ond)?s?/": "^sec(ond)?s?",
+        "/^mn|min(ute)?s?/": "^mn|min(ute)?s?",
+        "/^h(our)?s?/": "^h(our)?s?",
+        "/^w(eek)?s?/": "^w(eek)?s?",
+        "/^m(onth)?s?/": "^m(onth)?s?",
+        "/^d(ay)?s?/": "^d(ay)?s?",
+        "/^y(ear)?s?/": "^y(ear)?s?",
+        "/^(a|p)/": "^(a|p)",
+        "/^(a\\.?m?\\.?|p\\.?m?\\.?)/": "^(a\\.?m?\\.?|p\\.?m?\\.?)",
+        "/^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)/": "^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)",
+        "/^\\s*(st|nd|rd|th)/": "^\\s*(st|nd|rd|th)",
+        "/^\\s*(\\:|a(?!u|p)|p)/": "^\\s*(\\:|a(?!u|p)|p)",
+        "LINT": "LINT",
+        "TOT": "TOT",
+        "CHAST": "CHAST",
+        "NZST": "NZST",
+        "NFT": "NFT",
+        "SBT": "SBT",
+        "AEST": "AEST",
+        "ACST": "ACST",
+        "JST": "JST",
+        "CWST": "CWST",
+        "CT": "CT",
+        "ICT": "ICT",
+        "MMT": "MMT",
+        "BIOT": "BST",
+        "NPT": "NPT",
+        "IST": "IST",
+        "PKT": "PKT",
+        "AFT": "AFT",
+        "MSK": "MSK",
+        "IRST": "IRST",
+        "FET": "FET",
+        "EET": "EET",
+        "CET": "CET",
+        "UTC": "UTC",
+        "GMT": "GMT",
+        "CVT": "CVT",
+        "GST": "GST",
+        "BRT": "BRT",
+        "NST": "NST",
+        "AST": "AST",
+        "EST": "EST",
+        "CST": "CST",
+        "MST": "MST",
+        "PST": "PST",
+        "AKST": "AKST",
+        "MIT": "MIT",
+        "HST": "HST",
+        "SST": "SST",
+        "BIT": "BIT",
+        "CHADT": "CHADT",
+        "NZDT": "NZDT",
+        "AEDT": "AEDT",
+        "ACDT": "ACDT",
+        "AZST": "AZST",
+        "IRDT": "IRDT",
+        "EEST": "EEST",
+        "CEST": "CEST",
+        "BST": "BST",
+        "PMDT": "PMDT",
+        "ADT": "ADT",
+        "NDT": "NDT",
+        "EDT": "EDT",
+        "CDT": "CDT",
+        "MDT": "MDT",
+        "PDT": "PDT",
+        "AKDT": "AKDT",
+        "HADT": "HADT"
 };
+Date.CultureStrings.lang = "da-DK";
 
 /* 
  * Name: DateJS
- * Version: 1.0.0alpha-2013-12-16
- * Date: 2013-12-16
+ * Version: 1.0.0alpha-2013-12-20
+ * Date: 2013-12-20
  * Copyright: 2013 Gregory Wild-Smith
  * Original Project: 2008 Geoffrey McGill
  * Licence: MIT
  * URL: https://github.com/abritinthebay/datejs
  */(function () {
-	var $D = Date;
-	var __ = function (key) {
-		var output, split, length, last;
-		if (Date.CultureStrings && Date.CultureStrings[key]) {
-			output = Date.CultureStrings[key];
-		} else {
-			output = key;
-			split = key.split("_");
-			length = split.length;
-			if (length > 1 && key.charAt(0) !== "^") {
-				// if the key isn't a regex and it has a split.
-				last = split[(length - 1)].toLowerCase();
-				if (last === "initial" || last === "abbr") {
-					output = split[0];
+	/*
+	 * The following is a UTF8 conversion process. Technically decodeURIComponent(escape(s)) would work
+	 * however there are two downsides that: 
+	 *     1) It's slow. Even slower with large text. 
+	 *     2) escape was deprecated in JavaScript version 1.5 and it's replacement (encodeURIComponent) doesn't
+	 *        have the same behavior.
+	 */
+	var UTF8_ACCEPT = 0,
+		UTF8D = [
+			// The first part of the table maps bytes to character classes that
+			// to reduce the size of the transition table and create bitmasks.
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,   7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+			8, 8, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,   2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+			10, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3,  11, 6, 6, 6, 5, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+
+			// The second part is a transition table that maps a combination
+			// of a state of the automaton and a character class to a state.
+			0, 12, 24, 36, 60, 96, 84, 12, 12, 12, 48, 72,  12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
+			12,  0, 12, 12, 12, 12, 12,  0, 12,  0, 12, 12,  12, 24, 12, 12, 12, 12, 12, 24, 12, 24, 12, 12,
+			12, 12, 12, 12, 12, 12, 12, 24, 12, 12, 12, 12,  12, 24, 12, 12, 12, 12, 12, 12, 12, 24, 12, 12,
+			12, 12, 12, 12, 12, 12, 12, 36, 12, 36, 12, 12,  12, 36, 12, 12, 12, 12, 12, 36, 12, 36, 12, 12,
+			12, 36, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12
+		];
+	function decode (utftext) {
+		var i, charCode, type,
+			codep = 0,
+			state = UTF8_ACCEPT,
+			string = [],
+			len = utftext.length;
+
+		for (i = 0; i < len; i++) {
+			charCode = utftext.charCodeAt(i);
+			type = UTF8D[charCode];
+
+			if (state !== UTF8_ACCEPT) {
+				codep = (charCode & 0x3f) | (codep << 6);
+			} else {
+				codep = (0xff >> type) & charCode;
+			}
+
+			state = UTF8D[256 + state + type];
+
+			if (state === UTF8_ACCEPT) {
+				if (codep > 0xffff) {
+					string.push(0xD7C0 + (codep >> 10), 0xDC00 + (codep & 0x3FF));
+				} else {
+					string.push(codep);
 				}
 			}
 		}
-		if (key.charAt(0) === "^") {
-			// it's a regex
-			output = new RegExp(key, "i");
+
+		return String.fromCharCode.apply(null, string);
+	}
+	
+	var $D = Date;
+	var lang = Date.CultureStrings.lang;
+	var loggedKeys = {}; // for debug purposes.
+	var __ = function (key, language) {
+		var output, split, length, last;
+		var countryCode = (language) ? language : lang;
+		if (Date.CultureStrings && Date.CultureStrings[countryCode] && Date.CultureStrings[countryCode][key]) {
+			output = (typeof Date.CultureStrings[countryCode][key] === "string") ? decode(Date.CultureStrings[countryCode][key]) : Date.CultureStrings[countryCode][key]; // UTF support
+		} else {
+			switch(key) {
+				case "name":
+					output = "en-US";
+					break;
+				case "englishName":
+					output = "English (United States)";
+					break;
+				case "nativeName":
+					output = "English (United States)";
+					break;
+				default:
+					output = key;
+					split = key.split("_");
+					length = split.length;
+					if (length > 1 && key.charAt(0) !== "/") {
+						// if the key isn't a regex and it has a split.
+						last = split[(length - 1)].toLowerCase();
+						if (last === "initial" || last === "abbr") {
+							output = split[0];
+						}
+					}
+			}
 		}
+		if (key.charAt(0) === "/") {
+			// Assume it's a regex
+			if (Date.CultureStrings && Date.CultureStrings[countryCode] && Date.CultureStrings[countryCode][key]) {
+				output = new RegExp(decode(Date.CultureStrings[countryCode][key]), "i");
+			} else {
+				output = new RegExp(key.replace(new RegExp("/", "g"),""), "i");
+			}
+		}
+		loggedKeys[key] = key;
 		return output;
 	};
 
@@ -323,46 +404,52 @@ Date.CultureStrings = {
 				yearMonth: __("MMMM, yyyy")
 			},
 			regexPatterns: {
-				jan: __("^jan(uary)?"),
-				feb: __("^feb(ruary)?"),
-				mar: __("^mar(ch)?"),
-				apr: __("^apr(il)?"),
-				may: __("^may"),
-				jun: __("^jun(e)?"),
-				jul: __("^jul(y)?"),
-				aug: __("^aug(ust)?"),
-				sep: __("^sep(t(ember)?)?"),
-				oct: __("^oct(ober)?"),
-				nov: __("^nov(ember)?"),
-				dec: __("^dec(ember)?"),
-				sun: __("^su(n(day)?)?"),
-				mon: __("^mo(n(day)?)?"),
-				tue: __("^tu(e(s(day)?)?)?"),
-				wed: __("^we(d(nesday)?)?"),
-				thu: __("^th(u(r(s(day)?)?)?)?"),
-				fri: __("^fr(i(day)?)?"),
-				sat: __("^sa(t(urday)?)?"),
-				future: __("^next"),
-				past: __("^last|past|prev(ious)?"),
-				add: __("^(\\+|aft(er)?|from|hence)"),
-				subtract: __("^(\\-|bef(ore)?|ago)"),
-				yesterday: __("^yes(terday)?"),
-				today: __("^t(od(ay)?)?"),
-				tomorrow: __("^tom(orrow)?"),
-				now: __("^n(ow)?"),
-				millisecond: __("^ms|milli(second)?s?"),
-				second: __("^sec(ond)?s?"),
-				minute: __("^mn|min(ute)?s?"),
-				hour: __("^h(our)?s?"),
-				week: __("^w(eek)?s?"),
-				month: __("^m(onth)?s?"),
-				day: __("^d(ay)?s?"),
-				year: __("^y(ear)?s?"),
-				shortMeridian: __("^(a|p)"),
-				longMeridian: __("^(a\\.?m?\\.?|p\\.?m?\\.?)"),
-				timezone: __("^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)"),
-				ordinalSuffix: __("^\\s*(st|nd|rd|th)"),
-				timeContext: __("^\\s*(\\:|a(?!u|p)|p)")
+				inTheMorning: __("/( in the )(morn(ing)?)\\b/"),
+				thisMorning: __("/(this )(morn(ing)?)\\b/"),
+				amThisMorning: __("/(\b\\d(am)? )(this )(morn(ing)?)/"),
+				inTheEvening: __("/( in the )(even(ing)?)\\b/"),
+				thisEvening: __("/(this )(even(ing)?)\\b/"),
+				pmThisEvening: __("/(\b\\d(pm)? )(this )(even(ing)?)/"),
+				jan: __("/jan(uary)?/"),
+				feb: __("/feb(ruary)?/"),
+				mar: __("/mar(ch)?/"),
+				apr: __("/apr(il)?/"),
+				may: __("/may/"),
+				jun: __("/jun(e)?/"),
+				jul: __("/jul(y)?/"),
+				aug: __("/aug(ust)?/"),
+				sep: __("/sep(t(ember)?)?/"),
+				oct: __("/oct(ober)?/"),
+				nov: __("/nov(ember)?/"),
+				dec: __("/dec(ember)?/"),
+				sun: __("/^su(n(day)?)?/"),
+				mon: __("/^mo(n(day)?)?/"),
+				tue: __("/^tu(e(s(day)?)?)?/"),
+				wed: __("/^we(d(nesday)?)?/"),
+				thu: __("/^th(u(r(s(day)?)?)?)?/"),
+				fri: __("/fr(i(day)?)?/"),
+				sat: __("/^sa(t(urday)?)?/"),
+				future: __("/^next/"),
+				past: __("/last|past|prev(ious)?/"),
+				add: __("/^(\\+|aft(er)?|from|hence)/"),
+				subtract: __("/^(\\-|bef(ore)?|ago)/"),
+				yesterday: __("/^yes(terday)?/"),
+				today: __("/^t(od(ay)?)?/"),
+				tomorrow: __("/^tom(orrow)?/"),
+				now: __("/^n(ow)?/"),
+				millisecond: __("/^ms|milli(second)?s?/"),
+				second: __("/^sec(ond)?s?/"),
+				minute: __("/^mn|min(ute)?s?/"),
+				hour: __("/^h(our)?s?/"),
+				week: __("/^w(eek)?s?/"),
+				month: __("/^m(onth)?s?/"),
+				day: __("/^d(ay)?s?/"),
+				year: __("/^y(ear)?s?/"),
+				shortMeridian: __("/^(a|p)/"),
+				longMeridian: __("/^(a\\.?m?\\.?|p\\.?m?\\.?)/"),
+				timezone: __("/^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)/"),
+				ordinalSuffix: __("/^\\s*(st|nd|rd|th)/"),
+				timeContext: __("/^\\s*(\\:|a(?!u|p)|p)/")
 			},
 			timezones: [],
 			abbreviatedTimeZoneDST: {},
@@ -434,8 +521,23 @@ Date.CultureStrings = {
 	};
 
 	$D.i18n = {
-		__: function (key) {
-			return __(key);
+		__: function (key, lang) {
+			return __(key, lang);
+		},
+		currentLanguage: function () {
+			return lang || "en-US";
+		},
+		setLanguage: function (code, force) {
+			if (force || code === "en-US" || (Date.CultureStrings && Date.CultureStrings[code])) {
+				lang = code;
+				Date.CultureStrings.lang = code;
+				Date.CultureInfo = CultureInfo();
+			} else {
+				Date.console.error("Language '" + code + "' is not available or has not been loaded.");
+			}
+		},
+		getLoggedKeys: function () {
+			return loggedKeys;
 		},
 		updateCultureInfo: function () {
 			Date.CultureInfo = CultureInfo();
@@ -452,7 +554,17 @@ Date.CultureStrings = {
 			}
 			return ("000" + s).slice(l * -1);
 		};
-		
+	
+	if (console) {
+		$D.console = console; // used only to raise non-critical errors if available
+	} else {
+		// set mock so we don't give errors.
+		$D.console = {
+			log: function(){},
+			error: function(){}
+		};
+	}
+
 	$D.initOverloads = function() {
 		/** 
 		 * Overload of Date.now. Allows an alternate call for Date.now where it returns the 
@@ -1591,7 +1703,7 @@ Date.CultureStrings = {
 			var data, i,
 				time = {},
 				order = Date.CultureInfo.dateElementOrder.split("");
-			if (!(!isNaN(parseFloat(s)) && isFinite(s)) ||	// if it's non-numeric OR
+			if (!(!isNaN(parseFloat(s)) && isFinite(s)) || // if it's non-numeric OR
 				(s[0] === "+" && s[0] === "-")) {			// It's an arithmatic string (eg +/-1000)
 				return null;
 			}
@@ -1617,6 +1729,57 @@ Date.CultureStrings = {
 				}
 			}
 			return $P.processTimeObject(time);
+		}
+	};
+	$P.Normalizer = {
+		parse: function (s) {
+			var $C = Date.CultureInfo;
+			var $R = Date.CultureInfo.regexPatterns;
+			var __ = Date.i18n.__;
+
+			s = s.replace($R.jan.source, "January");
+			s = s.replace($R.feb, "February");
+			s = s.replace($R.mar, "March");
+			s = s.replace($R.apr, "April");
+			s = s.replace($R.may, "May");
+			s = s.replace($R.jun, "June");
+			s = s.replace($R.jul, "July");
+			s = s.replace($R.aug, "August");
+			s = s.replace($R.sep, "September");
+			s = s.replace($R.oct, "October");
+			s = s.replace($R.nov, "November");
+			s = s.replace($R.dec, "December");
+
+			
+			s = s.replace($R.tomorrow, Date.today().addDays(1).toString("d"));
+			s = s.replace($R.yesterday, Date.today().addDays(-1).toString("d"));
+			s = s.replace(new RegExp($R.today.source + "\\b", "i"), Date.today().toString("d"));
+			s = s.replace(/\bat\b/gi, ""); // replace "at", eg: "tomorrow at 3pm"
+			s = s.replace(/\s{2,}/, " "); // repliace multiple spaces with one.
+
+			s = s.replace(new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i"), function(full, m1, m2, m3, m4) {
+				var t = Date.today().addDays(1).toString("d");
+				var s = t + " " + m1;
+				return s;
+			});
+
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.mon.source+'))'), Date.today().last().monday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.tue.source+'))'), Date.today().last().tuesday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.wed.source+'))'), Date.today().last().wednesday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.thu.source+'))'), Date.today().last().thursday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.fri.source+'))'), Date.today().last().friday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.sat.source+'))'), Date.today().last().saturday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.sun.source+'))'), Date.today().last().sunday().toString("d"));
+
+			// s = s.replace($R.thisMorning, "9am"))
+			s = s.replace($R.amThisMorning, function(str, am){return am;});
+			s = s.replace($R.inTheMorning, "am");
+			s = s.replace($R.thisMorning, "9am");
+			s = s.replace($R.amThisEvening, function(str, pm){return pm;});
+			s = s.replace($R.inTheEvening, "pm");
+			s = s.replace($R.thisEvening, "7pm");
+
+			return s;
 		}
 	};
 }());
@@ -1900,7 +2063,7 @@ Date.CultureStrings = {
 					// so, if this isn't the last element, we're going to see if
 					// we can get any more matches from the remaining (unmatched)
 					// elements ...
-					if (!last) {
+					if (!last) {	
 						// build a list of the remaining rules we can match against,
 						// i.e., all but the one we just matched against
 						var qx = [];
@@ -2027,7 +2190,7 @@ Date.CultureStrings = {
 	
 	var _generator = function (op) {
 		function gen() {
-			var args, rx = [], px, i;
+			var args = null, rx = [], px, i;
 			if (arguments.length > 1) {
 				args = Array.prototype.slice.call(arguments);
 			} else if (arguments[0] instanceof Array) {
@@ -2264,8 +2427,14 @@ Date.CultureStrings = {
 			var gap, mod, orient;
 			orient = ((this.orient == "past" || this.operator == "subtract") ? -1 : 1);
 			
-			if(!this.now && "hour minute second".indexOf(this.unit) !== -1) {
+			if(!this.now && "hour minute second".indexOf(this.unit) != -1) {
 				today.setTimeToNow();
+			}
+
+			if (this.month && this.unit == "week") {
+				this.value = this.month + 1;
+				delete this.month;
+				delete this.day;
 			}
 
 			if (this.month || this.month === 0) {
@@ -2275,7 +2444,7 @@ Date.CultureStrings = {
 					expression = true;
 				}
 			}
-			
+
 			if (!expression && this.weekday && !this.day && !this.days) {
 				var temp = Date[this.weekday]();
 				this.day = temp.getDate();
@@ -2285,7 +2454,7 @@ Date.CultureStrings = {
 				this.year = temp.getFullYear();
 			}
 			
-			if (expression && this.weekday && this.unit != "month") {
+			if (expression && this.weekday && this.unit != "month" && this.unit != "week") {
 				this.unit = "day";
 				gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
 				mod = 7;
@@ -2324,7 +2493,7 @@ Date.CultureStrings = {
 			if (!this.unit) {
 				this.unit = "day";
 			}
-			
+
 			if (!this.value && this.operator && this.operator !== null && this[this.unit + "s"] && this[this.unit + "s"] !== null) {
 				this[this.unit + "s"] = this[this.unit + "s"] + ((this.operator == "add") ? 1 : -1) + (this.value||0) * orient;
 			} else if (this[this.unit + "s"] == null || this.operator != null) {
@@ -2341,8 +2510,8 @@ Date.CultureStrings = {
 					this.hour = 0;
 				}
 			}
-			
-			if (this.weekday && !this.day && !this.days) {
+
+			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
 				var temp = Date[this.weekday]();
 				this.day = temp.getDate();
 				if (temp.getMonth() !== today.getMonth()) {
@@ -2353,9 +2522,18 @@ Date.CultureStrings = {
 			if ((this.month || this.month === 0) && !this.day) {
 				this.day = 1;
 			}
-			
+
 			if (!this.orient && !this.operator && this.unit == "week" && this.value && !this.day && !this.month) {
 				return Date.today().setWeek(this.value);
+			}
+
+			if (this.unit == "week" && this.weeks && !this.day && !this.month) {
+				var weekday = (this.weekday) ? this.weekday : "today";
+				var d = Date[weekday]().addWeeks(this.weeks);
+				if (this.now) {
+					d.setTimeToNow();
+				}
+				return d;
 			}
 
 			if (expression && this.timezone && this.day && this.days) {
@@ -2426,7 +2604,8 @@ Date.CultureStrings = {
 	));
 	g.M = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d|\d)/), t.month));
 	g.MM = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d)/), t.month));
-	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join("")), t.month));
+	g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
+//	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join(" ")), t.month));
 	g.y = _.cache(_.process(_.rtoken(/^(\d\d?)/), t.year));
 	g.yy = _.cache(_.process(_.rtoken(/^(\d\d)/), t.year));
 	g.yyy = _.cache(_.process(_.rtoken(/^(\d\d?\d?\d?)/), t.year));
@@ -2703,16 +2882,17 @@ Date.CultureStrings = {
 		if (s instanceof Date) {
 			return s.clone();
 		}
-		//  Start with specific formats
-		d = $D.Parsing.ISO.parse(s) || $D.Parsing.Numeric.parse(s);
-
+		if (s.length >= 4 && s.charAt(0) !== "0") { // ie: 2004 will pass, 0800 won't.
+			//  Start with specific formats
+			d = $D.Parsing.ISO.parse(s) || $D.Parsing.Numeric.parse(s);
+		}
 		if (d instanceof Date && !isNaN(d.getTime())) {
 			return d;
 		} else {
 			// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
 			ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
 			s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
-
+			s = $D.Parsing.Normalizer.parse(s);
 			try {
 				r = $D.Grammar.start.call({}, s.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
 			} catch (e) {
@@ -3118,6 +3298,7 @@ Date.CultureStrings = {
 				this._is = false;
 				return this.getDay() === n;
 			}
+			if (this._move) { this._move = null; }
 			if (this._nth !== null) {
 				// If the .second() function was called earlier, remove the _orient 
 				// from the date, and then continue.
@@ -3234,6 +3415,7 @@ Date.CultureStrings = {
 			if (j.substring(j.length - 1) !== "s") {
 				j += "s";
 			}
+			if (this._move) { this._move = null; }
 			return this["add" + j](this._orient);
 		};
 	};
