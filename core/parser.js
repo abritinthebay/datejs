@@ -111,7 +111,7 @@
 			var data, i,
 				time = {},
 				order = Date.CultureInfo.dateElementOrder.split("");
-			if (!(!isNaN(parseFloat(s)) && isFinite(s)) ||	// if it's non-numeric OR
+			if (!(!isNaN(parseFloat(s)) && isFinite(s)) || // if it's non-numeric OR
 				(s[0] === "+" && s[0] === "-")) {			// It's an arithmatic string (eg +/-1000)
 				return null;
 			}
@@ -137,6 +137,57 @@
 				}
 			}
 			return $P.processTimeObject(time);
+		}
+	};
+	$P.Normalizer = {
+		parse: function (s) {
+			var $C = Date.CultureInfo;
+			var $R = Date.CultureInfo.regexPatterns;
+			var __ = Date.i18n.__;
+
+			s = s.replace($R.jan.source, "January");
+			s = s.replace($R.feb, "February");
+			s = s.replace($R.mar, "March");
+			s = s.replace($R.apr, "April");
+			s = s.replace($R.may, "May");
+			s = s.replace($R.jun, "June");
+			s = s.replace($R.jul, "July");
+			s = s.replace($R.aug, "August");
+			s = s.replace($R.sep, "September");
+			s = s.replace($R.oct, "October");
+			s = s.replace($R.nov, "November");
+			s = s.replace($R.dec, "December");
+
+			
+			s = s.replace($R.tomorrow, Date.today().addDays(1).toString("d"));
+			s = s.replace($R.yesterday, Date.today().addDays(-1).toString("d"));
+			s = s.replace(new RegExp($R.today.source + "\\b", "i"), Date.today().toString("d"));
+			s = s.replace(/\bat\b/gi, ""); // replace "at", eg: "tomorrow at 3pm"
+			s = s.replace(/\s{2,}/, " "); // repliace multiple spaces with one.
+
+			s = s.replace(new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i"), function(full, m1, m2, m3, m4) {
+				var t = Date.today().addDays(1).toString("d");
+				var s = t + " " + m1;
+				return s;
+			});
+
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.mon.source+'))'), Date.today().last().monday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.tue.source+'))'), Date.today().last().tuesday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.wed.source+'))'), Date.today().last().wednesday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.thu.source+'))'), Date.today().last().thursday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.fri.source+'))'), Date.today().last().friday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.sat.source+'))'), Date.today().last().saturday().toString("d"));
+			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.sun.source+'))'), Date.today().last().sunday().toString("d"));
+
+			// s = s.replace($R.thisMorning, "9am"))
+			s = s.replace($R.amThisMorning, function(str, am){return am;});
+			s = s.replace($R.inTheMorning, "am");
+			s = s.replace($R.thisMorning, "9am");
+			s = s.replace($R.amThisEvening, function(str, pm){return pm;});
+			s = s.replace($R.inTheEvening, "pm");
+			s = s.replace($R.thisEvening, "7pm");
+
+			return s;
 		}
 	};
 }());
@@ -420,7 +471,7 @@
 					// so, if this isn't the last element, we're going to see if
 					// we can get any more matches from the remaining (unmatched)
 					// elements ...
-					if (!last) {
+					if (!last) {	
 						// build a list of the remaining rules we can match against,
 						// i.e., all but the one we just matched against
 						var qx = [];
@@ -547,7 +598,7 @@
 	
 	var _generator = function (op) {
 		function gen() {
-			var args, rx = [], px, i;
+			var args = null, rx = [], px, i;
 			if (arguments.length > 1) {
 				args = Array.prototype.slice.call(arguments);
 			} else if (arguments[0] instanceof Array) {
@@ -784,8 +835,14 @@
 			var gap, mod, orient;
 			orient = ((this.orient == "past" || this.operator == "subtract") ? -1 : 1);
 			
-			if(!this.now && "hour minute second".indexOf(this.unit) !== -1) {
+			if(!this.now && "hour minute second".indexOf(this.unit) != -1) {
 				today.setTimeToNow();
+			}
+
+			if (this.month && this.unit == "week") {
+				this.value = this.month + 1;
+				delete this.month;
+				delete this.day;
 			}
 
 			if (this.month || this.month === 0) {
@@ -795,7 +852,7 @@
 					expression = true;
 				}
 			}
-			
+
 			if (!expression && this.weekday && !this.day && !this.days) {
 				var temp = Date[this.weekday]();
 				this.day = temp.getDate();
@@ -805,7 +862,7 @@
 				this.year = temp.getFullYear();
 			}
 			
-			if (expression && this.weekday && this.unit != "month") {
+			if (expression && this.weekday && this.unit != "month" && this.unit != "week") {
 				this.unit = "day";
 				gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
 				mod = 7;
@@ -844,7 +901,7 @@
 			if (!this.unit) {
 				this.unit = "day";
 			}
-			
+
 			if (!this.value && this.operator && this.operator !== null && this[this.unit + "s"] && this[this.unit + "s"] !== null) {
 				this[this.unit + "s"] = this[this.unit + "s"] + ((this.operator == "add") ? 1 : -1) + (this.value||0) * orient;
 			} else if (this[this.unit + "s"] == null || this.operator != null) {
@@ -861,8 +918,8 @@
 					this.hour = 0;
 				}
 			}
-			
-			if (this.weekday && !this.day && !this.days) {
+
+			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
 				var temp = Date[this.weekday]();
 				this.day = temp.getDate();
 				if (temp.getMonth() !== today.getMonth()) {
@@ -873,9 +930,18 @@
 			if ((this.month || this.month === 0) && !this.day) {
 				this.day = 1;
 			}
-			
+
 			if (!this.orient && !this.operator && this.unit == "week" && this.value && !this.day && !this.month) {
 				return Date.today().setWeek(this.value);
+			}
+
+			if (this.unit == "week" && this.weeks && !this.day && !this.month) {
+				var weekday = (this.weekday) ? this.weekday : "today";
+				var d = Date[weekday]().addWeeks(this.weeks);
+				if (this.now) {
+					d.setTimeToNow();
+				}
+				return d;
 			}
 
 			if (expression && this.timezone && this.day && this.days) {
@@ -946,7 +1012,8 @@
 	));
 	g.M = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d|\d)/), t.month));
 	g.MM = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d)/), t.month));
-	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join("")), t.month));
+	g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
+//	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join(" ")), t.month));
 	g.y = _.cache(_.process(_.rtoken(/^(\d\d?)/), t.year));
 	g.yy = _.cache(_.process(_.rtoken(/^(\d\d)/), t.year));
 	g.yyy = _.cache(_.process(_.rtoken(/^(\d\d?\d?\d?)/), t.year));
@@ -1223,16 +1290,17 @@
 		if (s instanceof Date) {
 			return s.clone();
 		}
-		//  Start with specific formats
-		d = $D.Parsing.ISO.parse(s) || $D.Parsing.Numeric.parse(s);
-
+		if (s.length >= 4 && s.charAt(0) !== "0") { // ie: 2004 will pass, 0800 won't.
+			//  Start with specific formats
+			d = $D.Parsing.ISO.parse(s) || $D.Parsing.Numeric.parse(s);
+		}
 		if (d instanceof Date && !isNaN(d.getTime())) {
 			return d;
 		} else {
 			// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
 			ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
 			s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
-
+			s = $D.Parsing.Normalizer.parse(s);
 			try {
 				r = $D.Grammar.start.call({}, s.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
 			} catch (e) {
