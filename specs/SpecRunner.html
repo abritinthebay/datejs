@@ -13,22 +13,28 @@
 	<script type="text/javascript" src="jasmine/jasmine-blanket.js"></script>
 
 	<!-- include source files here... -->
-	<script type="text/javascript" src="../i18n/de-DE.js"></script>
+	 
+	
+	<script type="text/javascript" src="../core/i18n/de-DE.js"></script>
+	<script type="text/javascript" src="../core/i18n/en-US.js"></script>
 	<script type="text/javascript" src="../core/i18n.js" data-cover></script>
 	<script type="text/javascript" src="../core/core.js" data-cover></script>
 	<script type="text/javascript" src="../core/parser.js" data-cover></script>
 	<script type="text/javascript" src="../core/sugarpak.js" data-cover></script>
 	<script type="text/javascript" src="../core/extras.js"></script>
 	<script type="text/javascript" src="../core/time.js"></script>
+
 	<!-- include spec files here... -->
-	<script type="text/javascript" src="I18n-spec.js"></script>
+
 	<script type="text/javascript" src="Core-spec.js"></script>
 	<script type="text/javascript" src="Sugarpak-spec.js"></script>
 	<script type="text/javascript" src="Parsing-spec.js"></script>
 	<script type="text/javascript" src="ISOparsing-spec.js"></script>
-
+	<script type="text/javascript" src="I18n-spec.js"></script> 
+	
 	<script type="text/javascript">
 		(function() {
+			Date.i18n.setLanguage("en-US");
 			var jasmineEnv = jasmine.getEnv();
 			jasmineEnv.updateInterval = 1000;
 			var htmlReporter = new jasmine.HtmlReporter();
