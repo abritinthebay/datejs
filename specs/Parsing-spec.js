@@ -217,4 +217,77 @@ describe("Parsing Module", function() {
 			expect(d).toBeNull();
 		});
 	});
+	describe("supports relative dates like", function() {
+		it("last week", function () {
+			var d = Date.parse("last week");
+			var w = Date.today().getWeek();
+			expect(w-1).toBe(d.getWeek());
+		});
+		it("next week", function () {
+			var d = Date.parse("next week");
+			var w = Date.today().getWeek();
+			expect(w+1).toBe(d.getWeek());
+		});
+		it("thursday last week", function () {
+			var d = Date.parse("thursday last week");
+			var d2 = Date.thursday().last().week();
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("tuesday next week", function () {
+			var d = Date.parse("tuesday next week");
+			var d2 = Date.tuesday().next().week();
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("tuesday 2 weeks from now", function () {
+			var d = Date.parse("tuesday 2 weeks from now");
+			var d2 = Date.tuesday().addWeeks(2).setTimeToNow();
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("this morning", function () {
+			var d = Date.parse("this morning");
+			var d2 = Date.today().set({hour: 9});
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("6 in the morning", function () {
+			var d = Date.parse("6 in the morning");
+			var d2 = Date.today().set({hour: 6});
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("sat 7 in the evening", function () {
+			var d = Date.parse("sat 7 in the evening");
+			var d2 = Date.saturday().set({hour:19});
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("tomorrow 3pm", function () {
+			var d = Date.parse("tomorrow 3pm");
+			var d2 = Date.today().addDays(1).set({hour: 15});
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("tomorrow 3am", function () {
+			var d = Date.parse("tomorrow 3am");
+			var d2 = Date.today().addDays(1).set({hour: 3});
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("3pm tomorrow", function () {
+			var d = Date.parse("3pm tomorrow");
+			var d2 = Date.today().addDays(1).set({hour: 15});
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("3am tomorrow", function () {
+			var d = Date.parse("3am tomorrow");
+			var d2 = Date.today().addDays(1).set({hour: 3});
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("3 tomorrow", function () {
+			var d = Date.parse("3 tomorrow");
+			var d2 = Date.today().addDays(1).set({hour: 3});
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("15 tomorrow", function () {
+			var d = Date.parse("15 tomorrow");
+			var d2 = Date.today().addDays(1).set({hour: 15});
+			expect(d2.equals(d)).toBe(true);
+		});
+
+	});
 });
