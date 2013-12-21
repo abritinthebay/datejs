@@ -7,7 +7,17 @@
 			}
 			return ("000" + s).slice(l * -1);
 		};
-		
+	
+	if (console) {
+		$D.console = console; // used only to raise non-critical errors if available
+	} else {
+		// set mock so we don't give errors.
+		$D.console = {
+			log: function(){},
+			error: function(){}
+		};
+	}
+
 	$D.initOverloads = function() {
 		/** 
 		 * Overload of Date.now. Allows an alternate call for Date.now where it returns the 
