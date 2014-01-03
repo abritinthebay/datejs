@@ -25,14 +25,13 @@ var buildMinifyFileList = function (dev) {
 	return output;
 };
 
-var banner = '/* \n' +
-			' * Name: <%= pkg.name %>\n' +
-			' * Version: <%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-			' * Date: <%= grunt.template.today("yyyy-mm-dd") %>\n' +
-			' * Copyright: <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-			' * Original Project: 2008 <%= pkg.originator %>\n' +
-			' * Licence: <%= pkg.license %>\n' +
-			' * URL: <%= pkg.homepage %>\n' +
+var banner = '/** \n' +
+			' * @overview <%= pkg.name %>\n' +
+			' * @version <%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+			' * @author <%= pkg.author.name %> <<%= pkg.author.email %>>\n' +
+			' * @copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
+			' * @license <%= pkg.license %>\n' +
+			' * @homepage <%= pkg.homepage %>\n' +
 			' */';
 
 module.exports = function(grunt) {

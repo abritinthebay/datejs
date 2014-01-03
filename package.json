@@ -24,7 +24,10 @@
     "js",
     "mit"
   ],
-  "author": "Gregory Wild-Smith",
+  "author": {
+    "name": "Gregory Wild-Smith",
+    "email": "gregory@wild-smith.com"
+  },
   "originator": "Geoffrey McGill",
   "license": "MIT",
   "readmeFilename": "README.md"
