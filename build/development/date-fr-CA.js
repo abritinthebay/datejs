@@ -1,11 +1,10 @@
-/* 
- * Name: DateJS
- * Version: 1.0.0alpha-2013-12-20
- * Date: 2013-12-20
- * Copyright: 2013 Gregory Wild-Smith
- * Original Project: 2008 Geoffrey McGill
- * Licence: MIT
- * URL: https://github.com/abritinthebay/datejs
+/** 
+ * @overview DateJS
+ * @version 1.0.0alpha-2014-01-02
+ * @author Gregory Wild-Smith <gregory@wild-smith.com>
+ * @copyright 2014 Gregory Wild-Smith
+ * @license MIT
+ * @homepage https://github.com/abritinthebay/datejs
  */
 /* 
  * DateJS Culture String File
@@ -86,41 +85,41 @@ Date.CultureStrings["fr-CA"] = {
         "ddd, dd MMM yyyy HH:mm:ss": "ddd, dd MMM yyyy HH:mm:ss",
         "MMMM dd": "d MMMM",
         "MMMM, yyyy": "MMMM, yyyy",
-        "/jan(uary)?/": "janv(.(ier)?)?",
-        "/feb(ruary)?/": "févr(.(ier)?)?",
+        "/jan(uary)?/": "janv((ier)?)?",
+        "/feb(ruary)?/": "févr((ier)?)?",
         "/mar(ch)?/": "mars",
-        "/apr(il)?/": "avr(.(il)?)?",
+        "/apr(il)?/": "avr((il)?)?",
         "/may/": "mai",
         "/jun(e)?/": "juin",
-        "/jul(y)?/": "juil(.(let)?)?",
+        "/jul(y)?/": "juil((let)?)?",
         "/aug(ust)?/": "août",
-        "/sep(t(ember)?)?/": "sept(.(embre)?)?",
-        "/oct(ober)?/": "oct(.(obre)?)?",
-        "/nov(ember)?/": "nov(.(embre)?)?",
-        "/dec(ember)?/": "déc(.(embre)?)?",
-        "/^su(n(day)?)?/": "^di(m(.(anche)?)?)?",
-        "/^mo(n(day)?)?/": "^lu(n(.(di)?)?)?",
-        "/^tu(e(s(day)?)?)?/": "^ma(r(.(di)?)?)?",
-        "/^we(d(nesday)?)?/": "^me(r(.(credi)?)?)?",
-        "/^th(u(r(s(day)?)?)?)?/": "^je(u(.(di)?)?)?",
-        "/^fr(i(day)?)?/": "^ve(n(.(dredi)?)?)?",
-        "/^sa(t(urday)?)?/": "^sa(m(.(edi)?)?)?",
-        "/^next/": "^next",
-        "/^last|past|prev(ious)?/": "^last|past|prev(ious)?",
-        "/^(\\+|aft(er)?|from|hence)/": "^(\\+|aft(er)?|from|hence)",
-        "/^(\\-|bef(ore)?|ago)/": "^(\\-|bef(ore)?|ago)",
-        "/^yes(terday)?/": "^yes(terday)?",
-        "/^t(od(ay)?)?/": "^t(od(ay)?)?",
-        "/^tom(orrow)?/": "^tom(orrow)?",
-        "/^n(ow)?/": "^n(ow)?",
-        "/^ms|milli(second)?s?/": "^ms|milli(second)?s?",
-        "/^sec(ond)?s?/": "^sec(ond)?s?",
+        "/sep(t(ember)?)?/": "sept((embre)?)?",
+        "/oct(ober)?/": "oct((obre)?)?",
+        "/nov(ember)?/": "nov((embre)?)?",
+        "/dec(ember)?/": "déc((embre)?)?",
+        "/^su(n(day)?)?/": "^di(m((anche)?)?)?",
+        "/^mo(n(day)?)?/": "^lu(n((di)?)?)?",
+        "/^tu(e(s(day)?)?)?/": "^ma(r((di)?)?)?",
+        "/^we(d(nesday)?)?/": "^me(r((credi)?)?)?",
+        "/^th(u(r(s(day)?)?)?)?/": "^je(u((di)?)?)?",
+        "/^fr(i(day)?)?/": "^ve(n((dredi)?)?)?",
+        "/^sa(t(urday)?)?/": "^sa(m((edi)?)?)?",
+        "/^next/": "^prochain",
+        "/^last|past|prev(ious)?/": "^dernier",
+        "/^(\\+|aft(er)?|from|hence)/": "^précédant",
+        "/^(\\-|bef(ore)?|ago)/": "^succédant",
+        "/^yes(terday)?/": "^hier",
+        "/^t(od(ay)?)?/": "^aujourd\'hui",
+        "/^tom(orrow)?/": "^demain",
+        "/^n(ow)?/": "^maintenant",
+        "/^ms|milli(second)?s?/": "^ms|milli(seconde)?s?",
+        "/^sec(ond)?s?/": "^sec(onde)?s?",
         "/^mn|min(ute)?s?/": "^mn|min(ute)?s?",
-        "/^h(our)?s?/": "^h(our)?s?",
-        "/^w(eek)?s?/": "^w(eek)?s?",
-        "/^m(onth)?s?/": "^m(onth)?s?",
-        "/^d(ay)?s?/": "^d(ay)?s?",
-        "/^y(ear)?s?/": "^y(ear)?s?",
+        "/^h(our)?s?/": "^h(eure)?s?",
+        "/^w(eek)?s?/": "^sem(aine)?s?",
+        "/^m(onth)?s?/": "^m(ois)?",
+        "/^d(ay)?s?/": "^j(our)?s?",
+        "/^y(ear)?s?/": "^a(nnée)?",
         "/^(a|p)/": "^(a|p)",
         "/^(a\\.?m?\\.?|p\\.?m?\\.?)/": "^(a\\.?m?\\.?|p\\.?m?\\.?)",
         "/^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)/": "^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)",
@@ -186,14 +185,13 @@ Date.CultureStrings["fr-CA"] = {
 };
 Date.CultureStrings.lang = "fr-CA";
 
-/* 
- * Name: DateJS
- * Version: 1.0.0alpha-2013-12-20
- * Date: 2013-12-20
- * Copyright: 2013 Gregory Wild-Smith
- * Original Project: 2008 Geoffrey McGill
- * Licence: MIT
- * URL: https://github.com/abritinthebay/datejs
+/** 
+ * @overview DateJS
+ * @version 1.0.0alpha-2014-01-02
+ * @author Gregory Wild-Smith <gregory@wild-smith.com>
+ * @copyright 2014 Gregory Wild-Smith
+ * @license MIT
+ * @homepage https://github.com/abritinthebay/datejs
  */(function () {
 	/*
 	 * The following is a UTF8 conversion process. Technically decodeURIComponent(escape(s)) would work
@@ -2775,7 +2773,7 @@ Date.CultureStrings.lang = "fr-CA";
 	};
 
 	/**
-	 * Converts the specified string value into its JavaScript Date equivalent using CultureInfo specific format information.
+	 * @desc Converts the specified string value into its JavaScript Date equivalent using CultureInfo specific format information.
 	 * 
 	 * Example
 	<pre><code>

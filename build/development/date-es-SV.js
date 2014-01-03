@@ -1,11 +1,10 @@
-/* 
- * Name: DateJS
- * Version: 1.0.0alpha-2013-12-20
- * Date: 2013-12-20
- * Copyright: 2013 Gregory Wild-Smith
- * Original Project: 2008 Geoffrey McGill
- * Licence: MIT
- * URL: https://github.com/abritinthebay/datejs
+/** 
+ * @overview DateJS
+ * @version 1.0.0alpha-2014-01-02
+ * @author Gregory Wild-Smith <gregory@wild-smith.com>
+ * @copyright 2014 Gregory Wild-Smith
+ * @license MIT
+ * @homepage https://github.com/abritinthebay/datejs
  */
 /* 
  * DateJS Culture String File
@@ -186,14 +185,13 @@ Date.CultureStrings["es-SV"] = {
 };
 Date.CultureStrings.lang = "es-SV";
 
-/* 
- * Name: DateJS
- * Version: 1.0.0alpha-2013-12-20
- * Date: 2013-12-20
- * Copyright: 2013 Gregory Wild-Smith
- * Original Project: 2008 Geoffrey McGill
- * Licence: MIT
- * URL: https://github.com/abritinthebay/datejs
+/** 
+ * @overview DateJS
+ * @version 1.0.0alpha-2014-01-02
+ * @author Gregory Wild-Smith <gregory@wild-smith.com>
+ * @copyright 2014 Gregory Wild-Smith
+ * @license MIT
+ * @homepage https://github.com/abritinthebay/datejs
  */(function () {
 	/*
 	 * The following is a UTF8 conversion process. Technically decodeURIComponent(escape(s)) would work
@@ -2775,7 +2773,7 @@ Date.CultureStrings.lang = "es-SV";
 	};
 
 	/**
-	 * Converts the specified string value into its JavaScript Date equivalent using CultureInfo specific format information.
+	 * @desc Converts the specified string value into its JavaScript Date equivalent using CultureInfo specific format information.
 	 * 
 	 * Example
 	<pre><code>
