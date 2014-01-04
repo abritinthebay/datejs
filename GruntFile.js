@@ -2,9 +2,9 @@
 // Run using NodeJS and the Grunt module
 var fs = require('fs');
 var dirs = {
-	core: 'core',
-	i18n: 'core/i18n',
-	build: 'build'
+	core: 'src/core',
+	i18n: 'src/core/i18n',
+	build: 'src/build'
 };
 var getI18NFiles = function () {
 	return fs.readdirSync(dirs.i18n);
@@ -91,6 +91,22 @@ module.exports = function(grunt) {
 				dest: '<%= dirs.build %>/development'   // destination *directory*, probably better than specifying same file names twice
 			}
 		},
+		jsdoc : {
+	        dist : {
+	            src: [
+					'<%= dirs.core %>/i18n.js',
+					'<%= dirs.core %>/core.js',
+					'<%= dirs.core %>/parser.js',
+					'<%= dirs.core %>/sugarpak.js',
+					'<%= dirs.core %>/extras.js',
+					'<%= dirs.core %>/time.js',
+					'/README.md'
+				],
+	            options: {
+	                destination: 'doc'
+	            }
+	        }
+	    },
 		convertit: {
 			core: {
 				src: ['<%= dirs.i18n %>/*.js'],
