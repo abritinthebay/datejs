@@ -3,8 +3,8 @@
 var fs = require('fs');
 var dirs = {
 	core: 'src/core',
-	i18n: 'src/core/i18n',
-	build: 'src/build'
+	i18n: 'src/i18n',
+	build: 'build'
 };
 var getI18NFiles = function () {
 	return fs.readdirSync(dirs.i18n);
