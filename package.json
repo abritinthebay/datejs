@@ -33,6 +33,7 @@
     "name": "Gregory Wild-Smith",
     "email": "gregory@wild-smith.com"
   },
+  "main" : "./index.js",
   "originator": "Geoffrey McGill",
   "license": "MIT",
   "readmeFilename": "README.md"
