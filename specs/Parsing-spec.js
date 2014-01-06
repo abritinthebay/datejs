@@ -1,5 +1,5 @@
 /*globals require, jasmine, describe, it, expect, spyOn */
-require("../build/developement/date.js");
+require("../build/development/date.js");
 
 describe("Parsing Module", function() {
 	var correctDate = new Date(1995, 11, 4, 0, 0, 0, 0);
@@ -220,8 +220,8 @@ describe("Parsing Module", function() {
 	describe("supports relative dates like", function() {
 		it("last week", function () {
 			var d = Date.parse("last week");
-			var w = Date.today().getWeek();
-			expect(w-1).toBe(d.getWeek());
+			var w = Date.today().addWeeks(-1).getWeek();
+			expect(w).toBe(d.getWeek());
 		});
 		it("next week", function () {
 			var d = Date.parse("next week");

@@ -8,7 +8,9 @@
     "grunt-cli": "~0.1.11",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-closurecompiler": "~0.9.8",
-    "grunt-grunt-jsdoc-plugin": "~0.5.0"
+    "grunt-grunt-jsdoc-plugin": "~0.5.0",
+    "jasmine-node": "~1.12.0",
+    "grunt-shell": "~0.6.1"
   },
   "dependencies": {},
   "repository": {
@@ -25,6 +27,9 @@
     "js",
     "mit"
   ],
+  "scripts": {
+    "test": "grunt test"
+  },
   "author": {
     "name": "Gregory Wild-Smith",
     "email": "gregory@wild-smith.com"

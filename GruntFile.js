@@ -107,10 +107,12 @@ module.exports = function(grunt) {
 	            }
 	        }
 	    },
-		convertit: {
-			core: {
-				src: ['<%= dirs.i18n %>/*.js'],
-				dest: '<%= dirs.build %>/i18n'   // destination *directory*, probably better than specifying same file names twice
+		shell: {
+			runTests: {
+				command: 'jasmine-node specs/',
+				options: {
+					stdout: true
+				}
 			}
 		}
 	});
@@ -140,103 +142,13 @@ module.exports = function(grunt) {
 		grunt.task.run(['concat:core', 'concat:basic', 'i18n:core', 'closurecompiler:minify']);
 	});
 
-	grunt.registerMultiTask('convertit', 'converts i18n regex into new format', function() {
-				var data = this.data,
-						path = require('path'),
-						dest = grunt.template.process(data.dest),
-						files = grunt.file.expand(data.src);
-
-				grunt.log.subhead('Processing i18n files...');
-				var banner = '/* \n' +
-						' * DateJS Culture String File\n' +
-						' * Country Code: <%= name %>\n' +
-						' * Name: <%= englishName %>\n' +
-						' * Format: "key" : "value"\n' +
-						' * Key is the en-US term, Value is the Key in the current language.\n' +
-						' */\n';
-				grunt.log.writeln(data.src);
-				files.forEach(function(f) {
-						require('./'+f);
-						grunt.log.ok('Loaded: ' + path.basename(f).replace('.js', ''));
-						var name = Date.CultureStrings.name,
-							englishName = Date.CultureStrings.englishName,
-							output = {},
-							key;
-						
-						var banner_compiled = grunt.template.process(banner, {data:{name: name, englishName: englishName}});
-						for (var item in Date.CultureStrings) {
-								if (Date.CultureStrings.hasOwnProperty(item)) {
-									// grunt.log.ok(item);
-										switch (item) {
-											case '^jan(uary)?':
-												key = '/jan(uary)?/';
-											break;
-											case '^feb(ruary)?':
-												key = '/feb(ruary)?/';
-											break;
-											case '^mar(ch)?':
-												key = '/mar(ch)?/';
-											break;
-											case '^apr(il)?':
-												key = '/apr(il)?/';
-											break;
-											case '^may':
-												key = '/may/';
-											break;
-											case '^jun(e)?':
-												key = '/jun(e)?/';
-											break;
-											case '^jul(y)?':
-												key = '/jul(y)?/';
-											break;
-											case '^aug(ust)?':
-												key = '/aug(ust)?/';
-											break;
-											case '^sep(t(ember)?)?':
-												key = '/sep(t(ember)?)?/';
-											break;
-											case '^oct(ober)?':
-												key = '/oct(ober)?/';
-											break;
-											case '^nov(ember)?':
-												key = '/nov(ember)?/';
-											break;
-											case '^dec(ember)?':
-												key = '/dec(ember)?/';
-											break;
-										}
-									if (key) {
-										if (Date.CultureStrings[item].charAt(0) === '^') {
-											item = Date.CultureStrings[item].slice(1);
-										}
-										output[key] = item;
-										grunt.log.ok('changed '+key+' has content '+item);
-										key = undefined;
-
-									} else {
-										if (item.charAt(0) === '^') {
-											output['/'+item+'/'] = Date.CultureStrings[item];
-										} else {
-											output[item] = Date.CultureStrings[item];
-										}
-									}
-								}
-						}
-
-					grunt.log.writeln(banner_compiled);
-					// grunt.log.writeln(JSON.stringify(output, null, '        '));
-					var p = dest + '/' + path.basename(f);
-					var json = JSON.stringify(output, null, '        ');
-					grunt.file.write(p, banner_compiled + 'Date.CultureStrings = Date.CultureStrings || {};\nDate.CultureStrings["'+name+'"] = ' + json + ';\nDate.CultureStrings.lang = "'+name+'";\n');
-					grunt.log.writeln('File "' + p + '" converted.');
-				});
-	});
-
 
 
 	// now set the default
 	grunt.registerTask('default', ['build_dev']);
 	// Load the plugin that provides the "minify" task.
+	grunt.loadNpmTasks('grunt-shell')
 	grunt.loadNpmTasks('grunt-closurecompiler');
 	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.registerTask('test', ['shell:runTests']);
 };

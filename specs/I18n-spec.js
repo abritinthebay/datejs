@@ -1,6 +1,6 @@
 /*globals require, jasmine, describe, it, expect, spyOn */
-require("../core/i18n.js");
-require("../i18n/de-DE.js");
+require("../build/development/date.js");
+require("../src/i18n/de-DE.js");
 
 describe("Internationalization Module", function() {
 	it("can support other languages", function() {

@@ -5,3 +5,5 @@ node_js:
   - "0.8"
 notifications:
   email: false
+before_script:
+  - "npm i -g jasmine-node"

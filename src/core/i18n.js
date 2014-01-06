@@ -59,7 +59,7 @@
 	}
 	
 	var $D = Date;
-	var lang = Date.CultureStrings.lang;
+	var lang = Date.CultureStrings ? Date.CultureStrings.lang : null;
 	var loggedKeys = {}; // for debug purposes.
 	var __ = function (key, language) {
 		var output, split, length, last;

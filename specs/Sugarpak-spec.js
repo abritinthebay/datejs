@@ -1,5 +1,5 @@
 /*globals require, describe, it, expect */
-require("../build/developement/date.js");
+require("../build/development/date.js");
 
 describe("Sugarpak Extensions", function() {
 	describe("has syntax sugar to allow movement to relative dates",function (){

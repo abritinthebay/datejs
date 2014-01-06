@@ -1,5 +1,5 @@
 /*globals require, jasmine, describe, it, expect, spyOn */
-require("../build/developement/date.js");
+require("../build/development/date.js");
 
 describe("Core Module", function() {
 	describe("has Exception handling for when", function() {
