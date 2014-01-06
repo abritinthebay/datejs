@@ -1,6 +1,6 @@
 /** 
  * @overview DateJS
- * @version 1.0.0alpha-2014-01-03
+ * @version 1.0.0alpha-2014-01-05
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -187,7 +187,7 @@ Date.CultureStrings.lang = "fr-CA";
 
 /** 
  * @overview DateJS
- * @version 1.0.0alpha-2014-01-03
+ * @version 1.0.0alpha-2014-01-05
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -253,7 +253,7 @@ Date.CultureStrings.lang = "fr-CA";
 	}
 	
 	var $D = Date;
-	var lang = Date.CultureStrings.lang;
+	var lang = Date.CultureStrings ? Date.CultureStrings.lang : null;
 	var loggedKeys = {}; // for debug purposes.
 	var __ = function (key, language) {
 		var output, split, length, last;
