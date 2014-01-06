@@ -111,7 +111,9 @@ module.exports = function(grunt) {
 			runTests: {
 				command: 'jasmine-node specs/',
 				options: {
-					stdout: true
+					stdout: true,
+					stderr: true,
+					failOnError: true
 				}
 			}
 		}
