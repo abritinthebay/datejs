@@ -109,7 +109,7 @@ module.exports = function(grunt) {
 	    },
 		shell: {
 			runTests: {
-				command: 'jasmine-node specs/',
+				command: 'jasmine-node --captureExceptions specs/',
 				options: {
 					stdout: true,
 					stderr: true,
