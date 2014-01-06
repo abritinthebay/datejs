@@ -1,6 +1,8 @@
+
 # DateJS: Evolved
 The Javascript Date Library
 
+[![Build Status](https://travis-ci.org/abritinthebay/datejs.png?branch=master)](https://travis-ci.org/abritinthebay/datejs)
 ## What is it?
 DateJS extends the built-in Javascript Date object to add much better parsing, internationalization support, and all the functions and syntactic sugar you could wish for.
 ### Background 
