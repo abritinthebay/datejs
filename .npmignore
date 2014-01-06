@@ -3,3 +3,6 @@ build/development/*
 build/production/*
 tests/*
 specs/*
+.travis.yml
+bower.json
+Gruntfile.js
