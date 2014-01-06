@@ -1,4 +1,7 @@
 /*globals require, jasmine, describe, it, expect, spyOn */
+if (process) {
+	process.env.TZ = 'America/Los_Angeles';
+}
 require("../build/development/date.js");
 
 describe("Core Module", function() {
