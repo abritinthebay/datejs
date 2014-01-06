@@ -332,12 +332,27 @@
 			return lang || "en-US";
 		},
 		setLanguage: function (code, force) {
-			if (force || code === "en-US" || (Date.CultureStrings && Date.CultureStrings[code])) {
+			if (force || code === "en-US") {
 				lang = code;
 				Date.CultureStrings.lang = code;
 				Date.CultureInfo = CultureInfo();
 			} else {
-				Date.console.error("Language '" + code + "' is not available or has not been loaded.");
+				if (!(Date.CultureStrings && Date.CultureStrings[code])) {
+					if (typeof exports !== 'undefined' && this.exports !== exports) {
+						// we're in a Node enviroment, load it using require
+						try {
+							require("../i18n/" + code + ".js");
+							lang = code;
+							Date.CultureStrings.lang = code;
+							Date.CultureInfo = CultureInfo();
+						} catch (e) {
+							// var str = "The language for '" + code + "' could not be loaded by Node. It likely does not exist.";
+							throw new Error("The DateJS IETF language tag '" + code + "' could not be loaded by Node. It likely does not exist.");
+						}
+					}
+				} else {
+					Date.console.error("The DateJS IETF language tag '" + code + "' is not available and has not been loaded.");
+				}
 			}
 		},
 		getLoggedKeys: function () {

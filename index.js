@@ -8,7 +8,6 @@ require("./src/core/parser.js");
 require("./src/core/sugarpak.js");
 require("./src/core/extras.js");
 require("./src/core/time.js");
-
 /*
- * Notice - no Export. Not required as it modifies the Date object and it's prototypes.
+ * Notice that there is no model.export or exports. This is not required as it modifies the Date object and it's prototypes.
  */
