@@ -1,8 +1,7 @@
 {
-  "name": "DateJS",
+  "name": "datejs",
   "version": "1.0.0alpha",
-  "description": "Datejs is an open-source JavaScript Date Library.",
-  "main": "GruntFile.js",
+  "description": "DateJS is the most full-featured, internationalized, open-source JavaScript Date Library.",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.11",
@@ -26,6 +25,9 @@
     "js",
     "mit"
   ],
+  "engines" : { 
+    "node" : ">=0.8" 
+  },
   "scripts": {
     "test": "grunt test"
   },
@@ -33,6 +35,12 @@
     "name": "Gregory Wild-Smith",
     "email": "gregory@wild-smith.com"
   },
+  "maintainers" : [ 
+    {
+      "name": "Gregory Wild-Smith",
+      "email": "gregory@wild-smith.com"
+    }
+  ],
   "main" : "./index.js",
   "originator": "Geoffrey McGill",
   "license": "MIT",
