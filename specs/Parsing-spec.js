@@ -1,5 +1,5 @@
 /*globals require, jasmine, describe, it, expect, spyOn */
-if (process) {
+if (typeof process !== "undefined") {
 	process.env.TZ = 'America/Los_Angeles';
 }
 require("../build/development/date.js");
