@@ -1,6 +1,6 @@
 /** 
- * @overview DateJS
- * @version 1.0.0alpha-2014-01-05
+ * @overview datejs
+ * @version 1.0.0alpha-2014-01-07
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -186,8 +186,8 @@ Date.CultureStrings["ur-PK"] = {
 Date.CultureStrings.lang = "ur-PK";
 
 /** 
- * @overview DateJS
- * @version 1.0.0alpha-2014-01-05
+ * @overview datejs
+ * @version 1.0.0alpha-2014-01-07
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -294,6 +294,40 @@ Date.CultureStrings.lang = "ur-PK";
 		}
 		loggedKeys[key] = key;
 		return output;
+	};
+	var loadI18nScript = function (code) {
+		// paatterned after jQuery's getScript.
+		var url = Date.Config.i18n + code + '.js';
+		var head = document.getElementsByTagName("head")[0] || document.documentElement;
+		var script = document.createElement("script");
+		script.src = url;
+
+		var completed = false;
+		var events = {
+			done: function (){} // dummy function
+		};
+		// Attach handlers for all browsers
+		script.onload = script.onreadystatechange = function() {
+		if ( !completed && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
+				done = true;
+				events.done();
+				head.removeChild(script);
+			}
+		};
+
+		setTimeout(function() {
+			head.insertBefore(script, head.firstChild);
+		}, 0); // allows return to execute first
+		
+		return {
+			done: function (f) {
+				events.done = function() {
+					if (f) {
+						f();
+					}
+				};
+			}
+		};
 	};
 
 	var CultureInfo = function () {
@@ -526,12 +560,35 @@ Date.CultureStrings.lang = "ur-PK";
 			return lang || "en-US";
 		},
 		setLanguage: function (code, force) {
-			if (force || code === "en-US" || (Date.CultureStrings && Date.CultureStrings[code])) {
+			if (force || code === "en-US" || (!!Date.CultureStrings && !!Date.CultureStrings[code])) {
 				lang = code;
 				Date.CultureStrings.lang = code;
 				Date.CultureInfo = CultureInfo();
 			} else {
-				Date.console.error("Language '" + code + "' is not available or has not been loaded.");
+				if (!(!!Date.CultureStrings && !!Date.CultureStrings[code])) {
+					if (typeof exports !== 'undefined' && this.exports !== exports) {
+						// we're in a Node enviroment, load it using require
+						try {
+							require("../i18n/" + code + ".js");
+							lang = code;
+							Date.CultureStrings.lang = code;
+							Date.CultureInfo = CultureInfo();
+						} catch (e) {
+							// var str = "The language for '" + code + "' could not be loaded by Node. It likely does not exist.";
+							throw new Error("The DateJS IETF language tag '" + code + "' could not be loaded by Node. It likely does not exist.");
+						}
+					} else if (Date.Config && Date.Config.i18n) {
+						// we know the location of the files, so lets load them
+						loadI18nScript(code).done(function(){
+							lang = code;
+							Date.CultureStrings.lang = code;
+							Date.CultureInfo = CultureInfo();
+						});
+					} else {
+						Date.console.error("The DateJS IETF language tag '" + code + "' is not available and has not been loaded.");
+				
+					}
+				}
 			}
 		},
 		getLoggedKeys: function () {
