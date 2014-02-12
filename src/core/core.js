@@ -221,6 +221,7 @@
 	
 	$D.getTimezoneOffset = function (name, dst) {
 		var i, a =[], z = Date.CultureInfo.timezones;
+		if (!name) { name = (new Date()).getTimezone()}
 		for (i = 0; i < z.length; i++) {
 			if (z[i].name === name.toUpperCase()) {
 				a.push(i);
@@ -817,7 +818,7 @@
 
 	$P.setTimezoneOffset = function (offset) {
 		var here = this.getTimezoneOffset(), there = Number(offset) * -6 / 10;
-		return (there || there === 0) ? this.addMinutes(here - there) : this;
+		return (there || there === 0) ? this.addMinutes(there - here) : this;
 	};
 
 	$P.setTimezone = function (offset) {

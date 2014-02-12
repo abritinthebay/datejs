@@ -54,14 +54,13 @@
 			// adjust (and calculate) for timezone here
 			if (obj.zone.toUpperCase() === "Z" || (obj.zone_hours === 0 && obj.zone_minutes === 0)) {
 				// it's UTC/GML so work out the current timeszone offset
-				offset = -(new Date()).getTimezoneOffset();
-				// offset *= -1;
+				offset = -date.getTimezoneOffset();
 			} else {
 				offset = (obj.zone_hours*60) + (obj.zone_minutes ? obj.zone_minutes : 0);
 				if (obj.zone_sign === "+") {
 					offset *= -1;
 				}
-				offset -= (new Date()).getTimezoneOffset();
+				offset -= date.getTimezoneOffset();
 			}
 			date.setMinutes(date.getMinutes()+offset);
 		}
@@ -1306,7 +1305,6 @@
 			} catch (e) {
 				return null;
 			}
-
 			d = ((r[1].length === 0) ? r[0] : null);
 			
 			if (d !== null) {

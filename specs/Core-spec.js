@@ -450,16 +450,20 @@ describe("Core Module", function() {
 			// note - this just sets the date *relative* to the offset. 
 			// As if it's that time. It doesn't change the browsers representation of timezone.
 			var d1 = new Date(2010, 1, 1);
-			var d2 = new Date(2010, 1, 1, 8);
+			var d2 = d1.clone().add(-8).hours();
 			d1.set({timezone: "GMT"});
 			expect(d1.equals(d2)).toBe(true);
 		});
 		it("timezone offset", function() {
 			// note - as above this just sets the date *relative* to the offset.
 			var d1 = new Date(2010, 1, 1);
-			var d2 = new Date(2010, 1, 1, 3);
+			var d2 = d1.clone().add(-3).hours();
+			var d3 = d1.clone();
+			var d4 = d1.clone().add(-9).hours();
 			d1.set({timezoneOffset: "-0500"});
 			expect(d1.equals(d2)).toBe(true);
+			d3.set({timezoneOffset: "+0100"});
+			expect(d3.equals(d4)).toBe(true);
 		});
 		// timezoneOffset
 		it("year", function() {

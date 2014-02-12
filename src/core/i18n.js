@@ -77,6 +77,12 @@
 				case "nativeName":
 					output = "English (United States)";
 					break;
+				case "twoDigitYearMax":
+					output = 2049;
+					break;
+				case "firstDayOfWeek":
+					output = 0;
+					break;
 				default:
 					output = key;
 					split = key.split("_");

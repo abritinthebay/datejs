@@ -65,7 +65,7 @@ Date.CultureStrings["en-US"] = {
         "AM": "AM",
         "PM": "PM",
         "firstDayOfWeek": 0,
-        "twoDigitYearMax": 2029,
+        "twoDigitYearMax": 2049,
         "mdy": "mdy",
         "M/d/yyyy": "M/d/yyyy",
         "dddd, MMMM dd, yyyy": "dddd, MMMM dd, yyyy",
