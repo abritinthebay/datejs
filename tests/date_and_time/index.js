@@ -99,7 +99,7 @@
     },
     '11 Aug 2007 7:15:00 am EDT': {
       run: function() { this.date =  Date.parse('11 Aug 2007 7:15:00 am EDT') },
-      assert: function() { return new Date(2007,7,11,7,15,0).add(-2).hours().equals( this.date ) }
+      assert: function() { return new Date(2007,7,11,7,15,0).add(-3).hours().equals( this.date ) }
     },
     'Tue Nov 20 2007 08:00:00 UTC': {
       run: function() { this.date = Date.parse("Tue Nov 20 2007 08:00:00 UTC") },
@@ -658,7 +658,7 @@
 
       '1997 : "YYYY"': {
         run: function() { },
-        assert: function() { return Date.today().set({year: 1997, day: 1}).equals( Date.parse('1997') ) }
+        assert: function() { return Date.today().set({year: 1997, day: 1, month: 0}).equals( Date.parse('1997') ) }
       },
       '1997-07 : "YYYY-MM"': {
         run: function() { },
@@ -701,9 +701,9 @@
         run: function() { },
         assert: function() { return new Date(1997,6,16,19,20,30).setTimezoneOffset('+0100').equals( Date.parseExact('1997-07-16T19:20:30+01:00', "yyyy-MM-ddTHH:mm:ssz") ) }
       },
-       '1997-07-16T19:20:30.45+01:00 : "YYYY-MM-DDThh:mm:ss.sTZD"': {
+       '1997-07-16T19:20:30.045+01:00 : "YYYY-MM-DDThh:mm:ss.sTZD"': {
         run: function() { },
-        assert: function() { return new Date(1997,6,16,19,20,30,45).setTimezoneOffset('+0100').equals( Date.parse('1997-07-16T19:20:30.45+01:00') ) }
+        assert: function() { return new Date(1997,6,16,19,20,30,45).setTimezoneOffset('+0100').equals( Date.parse('1997-07-16T19:20:30.045+01:00') ) }
       }    
   },
 
@@ -727,7 +727,7 @@
       },
       '1985-04-12T23:20:50Z': {
         run: function() { },
-        assert: function() { return new Date(1985,3,12,23,20,50).equals( Date.parse('1985-04-12T23:20:50Z') ) }
+        assert: function() { return new Date(1985,3,12,23,20,50).setTimezoneOffset('+0000').equals( Date.parse('1985-04-12T23:20:50Z') ) }
       },  
       'Much faster with Date.parseExact("1985-04-12T23:20:50Z", "yyyy-MM-ddTHH:mm:ssZ")': {
         run: function() { },
