@@ -184,7 +184,7 @@
     }, 
     'sat 7 in the evening : The term "evening" is not supported': {
       run: function() { },
-      assert: function() { return Date.today().set({hour:6}).equals( Date.parse('sat 7 in the evening') ) }
+      assert: function() { return Date.saturday().set({hour:19}).equals( Date.parse('sat 7 in the evening') ) }
     },
     'this tuesday : The term "this" is not supported': {
       run: function() { },
