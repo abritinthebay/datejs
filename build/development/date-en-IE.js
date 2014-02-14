@@ -1,6 +1,6 @@
 /** 
  * @overview datejs
- * @version 1.0.0alpha-2014-02-13
+ * @version 1.0.0-beta-2014-02-14
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -187,7 +187,7 @@ Date.CultureStrings.lang = "en-IE";
 
 /** 
  * @overview datejs
- * @version 1.0.0alpha-2014-02-13
+ * @version 1.0.0-beta-2014-02-14
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -1075,7 +1075,14 @@ Date.CultureStrings.lang = "en-IE";
 		}
 		
 		var x = config;
-		
+
+		if (x.day) {
+			// If we should be a different date than today (eg: for 'tomorrow -1d', etc).
+			// Should only effect parsing, not direct usage (eg, Finish and FinishExact)
+			if ((x.day - this.getDate()) !== 0) {
+				this.setDate(x.day);
+			}
+		}
 		if (x.milliseconds) {
 			this.addMilliseconds(x.milliseconds);
 		}
@@ -2477,7 +2484,7 @@ Date.CultureStrings.lang = "en-IE";
 			}
 			
 			var today = $D.today();
-			
+
 			if (this.now && !this.unit && !this.operator) {
 				return new Date();
 			} else if (this.now) {
@@ -2605,7 +2612,7 @@ Date.CultureStrings.lang = "en-IE";
 			if (expression && this.timezone && this.day && this.days) {
 				this.day = this.days;
 			}
-
+			
 			return (expression) ? today.add(this) : today.set(this);
 		}
 	};
