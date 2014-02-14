@@ -833,7 +833,7 @@
 			
 			var gap, mod, orient;
 			orient = ((this.orient == "past" || this.operator == "subtract") ? -1 : 1);
-			
+
 			if(!this.now && "hour minute second".indexOf(this.unit) != -1) {
 				today.setTimeToNow();
 			}
@@ -846,7 +846,9 @@
 
 			if (this.month || this.month === 0) {
 				if ("year day hour minute second".indexOf(this.unit) != -1) {
-					this.value = this.month + 1;
+					if (!this.value) {
+						this.value = this.month + 1;
+					}
 					this.month = null;
 					expression = true;
 				}
@@ -860,23 +862,25 @@
 				}
 				this.year = temp.getFullYear();
 			}
-			
+
 			if (expression && this.weekday && this.unit != "month" && this.unit != "week") {
 				this.unit = "day";
 				gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
 				mod = 7;
 				this.days = gap ? ((gap + (orient * mod)) % mod) : (orient * mod);
 			}
-			
+
 			if (this.month && this.unit == "day" && this.operator) {
-				this.value = (this.month + 1);
+				if (!this.value) {
+					this.value = (this.month + 1);
+				}
 				this.month = null;
 			}
-	   
+
 			if (this.value != null && this.month != null && this.year != null) {
 				this.day = this.value * 1;
 			}
-	 
+
 			if (this.month && !this.day && this.value) {
 				today.set({ day: this.value * 1 });
 				if (!expression) {
@@ -946,7 +950,7 @@
 			if (expression && this.timezone && this.day && this.days) {
 				this.day = this.days;
 			}
-			
+
 			return (expression) ? today.add(this) : today.set(this);
 		}
 	};
