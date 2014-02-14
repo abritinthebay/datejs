@@ -1,6 +1,6 @@
 /** 
  * @overview datejs
- * @version 1.0.0alpha-2014-01-07
+ * @version 1.0.0alpha-2014-02-13
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -187,7 +187,7 @@ Date.CultureStrings.lang = "es-BO";
 
 /** 
  * @overview datejs
- * @version 1.0.0alpha-2014-01-07
+ * @version 1.0.0alpha-2014-02-13
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -270,6 +270,12 @@ Date.CultureStrings.lang = "es-BO";
 					break;
 				case "nativeName":
 					output = "English (United States)";
+					break;
+				case "twoDigitYearMax":
+					output = 2049;
+					break;
+				case "firstDayOfWeek":
+					output = 0;
 					break;
 				default:
 					output = key;
@@ -610,7 +616,7 @@ Date.CultureStrings.lang = "es-BO";
 			return ("000" + s).slice(l * -1);
 		};
 	
-	if (console) {
+	if (typeof window !== "undefined" && typeof window.console !== "undefined" && typeof window.console.log !== "undefined") {
 		$D.console = console; // used only to raise non-critical errors if available
 	} else {
 		// set mock so we don't give errors.
@@ -619,6 +625,7 @@ Date.CultureStrings.lang = "es-BO";
 			error: function(){}
 		};
 	}
+	$D.Config = {};
 
 	$D.initOverloads = function() {
 		/** 
@@ -822,6 +829,7 @@ Date.CultureStrings.lang = "es-BO";
 	
 	$D.getTimezoneOffset = function (name, dst) {
 		var i, a =[], z = Date.CultureInfo.timezones;
+		if (!name) { name = (new Date()).getTimezone()}
 		for (i = 0; i < z.length; i++) {
 			if (z[i].name === name.toUpperCase()) {
 				a.push(i);
@@ -1418,7 +1426,7 @@ Date.CultureStrings.lang = "es-BO";
 
 	$P.setTimezoneOffset = function (offset) {
 		var here = this.getTimezoneOffset(), there = Number(offset) * -6 / 10;
-		return (there || there === 0) ? this.addMinutes(here - there) : this;
+		return (there || there === 0) ? this.addMinutes(there - here) : this;
 	};
 
 	$P.setTimezone = function (offset) {
@@ -1701,14 +1709,13 @@ Date.CultureStrings.lang = "es-BO";
 			// adjust (and calculate) for timezone here
 			if (obj.zone.toUpperCase() === "Z" || (obj.zone_hours === 0 && obj.zone_minutes === 0)) {
 				// it's UTC/GML so work out the current timeszone offset
-				offset = -(new Date()).getTimezoneOffset();
-				// offset *= -1;
+				offset = -date.getTimezoneOffset();
 			} else {
 				offset = (obj.zone_hours*60) + (obj.zone_minutes ? obj.zone_minutes : 0);
 				if (obj.zone_sign === "+") {
 					offset *= -1;
 				}
-				offset -= (new Date()).getTimezoneOffset();
+				offset -= date.getTimezoneOffset();
 			}
 			date.setMinutes(date.getMinutes()+offset);
 		}
@@ -2481,7 +2488,7 @@ Date.CultureStrings.lang = "es-BO";
 			
 			var gap, mod, orient;
 			orient = ((this.orient == "past" || this.operator == "subtract") ? -1 : 1);
-			
+
 			if(!this.now && "hour minute second".indexOf(this.unit) != -1) {
 				today.setTimeToNow();
 			}
@@ -2494,7 +2501,9 @@ Date.CultureStrings.lang = "es-BO";
 
 			if (this.month || this.month === 0) {
 				if ("year day hour minute second".indexOf(this.unit) != -1) {
-					this.value = this.month + 1;
+					if (!this.value) {
+						this.value = this.month + 1;
+					}
 					this.month = null;
 					expression = true;
 				}
@@ -2508,23 +2517,25 @@ Date.CultureStrings.lang = "es-BO";
 				}
 				this.year = temp.getFullYear();
 			}
-			
+
 			if (expression && this.weekday && this.unit != "month" && this.unit != "week") {
 				this.unit = "day";
 				gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
 				mod = 7;
 				this.days = gap ? ((gap + (orient * mod)) % mod) : (orient * mod);
 			}
-			
+
 			if (this.month && this.unit == "day" && this.operator) {
-				this.value = (this.month + 1);
+				if (!this.value) {
+					this.value = (this.month + 1);
+				}
 				this.month = null;
 			}
-	   
+
 			if (this.value != null && this.month != null && this.year != null) {
 				this.day = this.value * 1;
 			}
-	 
+
 			if (this.month && !this.day && this.value) {
 				today.set({ day: this.value * 1 });
 				if (!expression) {
@@ -2594,7 +2605,7 @@ Date.CultureStrings.lang = "es-BO";
 			if (expression && this.timezone && this.day && this.days) {
 				this.day = this.days;
 			}
-			
+
 			return (expression) ? today.add(this) : today.set(this);
 		}
 	};
@@ -2953,7 +2964,6 @@ Date.CultureStrings.lang = "es-BO";
 			} catch (e) {
 				return null;
 			}
-
 			d = ((r[1].length === 0) ? r[0] : null);
 			
 			if (d !== null) {
