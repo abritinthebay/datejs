@@ -822,7 +822,7 @@
 			}
 			
 			var today = $D.today();
-			
+
 			if (this.now && !this.unit && !this.operator) {
 				return new Date();
 			} else if (this.now) {
@@ -950,7 +950,7 @@
 			if (expression && this.timezone && this.day && this.days) {
 				this.day = this.days;
 			}
-
+			
 			return (expression) ? today.add(this) : today.set(this);
 		}
 	};

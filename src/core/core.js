@@ -467,7 +467,14 @@
 		}
 		
 		var x = config;
-		
+
+		if (x.day) {
+			// If we should be a different date than today (eg: for 'tomorrow -1d', etc).
+			// Should only effect parsing, not direct usage (eg, Finish and FinishExact)
+			if ((x.day - this.getDate()) !== 0) {
+				this.setDate(x.day);
+			}
+		}
 		if (x.milliseconds) {
 			this.addMilliseconds(x.milliseconds);
 		}
