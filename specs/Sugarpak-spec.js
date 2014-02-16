@@ -265,7 +265,7 @@ describe("Sugarpak Extensions", function() {
 			var d = new Date();
 			var d2 = Date.today();
 			expect(d.same().day(d2)).toBe(true);
-			expect(d.same().hour(d2)).toBe(false);
+			expect(d.same().minute(d2)).toBe(false);
 		});
 	});
 	describe("can create Dates using syntax sugar",function (){
