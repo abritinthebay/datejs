@@ -160,7 +160,7 @@
 			
 			s = s.replace($R.tomorrow, Date.today().addDays(1).toString("d"));
 			s = s.replace($R.yesterday, Date.today().addDays(-1).toString("d"));
-			s = s.replace(new RegExp($R.today.source + "\\b", "i"), Date.today().toString("d"));
+			// s = s.replace(new RegExp($R.today.source + "\\b", "i"), Date.today().toString("d"));
 			s = s.replace(/\bat\b/gi, ""); // replace "at", eg: "tomorrow at 3pm"
 			s = s.replace(/\s{2,}/, " "); // repliace multiple spaces with one.
 
@@ -809,6 +809,7 @@
 			return r;
 		},
 		finish: function (x) {
+
 			x = (x instanceof Array) ? flattenAndCompact(x) : [ x ];
 
 			if (x.length === 0) {
@@ -820,7 +821,7 @@
 					x[i].call(this);
 				}
 			}
-			
+			console.log(this);
 			var today = $D.today();
 
 			if (this.now && !this.unit && !this.operator) {
@@ -1054,7 +1055,7 @@
 			};
 		}
 	);
-	g.value = _.process(_.rtoken(/^\d\d?(st|nd|rd|th)?/),
+	g.value = _.process(_.rtoken(/^([-+]?\d+)?(st|nd|rd|th)?/),
 		function (s) {
 			return function () {
 				this.value = s.replace(/\D/g, "");
@@ -1293,7 +1294,7 @@
 		if (s instanceof Date) {
 			return s.clone();
 		}
-		if (s.length >= 4 && s.charAt(0) !== "0") { // ie: 2004 will pass, 0800 won't.
+		if (s.length >= 4 && s.charAt(0) !== "0" && s.charAt(0) !== "+"&& s.charAt(0) !== "-") { // ie: 2004 will pass, 0800 won't.
 			//  Start with specific formats
 			d = $D.Parsing.ISO.parse(s) || $D.Parsing.Numeric.parse(s);
 		}
