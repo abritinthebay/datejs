@@ -105,12 +105,13 @@
 		}
 	};
 	$P.Numeric = {
+		isNumeric: function (e){return!isNaN(parseFloat(e))&&isFinite(e)},
 		regex: /\b([0-1]?[0-9])([0-3]?[0-9])([0-2]?[0-9]?[0-9][0-9])\b/i,
 		parse: function (s) {
 			var data, i,
 				time = {},
 				order = Date.CultureInfo.dateElementOrder.split("");
-			if (!(!isNaN(parseFloat(s)) && isFinite(s)) || // if it's non-numeric OR
+			if (!(this.isNumeric(s)) || // if it's non-numeric OR
 				(s[0] === "+" && s[0] === "-")) {			// It's an arithmatic string (eg +/-1000)
 				return null;
 			}
@@ -185,6 +186,23 @@
 			s = s.replace($R.amThisEvening, function(str, pm){return pm;});
 			s = s.replace($R.inTheEvening, "pm");
 			s = s.replace($R.thisEvening, "7pm");
+
+			try {
+				var n = s.split(/([\s\-\.\,\/\x27]+)/);
+				if (n.length === 3) {
+					if ($P.Numeric.isNumeric(n[0]) && $P.Numeric.isNumeric(n[2])) {
+						if (n[2].length >= 4) {
+							// ok, so we're dealing with x/year. But that's not a full date.
+							// This fixes wonky dateElementOrder parsing when set to dmy order.
+							if (Date.CultureInfo.dateElementOrder[0] === 'd') {
+								s = '1/' + n[0] + '/' + n[2]; // set to 1st of month and normalize the seperator
+							}
+						}
+					}
+				}
+			} catch (e) {
+				// continue...
+			}
 
 			return s;
 		}
@@ -421,7 +439,6 @@
 				// r is the current match, best the current 'best' match
 				// which means it parsed the most amount of input
 				var r = null, p = null, q = null, rx = null, best = [[], s], last = false;
-
 				// go through the rules in the given set
 				for (var i = 0; i < px.length ; i++) {
 
@@ -439,11 +456,9 @@
 					} catch (e) {
 						continue;
 					}
-
 					// since we are matching against a set of elements, the first
 					// thing to do is to add r[0] to matched elements
 					rx = [[r[0]], r[1]];
-
 					// if we matched and there is still input to parse and 
 					// we don't already know this is the last element,
 					// we're going to next check for the delimiter ...
@@ -534,7 +549,6 @@
 					// it parsed ... be sure to update the best match remaining input
 					best[1] = q[1];
 				}
-
 				// if we're here, either there was no closing delimiter or we parsed it
 				// so now we have the best match; just return it!
 				return best;
@@ -809,7 +823,6 @@
 			return r;
 		},
 		finish: function (x) {
-
 			x = (x instanceof Array) ? flattenAndCompact(x) : [ x ];
 
 			if (x.length === 0) {
@@ -821,7 +834,7 @@
 					x[i].call(this);
 				}
 			}
-			console.log(this);
+
 			var today = $D.today();
 
 			if (this.now && !this.unit && !this.operator) {
