@@ -1,6 +1,6 @@
 /** 
  * @overview datejs
- * @version 1.0.0-beta-2014-02-14
+ * @version 1.0.0-beta-2014-02-17
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -1580,12 +1580,13 @@
 		}
 	};
 	$P.Numeric = {
+		isNumeric: function (e){return!isNaN(parseFloat(e))&&isFinite(e)},
 		regex: /\b([0-1]?[0-9])([0-3]?[0-9])([0-2]?[0-9]?[0-9][0-9])\b/i,
 		parse: function (s) {
 			var data, i,
 				time = {},
 				order = Date.CultureInfo.dateElementOrder.split("");
-			if (!(!isNaN(parseFloat(s)) && isFinite(s)) || // if it's non-numeric OR
+			if (!(this.isNumeric(s)) || // if it's non-numeric OR
 				(s[0] === "+" && s[0] === "-")) {			// It's an arithmatic string (eg +/-1000)
 				return null;
 			}
@@ -1635,7 +1636,7 @@
 			
 			s = s.replace($R.tomorrow, Date.today().addDays(1).toString("d"));
 			s = s.replace($R.yesterday, Date.today().addDays(-1).toString("d"));
-			s = s.replace(new RegExp($R.today.source + "\\b", "i"), Date.today().toString("d"));
+			// s = s.replace(new RegExp($R.today.source + "\\b", "i"), Date.today().toString("d"));
 			s = s.replace(/\bat\b/gi, ""); // replace "at", eg: "tomorrow at 3pm"
 			s = s.replace(/\s{2,}/, " "); // repliace multiple spaces with one.
 
@@ -1660,6 +1661,23 @@
 			s = s.replace($R.amThisEvening, function(str, pm){return pm;});
 			s = s.replace($R.inTheEvening, "pm");
 			s = s.replace($R.thisEvening, "7pm");
+
+			try {
+				var n = s.split(/([\s\-\.\,\/\x27]+)/);
+				if (n.length === 3) {
+					if ($P.Numeric.isNumeric(n[0]) && $P.Numeric.isNumeric(n[2])) {
+						if (n[2].length >= 4) {
+							// ok, so we're dealing with x/year. But that's not a full date.
+							// This fixes wonky dateElementOrder parsing when set to dmy order.
+							if (Date.CultureInfo.dateElementOrder[0] === 'd') {
+								s = '1/' + n[0] + '/' + n[2]; // set to 1st of month and normalize the seperator
+							}
+						}
+					}
+				}
+			} catch (e) {
+				// continue...
+			}
 
 			return s;
 		}
@@ -1896,7 +1914,6 @@
 				// r is the current match, best the current 'best' match
 				// which means it parsed the most amount of input
 				var r = null, p = null, q = null, rx = null, best = [[], s], last = false;
-
 				// go through the rules in the given set
 				for (var i = 0; i < px.length ; i++) {
 
@@ -1914,11 +1931,9 @@
 					} catch (e) {
 						continue;
 					}
-
 					// since we are matching against a set of elements, the first
 					// thing to do is to add r[0] to matched elements
 					rx = [[r[0]], r[1]];
-
 					// if we matched and there is still input to parse and 
 					// we don't already know this is the last element,
 					// we're going to next check for the delimiter ...
@@ -2009,7 +2024,6 @@
 					// it parsed ... be sure to update the best match remaining input
 					best[1] = q[1];
 				}
-
 				// if we're here, either there was no closing delimiter or we parsed it
 				// so now we have the best match; just return it!
 				return best;
@@ -2259,12 +2273,17 @@
 			if (!this.millisecond) {
 				this.millisecond = 0;
 			}
-			if (this.meridian && this.hour) {
-				if (this.meridian == "p" && this.hour < 12) {
+
+			if (this.meridian && (this.hour || this.hour === 0)) {
+				if (this.meridian == "a" && this.hour > 11 && Date.Config.strict24hr){
+					throw "Invalid hour and meridian combination";
+				} else if (this.meridian == "p" && this.hour < 12 && Date.Config.strict24hr){
+					throw "Invalid hour and meridian combination";
+				} else if (this.meridian == "p" && this.hour < 12) {
 					this.hour = this.hour + 12;
 				} else if (this.meridian == "a" && this.hour == 12) {
 					this.hour = 0;
-				}
+				} 
 			}
 			
 			if (this.day > $D.getDaysInMonth(this.year, this.month)) {
@@ -2295,7 +2314,7 @@
 					x[i].call(this);
 				}
 			}
-			
+
 			var today = $D.today();
 
 			if (this.now && !this.unit && !this.operator) {
@@ -2389,12 +2408,16 @@
 				this[this.unit + "s"] = this.value * orient;
 			}
 
-			if (this.meridian && this.hour) {
-				if (this.meridian == "p" && this.hour < 12) {
+			if (this.meridian && (this.hour || this.hour === 0)) {
+				if (this.meridian == "a" && this.hour > 11 && Date.Config.strict24hr){
+					throw "Invalid hour and meridian combination";
+				} else if (this.meridian == "p" && this.hour < 12 && Date.Config.strict24hr){
+					throw "Invalid hour and meridian combination";
+				} else if (this.meridian == "p" && this.hour < 12) {
 					this.hour = this.hour + 12;
 				} else if (this.meridian == "a" && this.hour == 12) {
 					this.hour = 0;
-				}
+				} 
 			}
 
 			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
@@ -2529,7 +2552,7 @@
 			};
 		}
 	);
-	g.value = _.process(_.rtoken(/^\d\d?(st|nd|rd|th)?/),
+	g.value = _.process(_.rtoken(/^([-+]?\d+)?(st|nd|rd|th)?/),
 		function (s) {
 			return function () {
 				this.value = s.replace(/\D/g, "");
@@ -2768,7 +2791,7 @@
 		if (s instanceof Date) {
 			return s.clone();
 		}
-		if (s.length >= 4 && s.charAt(0) !== "0") { // ie: 2004 will pass, 0800 won't.
+		if (s.length >= 4 && s.charAt(0) !== "0" && s.charAt(0) !== "+"&& s.charAt(0) !== "-") { // ie: 2004 will pass, 0800 won't.
 			//  Start with specific formats
 			d = $D.Parsing.ISO.parse(s) || $D.Parsing.Numeric.parse(s);
 		}
