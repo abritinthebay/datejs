@@ -798,12 +798,17 @@
 			if (!this.millisecond) {
 				this.millisecond = 0;
 			}
-			if (this.meridian && this.hour) {
-				if (this.meridian == "p" && this.hour < 12) {
+
+			if (this.meridian && (this.hour || this.hour === 0)) {
+				if (this.meridian == "a" && this.hour > 11 && Date.Config.strict24hr){
+					throw "Invalid hour and meridian combination";
+				} else if (this.meridian == "p" && this.hour < 12 && Date.Config.strict24hr){
+					throw "Invalid hour and meridian combination";
+				} else if (this.meridian == "p" && this.hour < 12) {
 					this.hour = this.hour + 12;
 				} else if (this.meridian == "a" && this.hour == 12) {
 					this.hour = 0;
-				}
+				} 
 			}
 			
 			if (this.day > $D.getDaysInMonth(this.year, this.month)) {
@@ -928,12 +933,16 @@
 				this[this.unit + "s"] = this.value * orient;
 			}
 
-			if (this.meridian && this.hour) {
-				if (this.meridian == "p" && this.hour < 12) {
+			if (this.meridian && (this.hour || this.hour === 0)) {
+				if (this.meridian == "a" && this.hour > 11 && Date.Config.strict24hr){
+					throw "Invalid hour and meridian combination";
+				} else if (this.meridian == "p" && this.hour < 12 && Date.Config.strict24hr){
+					throw "Invalid hour and meridian combination";
+				} else if (this.meridian == "p" && this.hour < 12) {
 					this.hour = this.hour + 12;
 				} else if (this.meridian == "a" && this.hour == 12) {
 					this.hour = 0;
-				}
+				} 
 			}
 
 			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
