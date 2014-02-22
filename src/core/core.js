@@ -553,7 +553,15 @@
 	 * @return {Date}    this
 	 */
 	$P.setWeek = function (n) {
-		return this.moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1)).addWeeks(n - this.getWeek());
+		if ((n - this.getWeek()) === 0) {
+			if (this.getDay() !== 1) {
+				return this.moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1));
+			} else {
+				return this;
+			}
+		} else {
+			return this.moveToDayOfWeek(1, (this.getDay() > 1 ? -1 : 1)).addWeeks(n - this.getWeek());
+		}
 	};
 
 	$P.setQuarter = function (qtr) {
