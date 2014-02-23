@@ -1,19 +1,23 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>DateJS Spec Runner</title>
+
+	<link rel="shortcut icon" type="image/png" href="jasmine/jasmine_favicon.png">
 	<link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+
 	<script type="text/javascript">
 		function require() {}; // stub out a dummy require for node compatibility with the specs
 	</script>
+
 	<script type="text/javascript" src="jasmine/jasmine.js"></script>
 	<script type="text/javascript" src="jasmine/jasmine-html.js"></script>
+	<script type="text/javascript" src="jasmine/boot.js"></script>
 	<script type="text/javascript" src="jasmine/blanket.js"></script>
-	<script type="text/javascript" src="jasmine/jasmine-blanket.js"></script>
+	<script type="text/javascript" src="jasmine/jasmine2-blanket.js"></script>
 
-	<!-- include source files here... -->
-	 
+	<!-- Source files -->
 	<script type="text/javascript" src="../src/i18n/de-DE.js"></script>
 	<script type="text/javascript" src="../src/i18n/en-US.js"></script>
 	<script type="text/javascript" src="../src/core/i18n.js" data-cover></script>
@@ -23,36 +27,16 @@
 	<script type="text/javascript" src="../src/core/extras.js" data-cover></script>
 	<script type="text/javascript" src="../src/core/time.js" data-cover></script>
 
-	<!-- include spec files here... -->
-
+	<!-- Tests for core file coverage-->
 	<script type="text/javascript" src="Core-spec.js"></script>
 	<script type="text/javascript" src="Sugarpak-spec.js"></script>
 	<script type="text/javascript" src="Parsing-spec.js"></script>
 	<script type="text/javascript" src="ISOparsing-spec.js"></script>
 	<script type="text/javascript" src="I18n-spec.js"></script> 
-	
-	<script type="text/javascript">
-		(function() {
-			Date.i18n.setLanguage("en-US");
-			var jasmineEnv = jasmine.getEnv();
-			jasmineEnv.updateInterval = 1000;
-			var htmlReporter = new jasmine.HtmlReporter();
-			jasmineEnv.addReporter(htmlReporter);
-			jasmineEnv.specFilter = function(spec) {
-				return htmlReporter.specFilter(spec);
-			};
-			var currentWindowOnload = window.onload;
-			window.onload = function() {
-				if (currentWindowOnload) {
-					currentWindowOnload();
-				}
-				execJasmine();
-			};
-			function execJasmine() {
-				jasmineEnv.execute();
-			}
-		})();
-	</script>
+
+	<!-- Acceptance tests of features -->
+	<script type="text/javascript" src="DateMath-spec.js"></script> 
+
 </head>
 <body id="datejs">
 	<div id="blanket-main"></div>
