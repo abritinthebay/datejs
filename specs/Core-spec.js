@@ -428,6 +428,12 @@ describe("Core Module", function() {
 			d.set({week: 5});
 			expect(d.getDate()).toBe(28);
 			expect(d.getMonth()).toBe(0);
+			// bug check
+			d = new Date(2014, 11, 22) // Mon Dec 22 2014 00:00:00 GMT
+			d.setWeek(52);
+			expect(d.getDate()).toBe(22);
+			expect(d.getMonth()).toBe(11);
+			expect(d.getFullYear()).toBe(2014);
 		});
 		it("month", function() {
 			var d1 = new Date(2010, 1, 1);
