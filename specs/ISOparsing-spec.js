@@ -28,7 +28,7 @@ describe("ISO 8601 Date Parser", function() {
 	it("should pass processTimeObject an object with at least a year property", function() {
 		spyOn($P, "processTimeObject");
 		$P.ISO.parse("1995-12-04");
-		var x = $P.processTimeObject.mostRecentCall.args[0];
+		var x = $P.processTimeObject.calls.mostRecent().args[0];
 		expect($P.processTimeObject).toHaveBeenCalled();
 		expect(x).toEqual(jasmine.any(Object));
 		expect(x.year).toBeDefined();
