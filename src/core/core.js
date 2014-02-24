@@ -1001,7 +1001,7 @@
 			}
 		}
 
-		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S|q|Q)(?![^\[]*\]))/g,
+		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S|q|Q|WW?W?W?)(?![^\[]*\]))/g,
 		function (m) {
 			if (m.charAt(0) === "\\") {
 				return m.replace("\\", "");
@@ -1050,10 +1050,16 @@
 				return x.h() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
 			case "S":
 				return ord(x.getDate());
+			case "W":
+				return x.getWeek();
+			case "WW":
+				return x.getISOWeek();
 			case "Q":
 				return "Q" + x.getQuarter();
 			case "q":
 				return String(x.getQuarter());
+			default: 
+				return m;
 			}
 		}).replace(/\[|\]/g, "") : this._toString();
 	};
