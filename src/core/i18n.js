@@ -1,63 +1,4 @@
 (function () {
-	/*
-	 * The following is a UTF8 conversion process. Technically decodeURIComponent(escape(s)) would work
-	 * however there are two downsides that: 
-	 *     1) It's slow. Even slower with large text. 
-	 *     2) escape was deprecated in JavaScript version 1.5 and it's replacement (encodeURIComponent) doesn't
-	 *        have the same behavior.
-	 */
-	var UTF8_ACCEPT = 0,
-		UTF8D = [
-			// The first part of the table maps bytes to character classes that
-			// to reduce the size of the transition table and create bitmasks.
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,   9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-			7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,   7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-			8, 8, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,   2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-			10, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3,  11, 6, 6, 6, 5, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-
-			// The second part is a transition table that maps a combination
-			// of a state of the automaton and a character class to a state.
-			0, 12, 24, 36, 60, 96, 84, 12, 12, 12, 48, 72,  12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-			12,  0, 12, 12, 12, 12, 12,  0, 12,  0, 12, 12,  12, 24, 12, 12, 12, 12, 12, 24, 12, 24, 12, 12,
-			12, 12, 12, 12, 12, 12, 12, 24, 12, 12, 12, 12,  12, 24, 12, 12, 12, 12, 12, 12, 12, 24, 12, 12,
-			12, 12, 12, 12, 12, 12, 12, 36, 12, 36, 12, 12,  12, 36, 12, 12, 12, 12, 12, 36, 12, 36, 12, 12,
-			12, 36, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12
-		];
-	function decode (utftext) {
-		var i, charCode, type,
-			codep = 0,
-			state = UTF8_ACCEPT,
-			string = [],
-			len = utftext.length;
-
-		for (i = 0; i < len; i++) {
-			charCode = utftext.charCodeAt(i);
-			type = UTF8D[charCode];
-
-			if (state !== UTF8_ACCEPT) {
-				codep = (charCode & 0x3f) | (codep << 6);
-			} else {
-				codep = (0xff >> type) & charCode;
-			}
-
-			state = UTF8D[256 + state + type];
-
-			if (state === UTF8_ACCEPT) {
-				if (codep > 0xffff) {
-					string.push(0xD7C0 + (codep >> 10), 0xDC00 + (codep & 0x3FF));
-				} else {
-					string.push(codep);
-				}
-			}
-		}
-
-		return String.fromCharCode.apply(null, string);
-	}
-	
 	var $D = Date;
 	var lang = Date.CultureStrings ? Date.CultureStrings.lang : null;
 	var loggedKeys = {}; // for debug purposes.
@@ -65,7 +6,7 @@
 		var output, split, length, last;
 		var countryCode = (language) ? language : lang;
 		if (Date.CultureStrings && Date.CultureStrings[countryCode] && Date.CultureStrings[countryCode][key]) {
-			output = (typeof Date.CultureStrings[countryCode][key] === "string") ? decode(Date.CultureStrings[countryCode][key]) : Date.CultureStrings[countryCode][key]; // UTF support
+			output = Date.CultureStrings[countryCode][key];
 		} else {
 			switch(key) {
 				case "name":
@@ -99,7 +40,7 @@
 		if (key.charAt(0) === "/") {
 			// Assume it's a regex
 			if (Date.CultureStrings && Date.CultureStrings[countryCode] && Date.CultureStrings[countryCode][key]) {
-				output = new RegExp(decode(Date.CultureStrings[countryCode][key]), "i");
+				output = new RegExp(Date.CultureStrings[countryCode][key], "i");
 			} else {
 				output = new RegExp(key.replace(new RegExp("/", "g"),""), "i");
 			}
