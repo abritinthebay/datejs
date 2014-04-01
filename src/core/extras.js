@@ -151,8 +151,8 @@
 	 * O		Difference to Greenwich time (GMT) in hours									"+0200", "-0600"
 	 * P		Difference to Greenwich time (GMT) with colon between hours and minutes		"+02:00", "-06:00"
 	 * T		Timezone abbreviation														"UTC", "EST", "PST"
-	 * Z		Timezone offset in seconds. The offset for timezones west of UTC is		    "-43200" through "50400"
-	 *		always negative, and for those east of UTC is always positive.
+	 * Z		Timezone offset in seconds. The offset for timezones west of UTC is			"-43200" through "50400"
+	 *			always negative, and for those east of UTC is always positive.
 	 * c		ISO 8601 date																"2004-02-12T15:19:21+00:00"
 	 * r		RFC 2822 formatted date														"Thu, 21 Dec 2000 16:01:07 +0200"
 	 * U		Seconds since the Unix Epoch (January 1 1970 00:00:00 GMT)					"0"
