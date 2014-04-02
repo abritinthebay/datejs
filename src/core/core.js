@@ -705,20 +705,7 @@
 		}
 		return result;
 	};
-
-	// var validateConfigObject = function (obj) {
-	// 	var result = {}, prop;
-	// 	for (prop in obj) {
-	// 		if (hasOwnProperty.call(obj, prop)) {
-	// 			var validationFunc = "validate" + prop.charAt(0).toUpperCase() + prop.slice(1);
-	// 			var args = (prop === "day") ? [obj[prop], this.getFullYear(), this.getMonth()] : [obj[prop]];
-	// 			if ($D[validationFunc] && obj[prop] !== null && $D[validationFunc].apply(this, args)) {
-	// 				result[prop] = obj[prop];
-	// 			}
-	// 		}
-	// 	}
-	// 	return result;
-	// };
+	
 	/**
 	 * Set the value of year, month, day, hour, minute, second, millisecond of date instance using given configuration object.
 	 * Example
@@ -829,10 +816,6 @@
 	 * @param {Number}   Forward (+1) or Back (-1). Defaults to +1. [Optional]
 	 * @return {Date}    this
 	 */
-	// $P.moveToDayOfWeek = function (dayOfWeek, orient) {
-	// 	var diff = (dayOfWeek - this.getDay() + 7 * (orient || +1)) % 7;
-	// 	return this.addDays((diff === 0) ? diff += 7 * (orient || +1) : diff);
-	// };
 	$P.moveToDayOfWeek = moveToN("getDay", "addDays", 7);
 	/**
 	 * Move to the next or last month based on the orient value.
@@ -840,10 +823,6 @@
 	 * @param {Number}   Forward (+1) or Back (-1). Defaults to +1. [Optional]
 	 * @return {Date}    this
 	 */
-	// $P.moveToMonth = function (month, orient) {
-	// 	var diff = (month - this.getMonth() + 12 * (orient || +1)) % 12;
-	// 	return this.addMonths((diff === 0) ? diff += 12 * (orient || +1) : diff);
-	// };
 	$P.moveToMonth = moveToN("getMonth", "addMonths", 12);
 	/**
 	 * Get the Ordinate of the current day ("th", "st", "rd").
