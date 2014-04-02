@@ -50,7 +50,7 @@
 	};
 	var loadI18nScript = function (code) {
 		// paatterned after jQuery's getScript.
-		var url = Date.Config.i18n + code + '.js';
+		var url = Date.Config.i18n + code + ".js";
 		var head = document.getElementsByTagName("head")[0] || document.documentElement;
 		var script = document.createElement("script");
 		script.src = url;
@@ -61,8 +61,7 @@
 		};
 		// Attach handlers for all browsers
 		script.onload = script.onreadystatechange = function() {
-		if ( !completed && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
-				done = true;
+			if ( !completed && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") ) {
 				events.done();
 				head.removeChild(script);
 			}
@@ -73,18 +72,83 @@
 		}, 0); // allows return to execute first
 		
 		return {
-			done: function (f) {
+			done: function (cb) {
 				events.done = function() {
-					if (f) {
-						f();
+					if (cb) {
+						cb();
 					}
 				};
 			}
 		};
 	};
 
-	var CultureInfo = function () {
-		var buildTimeZones = function (data) {
+	var buildInfo = {
+		timeZoneDST: function () {
+			var DST = {};
+			DST[__("CHADT")] = "+1345";
+			DST[__("NZDT")] = "+1300";
+			DST[__("AEDT")] = "+1100";
+			DST[__("ACDT")] = "+1030";
+			DST[__("AZST")] = "+0500";
+			DST[__("IRDT")] = "+0430";
+			DST[__("EEST")] = "+0300";
+			DST[__("CEST")] = "+0200";
+			DST[__("BST")] = "+0100";
+			DST[__("PMDT")] = "-0200";
+			DST[__("ADT")] = "-0300";
+			DST[__("NDT")] = "-0230";
+			DST[__("EDT")] = "-0400";
+			DST[__("CDT")] = "-0500";
+			DST[__("MDT")] = "-0600";
+			DST[__("PDT")] = "-0700";
+			DST[__("AKDT")] = "-0800";
+			DST[__("HADT")] = "-0900";
+			return DST;
+		},
+		timeZoneStandard: function () {
+			var standard = {};
+			standard[__("LINT")] = "+1400";
+			standard[__("TOT")] = "+1300";
+			standard[__("CHAST")] = "+1245";
+			standard[__("NZST")] = "+1200";
+			standard[__("NFT")] = "+1130";
+			standard[__("SBT")] = "+1100";
+			standard[__("AEST")] = "+1000";
+			standard[__("ACST")] = "+0930";
+			standard[__("JST")] = "+0900";
+			standard[__("CWST")] = "+0845";
+			standard[__("CT")] = "+0800";
+			standard[__("ICT")] = "+0700";
+			standard[__("MMT")] = "+0630";
+			standard[__("BST")] = "+0600";
+			standard[__("NPT")] = "+0545";
+			standard[__("IST")] = "+0530";
+			standard[__("PKT")] = "+0500";
+			standard[__("AFT")] = "+0430";
+			standard[__("MSK")] = "+0400";
+			standard[__("IRST")] = "+0330";
+			standard[__("FET")] = "+0300";
+			standard[__("EET")] = "+0200";
+			standard[__("CET")] = "+0100";
+			standard[__("GMT")] = "+0000";
+			standard[__("UTC")] = "+0000";
+			standard[__("CVT")] = "-0100";
+			standard[__("GST")] = "-0200";
+			standard[__("BRT")] = "-0300";
+			standard[__("NST")] = "-0330";
+			standard[__("AST")] = "-0400";
+			standard[__("EST")] = "-0500";
+			standard[__("CST")] = "-0600";
+			standard[__("MST")] = "-0700";
+			standard[__("PST")] = "-0800";
+			standard[__("AKST")] = "-0900";
+			standard[__("MIT")] = "-0930";
+			standard[__("HST")] = "-1000";
+			standard[__("SST")] = "-1100";
+			standard[__("BIT")] = "-1200";
+			return standard;
+		},
+		timeZones: function (data) {
 			var zone;
 			for (zone in data.abbreviatedTimeZoneStandard) {
 				if (data.abbreviatedTimeZoneStandard.hasOwnProperty(zone)) {
@@ -97,13 +161,9 @@
 				}
 			}
 			return data.timezones;
-		};
-		var info =  {
-			name: __("name"),
-			englishName: __("englishName"),
-			nativeName: __("nativeName"),
-			/* Day Name Strings */
-			dayNames: [
+		},
+		days: function () {
+			return [
 				__("Sunday"),
 				__("Monday"),
 				__("Tuesday"),
@@ -111,8 +171,10 @@
 				__("Thursday"),
 				__("Friday"),
 				__("Saturday")
-			],
-			abbreviatedDayNames: [
+			];
+		},
+		dayAbbr: function () {
+			return [
 				__("Sun"),
 				__("Mon"),
 				__("Tue"),
@@ -120,8 +182,10 @@
 				__("Thu"),
 				__("Fri"),
 				__("Sat")
-			],
-			shortestDayNames: [
+			];
+		},
+		dayShortNames: function () {
+			return [
 				__("Su"),
 				__("Mo"),
 				__("Tu"),
@@ -129,8 +193,10 @@
 				__("Th"),
 				__("Fr"),
 				__("Sa")
-			],
-			firstLetterDayNames: [
+			];
+		},
+		dayFirstLetters: function () {
+			return [
 				__("S_Sun_Initial"),
 				__("M_Mon_Initial"),
 				__("T_Tues_Initial"),
@@ -138,10 +204,10 @@
 				__("T_Thu_Initial"),
 				__("F_Fri_Initial"),
 				__("S_Sat_Initial")
-			],
-
-			/* Month Name Strings */
-			monthNames: [
+			];
+		},
+		months: function () {
+			return [
 				__("January"),
 				__("February"),
 				__("March"),
@@ -154,8 +220,10 @@
 				__("October"),
 				__("November"),
 				__("December")
-			],
-			abbreviatedMonthNames: [
+			];
+		},
+		monthAbbr: function () {
+			return [
 				__("Jan_Abbr"),
 				__("Feb_Abbr"),
 				__("Mar_Abbr"),
@@ -168,15 +236,10 @@
 				__("Oct_Abbr"),
 				__("Nov_Abbr"),
 				__("Dec_Abbr")
-			],
-			/* AM/PM Designators */
-			amDesignator: __("AM"),
-			pmDesignator: __("PM"),
-			firstDayOfWeek: __("firstDayOfWeek"),
-			twoDigitYearMax: __("twoDigitYearMax"),
-			dateElementOrder: __("mdy"),
-			/* Standard date and time format patterns */
-			formatPatterns: {
+			];
+		},
+		formatPatterns: function () {
+			return {
 				shortDate: __("M/d/yyyy"),
 				longDate: __("dddd, MMMM dd, yyyy"),
 				shortTime: __("h:mm tt"),
@@ -187,8 +250,10 @@
 				rfc1123: __("ddd, dd MMM yyyy HH:mm:ss"),
 				monthDay: __("MMMM dd"),
 				yearMonth: __("MMMM, yyyy")
-			},
-			regexPatterns: {
+			};
+		},
+		regex: function () {
+			return {
 				inTheMorning: __("/( in the )(morn(ing)?)\\b/"),
 				thisMorning: __("/(this )(morn(ing)?)\\b/"),
 				amThisMorning: __("/(\b\\d(am)? )(this )(morn(ing)?)/"),
@@ -235,72 +300,36 @@
 				timezone: __("/^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)/"),
 				ordinalSuffix: __("/^\\s*(st|nd|rd|th)/"),
 				timeContext: __("/^\\s*(\\:|a(?!u|p)|p)/")
-			},
+			};
+		}
+	};
+
+	var CultureInfo = function () {
+		var info =  {
+			name: __("name"),
+			englishName: __("englishName"),
+			nativeName: __("nativeName"),
 			timezones: [],
 			abbreviatedTimeZoneDST: {},
-			abbreviatedTimeZoneStandard: {}
+			abbreviatedTimeZoneStandard: {},
+			dayNames: buildInfo.days(),
+			abbreviatedDayNames: buildInfo.dayAbbr(),
+			shortestDayNames: buildInfo.dayShortNames(),
+			firstLetterDayNames: buildInfo.dayFirstLetters(),
+			monthNames: buildInfo.months(),
+			abbreviatedMonthNames: buildInfo.monthAbbr(),
+			amDesignator: __("AM"),
+			pmDesignator: __("PM"),
+			firstDayOfWeek: __("firstDayOfWeek"),
+			twoDigitYearMax: __("twoDigitYearMax"),
+			dateElementOrder: __("mdy"),
+			formatPatterns: buildInfo.formatPatterns(),
+			regexPatterns: buildInfo.regex()
 		};
-		
-		info.abbreviatedTimeZoneDST[__("CHADT")] = "+1345";
-		info.abbreviatedTimeZoneDST[__("NZDT")] = "+1300";
-		info.abbreviatedTimeZoneDST[__("AEDT")] = "+1100";
-		info.abbreviatedTimeZoneDST[__("ACDT")] = "+1030";
-		info.abbreviatedTimeZoneDST[__("AZST")] = "+0500";
-		info.abbreviatedTimeZoneDST[__("IRDT")] = "+0430";
-		info.abbreviatedTimeZoneDST[__("EEST")] = "+0300";
-		info.abbreviatedTimeZoneDST[__("CEST")] = "+0200";
-		info.abbreviatedTimeZoneDST[__("BST")] = "+0100";
-		info.abbreviatedTimeZoneDST[__("PMDT")] = "-0200";
-		info.abbreviatedTimeZoneDST[__("ADT")] = "-0300";
-		info.abbreviatedTimeZoneDST[__("NDT")] = "-0230";
-		info.abbreviatedTimeZoneDST[__("EDT")] = "-0400";
-		info.abbreviatedTimeZoneDST[__("CDT")] = "-0500";
-		info.abbreviatedTimeZoneDST[__("MDT")] = "-0600";
-		info.abbreviatedTimeZoneDST[__("PDT")] = "-0700";
-		info.abbreviatedTimeZoneDST[__("AKDT")] = "-0800";
-		info.abbreviatedTimeZoneDST[__("HADT")] = "-0900";
 
-		info.abbreviatedTimeZoneStandard[__("LINT")] = "+1400";
-		info.abbreviatedTimeZoneStandard[__("TOT")] = "+1300";
-		info.abbreviatedTimeZoneStandard[__("CHAST")] = "+1245";
-		info.abbreviatedTimeZoneStandard[__("NZST")] = "+1200";
-		info.abbreviatedTimeZoneStandard[__("NFT")] = "+1130";
-		info.abbreviatedTimeZoneStandard[__("SBT")] = "+1100";
-		info.abbreviatedTimeZoneStandard[__("AEST")] = "+1000";
-		info.abbreviatedTimeZoneStandard[__("ACST")] = "+0930";
-		info.abbreviatedTimeZoneStandard[__("JST")] = "+0900";
-		info.abbreviatedTimeZoneStandard[__("CWST")] = "+0845";
-		info.abbreviatedTimeZoneStandard[__("CT")] = "+0800";
-		info.abbreviatedTimeZoneStandard[__("ICT")] = "+0700";
-		info.abbreviatedTimeZoneStandard[__("MMT")] = "+0630";
-		info.abbreviatedTimeZoneStandard[__("BST")] = "+0600";
-		info.abbreviatedTimeZoneStandard[__("NPT")] = "+0545";
-		info.abbreviatedTimeZoneStandard[__("IST")] = "+0530";
-		info.abbreviatedTimeZoneStandard[__("PKT")] = "+0500";
-		info.abbreviatedTimeZoneStandard[__("AFT")] = "+0430";
-		info.abbreviatedTimeZoneStandard[__("MSK")] = "+0400";
-		info.abbreviatedTimeZoneStandard[__("IRST")] = "+0330";
-		info.abbreviatedTimeZoneStandard[__("FET")] = "+0300";
-		info.abbreviatedTimeZoneStandard[__("EET")] = "+0200";
-		info.abbreviatedTimeZoneStandard[__("CET")] = "+0100";
-		info.abbreviatedTimeZoneStandard[__("GMT")] = "+0000";
-		info.abbreviatedTimeZoneStandard[__("UTC")] = "+0000";
-		info.abbreviatedTimeZoneStandard[__("CVT")] = "-0100";
-		info.abbreviatedTimeZoneStandard[__("GST")] = "-0200";
-		info.abbreviatedTimeZoneStandard[__("BRT")] = "-0300";
-		info.abbreviatedTimeZoneStandard[__("NST")] = "-0330";
-		info.abbreviatedTimeZoneStandard[__("AST")] = "-0400";
-		info.abbreviatedTimeZoneStandard[__("EST")] = "-0500";
-		info.abbreviatedTimeZoneStandard[__("CST")] = "-0600";
-		info.abbreviatedTimeZoneStandard[__("MST")] = "-0700";
-		info.abbreviatedTimeZoneStandard[__("PST")] = "-0800";
-		info.abbreviatedTimeZoneStandard[__("AKST")] = "-0900";
-		info.abbreviatedTimeZoneStandard[__("MIT")] = "-0930";
-		info.abbreviatedTimeZoneStandard[__("HST")] = "-1000";
-		info.abbreviatedTimeZoneStandard[__("SST")] = "-1100";
-		info.abbreviatedTimeZoneStandard[__("BIT")] = "-1200";
-
-		buildTimeZones(info);
+		info.abbreviatedTimeZoneDST = buildInfo.timeZoneDST();
+		info.abbreviatedTimeZoneStandard = buildInfo.timeZoneStandard();
+		buildInfo.timeZones(info);
 
 		return info;
 	};
@@ -316,16 +345,16 @@
 			if (force || code === "en-US" || (!!Date.CultureStrings && !!Date.CultureStrings[code])) {
 				lang = code;
 				Date.CultureStrings.lang = code;
-				Date.CultureInfo = CultureInfo();
+				Date.CultureInfo = new CultureInfo();
 			} else {
 				if (!(!!Date.CultureStrings && !!Date.CultureStrings[code])) {
-					if (typeof exports !== 'undefined' && this.exports !== exports) {
+					if (typeof exports !== "undefined" && this.exports !== exports) {
 						// we're in a Node enviroment, load it using require
 						try {
 							require("../i18n/" + code + ".js");
 							lang = code;
 							Date.CultureStrings.lang = code;
-							Date.CultureInfo = CultureInfo();
+							Date.CultureInfo = new CultureInfo();
 						} catch (e) {
 							// var str = "The language for '" + code + "' could not be loaded by Node. It likely does not exist.";
 							throw new Error("The DateJS IETF language tag '" + code + "' could not be loaded by Node. It likely does not exist.");
@@ -335,7 +364,7 @@
 						loadI18nScript(code).done(function(){
 							lang = code;
 							Date.CultureStrings.lang = code;
-							Date.CultureInfo = CultureInfo();
+							Date.CultureInfo = new CultureInfo();
 						});
 					} else {
 						Date.console.error("The DateJS IETF language tag '" + code + "' is not available and has not been loaded.");
@@ -348,7 +377,7 @@
 			return loggedKeys;
 		},
 		updateCultureInfo: function () {
-			Date.CultureInfo = CultureInfo();
+			Date.CultureInfo = new CultureInfo();
 		}
 	};
 	$D.i18n.updateCultureInfo(); // run automatically
