@@ -128,7 +128,7 @@
 	// Do they occur on the same day?
 	d1.same().day(d2); // true
 	
-	 // Do they occur on the same hour?
+	// Do they occur on the same hour?
 	d1.same().hour(d2); // false, unless d2 hour is '00' (midnight).
 	
 	// What if it's the same day, but one year apart?
@@ -373,16 +373,7 @@
 		};
 	};
 	
-	for (var i = 0; i < dx.length; i++) {
-		// Create constant static Day Name variables. Example: Date.MONDAY or Date.MON
-		$D[dx[i].toUpperCase()] = $D[dx[i].toUpperCase().substring(0, 3)] = i;
 
-		// Create Day Name functions. Example: Date.monday() or Date.mon()
-		$D[dx[i]] = $D[dx[i].substring(0, 3)] = sdf(i);
-
-		// Create Day Name instance functions. Example: Date.today().next().monday()
-		$P[dx[i]] = $P[dx[i].substring(0, 3)] = df(i);
-	}
 	
 	// Create month name functions and abbreviated month name functions (eg. january(), march(), mar()).
 	var month_instance_functions = function (n) {
@@ -401,16 +392,20 @@
 		};
 	};
 	
-	for (var j = 0; j < mx.length; j++) {
-		// Create constant static Month Name variables. Example: Date.MARCH or Date.MAR
-		$D[mx[j].toUpperCase()] = $D[mx[j].toUpperCase().substring(0, 3)] = j;
+	var processTerms = function (names, staticFunc, instanceFunc) {
+		for (var i = 0; i < names.length; i++) {
+			// Create constant static Name variables.
+			$D[names[i].toUpperCase()] = $D[names[i].toUpperCase().substring(0, 3)] = i;
+			// Create Name functions.
+			$D[names[i]] = $D[names[i].substring(0, 3)] = staticFunc(i);
+			// Create Name instance functions.
+			$P[names[i]] = $P[names[i].substring(0, 3)] = instanceFunc(i);
+		}
 
-		// Create Month Name functions. Example: Date.march() or Date.mar()
-		$D[mx[j]] = $D[mx[j].substring(0, 3)] = month_static_functions(j);
+	};
 
-		// Create Month Name instance functions. Example: Date.today().next().march()
-		$P[mx[j]] = $P[mx[j].substring(0, 3)] = month_instance_functions(j);
-	}
+	processTerms(dx, sdf, df);
+	processTerms(mx, month_static_functions, month_instance_functions);
 	
 	// Create date element functions and plural date element functions used with Date (eg. day(), days(), months()).
 	var ef = function (j) {
