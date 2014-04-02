@@ -2,12 +2,48 @@
 	var $D = Date;
 	var lang = Date.CultureStrings ? Date.CultureStrings.lang : null;
 	var loggedKeys = {}; // for debug purposes.
-	var __ = function (key, language) {
-		var output, split, length, last;
-		var countryCode = (language) ? language : lang;
-		if (Date.CultureStrings && Date.CultureStrings[countryCode] && Date.CultureStrings[countryCode][key]) {
-			output = Date.CultureStrings[countryCode][key];
-		} else {
+	var getText = {
+		getFromKey: function (key, countryCode) {
+			var output;
+			if (Date.CultureStrings && Date.CultureStrings[countryCode] && Date.CultureStrings[countryCode][key]) {
+				output = Date.CultureStrings[countryCode][key];
+			} else {
+				output = getText.buildFromDefault(key);
+			}
+			if (key.charAt(0) === "/") { // Assume it's a regex
+				output = getText.buildFromRegex(key, countryCode);
+			}
+			return output;
+		},
+		getFromObjectValues: function (obj, countryCode) {
+			var key, output = {};
+			for(key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					output[key] = getText.getFromKey(obj[key], countryCode);
+				}
+			}
+			return output;
+		},
+		getFromObjectKeys: function (obj, countryCode) {
+			var key, output = {};
+			for(key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					output[getText.getFromKey(key, countryCode)] = obj[key];
+				}
+			}
+			return output;
+		},
+		getFromArray: function (arr, countryCode) {
+			var i =0, output = [];
+			for (i; i < arr.length; i++){
+				if (i in arr) {
+					output[i] = getText.getFromKey(arr[i], countryCode);
+				}
+			}
+			return output;
+		},
+		buildFromDefault: function (key) {
+			var output, length, split, last;
 			switch(key) {
 				case "name":
 					output = "en-US";
@@ -35,19 +71,35 @@
 							output = split[0];
 						}
 					}
+					break;
 			}
-		}
-		if (key.charAt(0) === "/") {
-			// Assume it's a regex
+			return output;
+		},
+		buildFromRegex: function (key, countryCode) {
+			var output;
 			if (Date.CultureStrings && Date.CultureStrings[countryCode] && Date.CultureStrings[countryCode][key]) {
 				output = new RegExp(Date.CultureStrings[countryCode][key], "i");
 			} else {
 				output = new RegExp(key.replace(new RegExp("/", "g"),""), "i");
 			}
+			return output;
 		}
-		loggedKeys[key] = key;
-		return output;
 	};
+
+	var __ = function (key, language) {
+		var countryCode = (language) ? language : lang;
+		loggedKeys[key] = key;
+		if (typeof key === "object") {
+			if (key instanceof Array) {
+				return getText.getFromArray(key, countryCode);
+			} else {
+				return getText.getFromObjectKeys(key, countryCode);
+			}
+		} else {
+			return getText.getFromKey(key, countryCode);
+		}
+	};
+	
 	var loadI18nScript = function (code) {
 		// paatterned after jQuery's getScript.
 		var url = Date.Config.i18n + code + ".js";
@@ -84,69 +136,71 @@
 
 	var buildInfo = {
 		timeZoneDST: function () {
-			var DST = {};
-			DST[__("CHADT")] = "+1345";
-			DST[__("NZDT")] = "+1300";
-			DST[__("AEDT")] = "+1100";
-			DST[__("ACDT")] = "+1030";
-			DST[__("AZST")] = "+0500";
-			DST[__("IRDT")] = "+0430";
-			DST[__("EEST")] = "+0300";
-			DST[__("CEST")] = "+0200";
-			DST[__("BST")] = "+0100";
-			DST[__("PMDT")] = "-0200";
-			DST[__("ADT")] = "-0300";
-			DST[__("NDT")] = "-0230";
-			DST[__("EDT")] = "-0400";
-			DST[__("CDT")] = "-0500";
-			DST[__("MDT")] = "-0600";
-			DST[__("PDT")] = "-0700";
-			DST[__("AKDT")] = "-0800";
-			DST[__("HADT")] = "-0900";
-			return DST;
+			var DST = {
+				"CHADT": "+1345",
+				"NZDT": "+1300",
+				"AEDT": "+1100",
+				"ACDT": "+1030",
+				"AZST": "+0500",
+				"IRDT": "+0430",
+				"EEST": "+0300",
+				"CEST": "+0200",
+				"BST": "+0100",
+				"PMDT": "-0200",
+				"ADT": "-0300",
+				"NDT": "-0230",
+				"EDT": "-0400",
+				"CDT": "-0500",
+				"MDT": "-0600",
+				"PDT": "-0700",
+				"AKDT": "-0800",
+				"HADT": "-0900"
+			};
+			return __(DST);
 		},
 		timeZoneStandard: function () {
-			var standard = {};
-			standard[__("LINT")] = "+1400";
-			standard[__("TOT")] = "+1300";
-			standard[__("CHAST")] = "+1245";
-			standard[__("NZST")] = "+1200";
-			standard[__("NFT")] = "+1130";
-			standard[__("SBT")] = "+1100";
-			standard[__("AEST")] = "+1000";
-			standard[__("ACST")] = "+0930";
-			standard[__("JST")] = "+0900";
-			standard[__("CWST")] = "+0845";
-			standard[__("CT")] = "+0800";
-			standard[__("ICT")] = "+0700";
-			standard[__("MMT")] = "+0630";
-			standard[__("BST")] = "+0600";
-			standard[__("NPT")] = "+0545";
-			standard[__("IST")] = "+0530";
-			standard[__("PKT")] = "+0500";
-			standard[__("AFT")] = "+0430";
-			standard[__("MSK")] = "+0400";
-			standard[__("IRST")] = "+0330";
-			standard[__("FET")] = "+0300";
-			standard[__("EET")] = "+0200";
-			standard[__("CET")] = "+0100";
-			standard[__("GMT")] = "+0000";
-			standard[__("UTC")] = "+0000";
-			standard[__("CVT")] = "-0100";
-			standard[__("GST")] = "-0200";
-			standard[__("BRT")] = "-0300";
-			standard[__("NST")] = "-0330";
-			standard[__("AST")] = "-0400";
-			standard[__("EST")] = "-0500";
-			standard[__("CST")] = "-0600";
-			standard[__("MST")] = "-0700";
-			standard[__("PST")] = "-0800";
-			standard[__("AKST")] = "-0900";
-			standard[__("MIT")] = "-0930";
-			standard[__("HST")] = "-1000";
-			standard[__("SST")] = "-1100";
-			standard[__("BIT")] = "-1200";
-			return standard;
+			var standard = {
+				"LINT": "+1400",
+				"TOT": "+1300",
+				"CHAST": "+1245",
+				"NZST": "+1200",
+				"NFT": "+1130",
+				"SBT": "+1100",
+				"AEST": "+1000",
+				"ACST": "+0930",
+				"JST": "+0900",
+				"CWST": "+0845",
+				"CT": "+0800",
+				"ICT": "+0700",
+				"MMT": "+0630",
+				"BST": "+0600",
+				"NPT": "+0545",
+				"IST": "+0530",
+				"PKT": "+0500",
+				"AFT": "+0430",
+				"MSK": "+0400",
+				"IRST": "+0330",
+				"FET": "+0300",
+				"EET": "+0200",
+				"CET": "+0100",
+				"GMT": "+0000",
+				"UTC": "+0000",
+				"CVT": "-0100",
+				"GST": "-0200",
+				"BRT": "-0300",
+				"NST": "-0330",
+				"AST": "-0400",
+				"EST": "-0500",
+				"CST": "-0600",
+				"MST": "-0700",
+				"PST": "-0800",
+				"AKST": "-0900",
+				"MIT": "-0930",
+				"HST": "-1000",
+				"SST": "-1100",
+				"BIT": "-1200"
+			};
+			return __(standard);
 		},
 		timeZones: function (data) {
 			var zone;
@@ -163,144 +217,86 @@
 			return data.timezones;
 		},
 		days: function () {
-			return [
-				__("Sunday"),
-				__("Monday"),
-				__("Tuesday"),
-				__("Wednesday"),
-				__("Thursday"),
-				__("Friday"),
-				__("Saturday")
-			];
+			return __(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]);
 		},
 		dayAbbr: function () {
-			return [
-				__("Sun"),
-				__("Mon"),
-				__("Tue"),
-				__("Wed"),
-				__("Thu"),
-				__("Fri"),
-				__("Sat")
-			];
+			return __(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]);
 		},
 		dayShortNames: function () {
-			return [
-				__("Su"),
-				__("Mo"),
-				__("Tu"),
-				__("We"),
-				__("Th"),
-				__("Fr"),
-				__("Sa")
-			];
+			return __(["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]);
 		},
 		dayFirstLetters: function () {
-			return [
-				__("S_Sun_Initial"),
-				__("M_Mon_Initial"),
-				__("T_Tues_Initial"),
-				__("W_Wed_Initial"),
-				__("T_Thu_Initial"),
-				__("F_Fri_Initial"),
-				__("S_Sat_Initial")
-			];
+			return __(["S_Sun_Initial", "M_Mon_Initial", "T_Tues_Initial", "W_Wed_Initial", "T_Thu_Initial", "F_Fri_Initial", "S_Sat_Initial"]);
 		},
 		months: function () {
-			return [
-				__("January"),
-				__("February"),
-				__("March"),
-				__("April"),
-				__("May"),
-				__("June"),
-				__("July"),
-				__("August"),
-				__("September"),
-				__("October"),
-				__("November"),
-				__("December")
-			];
+			return __(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]);
 		},
 		monthAbbr: function () {
-			return [
-				__("Jan_Abbr"),
-				__("Feb_Abbr"),
-				__("Mar_Abbr"),
-				__("Apr_Abbr"),
-				__("May_Abbr"),
-				__("Jun_Abbr"),
-				__("Jul_Abbr"),
-				__("Aug_Abbr"),
-				__("Sep_Abbr"),
-				__("Oct_Abbr"),
-				__("Nov_Abbr"),
-				__("Dec_Abbr")
-			];
+			return __(["Jan_Abbr", "Feb_Abbr", "Mar_Abbr", "Apr_Abbr", "May_Abbr", "Jun_Abbr", "Jul_Abbr", "Aug_Abbr", "Sep_Abbr", "Oct_Abbr", "Nov_Abbr", "Dec_Abbr"]);
 		},
 		formatPatterns: function () {
-			return {
-				shortDate: __("M/d/yyyy"),
-				longDate: __("dddd, MMMM dd, yyyy"),
-				shortTime: __("h:mm tt"),
-				longTime: __("h:mm:ss tt"),
-				fullDateTime: __("dddd, MMMM dd, yyyy h:mm:ss tt"),
-				sortableDateTime: __("yyyy-MM-ddTHH:mm:ss"),
-				universalSortableDateTime: __("yyyy-MM-dd HH:mm:ssZ"),
-				rfc1123: __("ddd, dd MMM yyyy HH:mm:ss"),
-				monthDay: __("MMMM dd"),
-				yearMonth: __("MMMM, yyyy")
-			};
+			return getText.getFromObjectValues({
+				shortDate: "M/d/yyyy",
+				longDate: "dddd, MMMM dd, yyyy",
+				shortTime: "h:mm tt",
+				longTime: "h:mm:ss tt",
+				fullDateTime: "dddd, MMMM dd, yyyy h:mm:ss tt",
+				sortableDateTime: "yyyy-MM-ddTHH:mm:ss",
+				universalSortableDateTime: "yyyy-MM-dd HH:mm:ssZ",
+				rfc1123: "ddd, dd MMM yyyy HH:mm:ss",
+				monthDay: "MMMM dd",
+				yearMonth: "MMMM, yyyy"
+			}, Date.i18n.currentLanguage());
 		},
 		regex: function () {
-			return {
-				inTheMorning: __("/( in the )(morn(ing)?)\\b/"),
-				thisMorning: __("/(this )(morn(ing)?)\\b/"),
-				amThisMorning: __("/(\b\\d(am)? )(this )(morn(ing)?)/"),
-				inTheEvening: __("/( in the )(even(ing)?)\\b/"),
-				thisEvening: __("/(this )(even(ing)?)\\b/"),
-				pmThisEvening: __("/(\b\\d(pm)? )(this )(even(ing)?)/"),
-				jan: __("/jan(uary)?/"),
-				feb: __("/feb(ruary)?/"),
-				mar: __("/mar(ch)?/"),
-				apr: __("/apr(il)?/"),
-				may: __("/may/"),
-				jun: __("/jun(e)?/"),
-				jul: __("/jul(y)?/"),
-				aug: __("/aug(ust)?/"),
-				sep: __("/sep(t(ember)?)?/"),
-				oct: __("/oct(ober)?/"),
-				nov: __("/nov(ember)?/"),
-				dec: __("/dec(ember)?/"),
-				sun: __("/^su(n(day)?)?/"),
-				mon: __("/^mo(n(day)?)?/"),
-				tue: __("/^tu(e(s(day)?)?)?/"),
-				wed: __("/^we(d(nesday)?)?/"),
-				thu: __("/^th(u(r(s(day)?)?)?)?/"),
-				fri: __("/fr(i(day)?)?/"),
-				sat: __("/^sa(t(urday)?)?/"),
-				future: __("/^next/"),
-				past: __("/last|past|prev(ious)?/"),
-				add: __("/^(\\+|aft(er)?|from|hence)/"),
-				subtract: __("/^(\\-|bef(ore)?|ago)/"),
-				yesterday: __("/^yes(terday)?/"),
-				today: __("/^t(od(ay)?)?/"),
-				tomorrow: __("/^tom(orrow)?/"),
-				now: __("/^n(ow)?/"),
-				millisecond: __("/^ms|milli(second)?s?/"),
-				second: __("/^sec(ond)?s?/"),
-				minute: __("/^mn|min(ute)?s?/"),
-				hour: __("/^h(our)?s?/"),
-				week: __("/^w(eek)?s?/"),
-				month: __("/^m(onth)?s?/"),
-				day: __("/^d(ay)?s?/"),
-				year: __("/^y(ear)?s?/"),
-				shortMeridian: __("/^(a|p)/"),
-				longMeridian: __("/^(a\\.?m?\\.?|p\\.?m?\\.?)/"),
-				timezone: __("/^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)/"),
-				ordinalSuffix: __("/^\\s*(st|nd|rd|th)/"),
-				timeContext: __("/^\\s*(\\:|a(?!u|p)|p)/")
-			};
+			return getText.getFromObjectValues({
+				inTheMorning: "/( in the )(morn(ing)?)\\b/",
+				thisMorning: "/(this )(morn(ing)?)\\b/",
+				amThisMorning: "/(\b\\d(am)? )(this )(morn(ing)?)/",
+				inTheEvening: "/( in the )(even(ing)?)\\b/",
+				thisEvening: "/(this )(even(ing)?)\\b/",
+				pmThisEvening: "/(\b\\d(pm)? )(this )(even(ing)?)/",
+				jan: "/jan(uary)?/",
+				feb: "/feb(ruary)?/",
+				mar: "/mar(ch)?/",
+				apr: "/apr(il)?/",
+				may: "/may/",
+				jun: "/jun(e)?/",
+				jul: "/jul(y)?/",
+				aug: "/aug(ust)?/",
+				sep: "/sep(t(ember)?)?/",
+				oct: "/oct(ober)?/",
+				nov: "/nov(ember)?/",
+				dec: "/dec(ember)?/",
+				sun: "/^su(n(day)?)?/",
+				mon: "/^mo(n(day)?)?/",
+				tue: "/^tu(e(s(day)?)?)?/",
+				wed: "/^we(d(nesday)?)?/",
+				thu: "/^th(u(r(s(day)?)?)?)?/",
+				fri: "/fr(i(day)?)?/",
+				sat: "/^sa(t(urday)?)?/",
+				future: "/^next/",
+				past: "/last|past|prev(ious)?/",
+				add: "/^(\\+|aft(er)?|from|hence)/",
+				subtract: "/^(\\-|bef(ore)?|ago)/",
+				yesterday: "/^yes(terday)?/",
+				today: "/^t(od(ay)?)?/",
+				tomorrow: "/^tom(orrow)?/",
+				now: "/^n(ow)?/",
+				millisecond: "/^ms|milli(second)?s?/",
+				second: "/^sec(ond)?s?/",
+				minute: "/^mn|min(ute)?s?/",
+				hour: "/^h(our)?s?/",
+				week: "/^w(eek)?s?/",
+				month: "/^m(onth)?s?/",
+				day: "/^d(ay)?s?/",
+				year: "/^y(ear)?s?/",
+				shortMeridian: "/^(a|p)/",
+				longMeridian: "/^(a\\.?m?\\.?|p\\.?m?\\.?)/",
+				timezone: "/^((e(s|d)t|c(s|d)t|m(s|d)t|p(s|d)t)|((gmt)?\\s*(\\+|\\-)\\s*\\d\\d\\d\\d?)|gmt|utc)/",
+				ordinalSuffix: "/^\\s*(st|nd|rd|th)/",
+				timeContext: "/^\\s*(\\:|a(?!u|p)|p)/"
+			}, Date.i18n.currentLanguage());
 		}
 	};
 
