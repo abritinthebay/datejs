@@ -171,133 +171,133 @@
 				return m.replace("\\", "").replace("%%", "%");
 			}
 			switch (m) {
-			case "d":
-			case "%d":
-				return t("dd");
-			case "D":
-			case "%a":
-				return t("ddd");
-			case "j":
-			case "%e":
-				return t("d", true);
-			case "l":
-			case "%A":
-				return t("dddd");
-			case "N":
-			case "%u":
-				return x.getDay() + 1;
-			case "S":
-				return t("S");
-			case "w":
-			case "%w":
-				return x.getDay();
-			case "z":
-				return x.getOrdinalNumber();
-			case "%j":
-				return p(x.getOrdinalNumber(), 3);
-			case "%U":
-				var d1 = x.clone().set({month: 0, day: 1}).addDays(-1).moveToDayOfWeek(0),
-					d2 = x.clone().addDays(1).moveToDayOfWeek(0, -1);
-				return (d2 < d1) ? "00" : p((d2.getOrdinalNumber() - d1.getOrdinalNumber()) / 7 + 1);
-			case "W":
-			case "%V":
-				return x.getISOWeek();
-			case "%W":
-				return p(x.getWeek());
-			case "F":
-			case "%B":
-				return t("MMMM");
-			case "m":
-			case "%m":
-				return t("MM");
-			case "M":
-			case "%b":
-			case "%h":
-				return t("MMM");
-			case "n":
-				return t("M");
-			case "t":
-				return $D.getDaysInMonth(x.getFullYear(), x.getMonth());
-			case "L":
-				return ($D.isLeapYear(x.getFullYear())) ? 1 : 0;
-			case "o":
-			case "%G":
-				return x.setWeek(x.getISOWeek()).toString("yyyy");
-			case "%g":
-				return x.$format("%G").slice(-2);
-			case "Y":
-			case "%Y":
-				return t("yyyy");
-			case "y":
-			case "%y":
-				return t("yy");
-			case "a":
-			case "%p":
-				return t("tt").toLowerCase();
-			case "A":
-				return t("tt").toUpperCase();
-			case "g":
-			case "%I":
-				return t("h");
-			case "G":
-				return t("H");
-			case "h":
-				return t("hh");
-			case "H":
-			case "%H":
-				return t("HH");
-			case "i":
-			case "%M":
-				return t("mm");
-			case "s":
-			case "%S":
-				return t("ss");
-			case "u":
-				return p(x.getMilliseconds(), 3);
-			case "I":
-				return (x.isDaylightSavingTime()) ? 1 : 0;
-			case "O":
-				return x.getUTCOffset();
-			case "P":
-				y = x.getUTCOffset();
-				return y.substring(0, y.length - 2) + ":" + y.substring(y.length - 2);
-			case "e":
-			case "T":
-			case "%z":
-			case "%Z":
-				return x.getTimezone();
-			case "Z":
-				return x.getTimezoneOffset() * -60;
-			case "B":
-				var now = new Date();
-				return Math.floor(((now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getTimezoneOffset() + 60) * 60) / 86.4);
-			case "c":
-				return x.toISOString().replace(/\"/g, "");
-			case "U":
-				return $D.strtotime("now");
-			case "%c":
-				return t("d") + " " + t("t");
-			case "%C":
-				return Math.floor(x.getFullYear() / 100 + 1);
-			case "%D":
-				return t("MM/dd/yy");
-			case "%n":
-				return "\\n";
-			case "%t":
-				return "\\t";
-			case "%r":
-				return t("hh:mm tt");
-			case "%R":
-				return t("H:mm");
-			case "%T":
-				return t("H:mm:ss");
-			case "%x":
-				return t("d");
-			case "%X":
-				return t("t");
-			default:
-				$f.push(m);
-				return m;
+				case "d":
+				case "%d":
+					return t("dd");
+				case "D":
+				case "%a":
+					return t("ddd");
+				case "j":
+				case "%e":
+					return t("d", true);
+				case "l":
+				case "%A":
+					return t("dddd");
+				case "N":
+				case "%u":
+					return x.getDay() + 1;
+				case "S":
+					return t("S");
+				case "w":
+				case "%w":
+					return x.getDay();
+				case "z":
+					return x.getOrdinalNumber();
+				case "%j":
+					return p(x.getOrdinalNumber(), 3);
+				case "%U":
+					var d1 = x.clone().set({month: 0, day: 1}).addDays(-1).moveToDayOfWeek(0),
+						d2 = x.clone().addDays(1).moveToDayOfWeek(0, -1);
+					return (d2 < d1) ? "00" : p((d2.getOrdinalNumber() - d1.getOrdinalNumber()) / 7 + 1);
+				case "W":
+				case "%V":
+					return x.getISOWeek();
+				case "%W":
+					return p(x.getWeek());
+				case "F":
+				case "%B":
+					return t("MMMM");
+				case "m":
+				case "%m":
+					return t("MM");
+				case "M":
+				case "%b":
+				case "%h":
+					return t("MMM");
+				case "n":
+					return t("M");
+				case "t":
+					return $D.getDaysInMonth(x.getFullYear(), x.getMonth());
+				case "L":
+					return ($D.isLeapYear(x.getFullYear())) ? 1 : 0;
+				case "o":
+				case "%G":
+					return x.setWeek(x.getISOWeek()).toString("yyyy");
+				case "%g":
+					return x.$format("%G").slice(-2);
+				case "Y":
+				case "%Y":
+					return t("yyyy");
+				case "y":
+				case "%y":
+					return t("yy");
+				case "a":
+				case "%p":
+					return t("tt").toLowerCase();
+				case "A":
+					return t("tt").toUpperCase();
+				case "g":
+				case "%I":
+					return t("h");
+				case "G":
+					return t("H");
+				case "h":
+					return t("hh");
+				case "H":
+				case "%H":
+					return t("HH");
+				case "i":
+				case "%M":
+					return t("mm");
+				case "s":
+				case "%S":
+					return t("ss");
+				case "u":
+					return p(x.getMilliseconds(), 3);
+				case "I":
+					return (x.isDaylightSavingTime()) ? 1 : 0;
+				case "O":
+					return x.getUTCOffset();
+				case "P":
+					y = x.getUTCOffset();
+					return y.substring(0, y.length - 2) + ":" + y.substring(y.length - 2);
+				case "e":
+				case "T":
+				case "%z":
+				case "%Z":
+					return x.getTimezone();
+				case "Z":
+					return x.getTimezoneOffset() * -60;
+				case "B":
+					var now = new Date();
+					return Math.floor(((now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getTimezoneOffset() + 60) * 60) / 86.4);
+				case "c":
+					return x.toISOString().replace(/\"/g, "");
+				case "U":
+					return $D.strtotime("now");
+				case "%c":
+					return t("d") + " " + t("t");
+				case "%C":
+					return Math.floor(x.getFullYear() / 100 + 1);
+				case "%D":
+					return t("MM/dd/yy");
+				case "%n":
+					return "\\n";
+				case "%t":
+					return "\\t";
+				case "%r":
+					return t("hh:mm tt");
+				case "%R":
+					return t("H:mm");
+				case "%T":
+					return t("H:mm:ss");
+				case "%x":
+					return t("d");
+				case "%X":
+					return t("t");
+				default:
+					$f.push(m);
+					return m;
 			}
 		}) : this._toString();
 	};

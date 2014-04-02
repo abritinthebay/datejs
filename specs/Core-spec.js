@@ -555,7 +555,7 @@ describe("Core Module", function() {
 		it("can get the current timezone", function() {
 			var d = Date.today();
 			if (d.isDaylightSavingTime()) {
-				expect(d.getTimezone()).toBe("PST");
+				expect(d.getTimezone()).toBe("PDT");
 			} else {
 				expect(d.getTimezone()).toBe("PST");
 			}

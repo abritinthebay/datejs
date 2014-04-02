@@ -221,7 +221,7 @@
 	
 	$D.getTimezoneOffset = function (name, dst) {
 		var i, a =[], z = Date.CultureInfo.timezones;
-		if (!name) { name = (new Date()).getTimezone()}
+		if (!name) { name = (new Date()).getTimezone();}
 		for (i = 0; i < z.length; i++) {
 			if (z[i].name === name.toUpperCase()) {
 				a.push(i);
@@ -635,6 +635,7 @@
 	 * @return {Boolean} true if within range, otherwise false.
 	 */
 	$D.validateDay = function (value, year, month) {
+		if (year === undefined || year === null || month === undefined || month === null) { return false;}
 		return validate(value, 1, $D.getDaysInMonth(year, month), "day");
 	};
 
@@ -664,7 +665,7 @@
 	$D.validateYear = function (value) {
 		/**
 		 * Per ECMAScript spec the range of times supported by Date objects is 
-		 * exactly –100,000,000 days to 100,000,000 days measured relative to 
+		 * exactly -100,000,000 days to +100,000,000 days measured relative to 
 		 * midnight at the beginning of 01 January, 1970 UTC. 
 		 * This gives a range of 8,640,000,000,000,000 milliseconds to either 
 		 * side of 01 January, 1970 UTC.
@@ -672,10 +673,52 @@
 		 * Earliest possible date: Tue, 20 Apr 271,822 B.C. 00:00:00 UTC
 		 * Latest possible date: Sat, 13 Sep 275,760 00:00:00 UTC
 		 */
-
 		return validate(value, -271822, 275760, "year");
 	};
+	$D.validateTimezone = function(value) {
+		var timezones = {"ACDT":1,"ACST":1,"ACT":1,"ADT":1,"AEDT":1,"AEST":1,"AFT":1,"AKDT":1,"AKST":1,"AMST":1,"AMT":1,"ART":1,"AST":1,"AWDT":1,"AWST":1,"AZOST":1,"AZT":1,"BDT":1,"BIOT":1,"BIT":1,"BOT":1,"BRT":1,"BST":1,"BTT":1,"CAT":1,"CCT":1,"CDT":1,"CEDT":1,"CEST":1,"CET":1,"CHADT":1,"CHAST":1,"CHOT":1,"ChST":1,"CHUT":1,"CIST":1,"CIT":1,"CKT":1,"CLST":1,"CLT":1,"COST":1,"COT":1,"CST":1,"CT":1,"CVT":1,"CWST":1,"CXT":1,"DAVT":1,"DDUT":1,"DFT":1,"EASST":1,"EAST":1,"EAT":1,"ECT":1,"EDT":1,"EEDT":1,"EEST":1,"EET":1,"EGST":1,"EGT":1,"EIT":1,"EST":1,"FET":1,"FJT":1,"FKST":1,"FKT":1,"FNT":1,"GALT":1,"GAMT":1,"GET":1,"GFT":1,"GILT":1,"GIT":1,"GMT":1,"GST":1,"GYT":1,"HADT":1,"HAEC":1,"HAST":1,"HKT":1,"HMT":1,"HOVT":1,"HST":1,"ICT":1,"IDT":1,"IOT":1,"IRDT":1,"IRKT":1,"IRST":1,"IST":1,"JST":1,"KGT":1,"KOST":1,"KRAT":1,"KST":1,"LHST":1,"LINT":1,"MAGT":1,"MART":1,"MAWT":1,"MDT":1,"MET":1,"MEST":1,"MHT":1,"MIST":1,"MIT":1,"MMT":1,"MSK":1,"MST":1,"MUT":1,"MVT":1,"MYT":1,"NCT":1,"NDT":1,"NFT":1,"NPT":1,"NST":1,"NT":1,"NUT":1,"NZDT":1,"NZST":1,"OMST":1,"ORAT":1,"PDT":1,"PET":1,"PETT":1,"PGT":1,"PHOT":1,"PHT":1,"PKT":1,"PMDT":1,"PMST":1,"PONT":1,"PST":1,"PYST":1,"PYT":1,"RET":1,"ROTT":1,"SAKT":1,"SAMT":1,"SAST":1,"SBT":1,"SCT":1,"SGT":1,"SLST":1,"SRT":1,"SST":1,"SYOT":1,"TAHT":1,"THA":1,"TFT":1,"TJT":1,"TKT":1,"TLT":1,"TMT":1,"TOT":1,"TVT":1,"UCT":1,"ULAT":1,"UTC":1,"UYST":1,"UYT":1,"UZT":1,"VET":1,"VLAT":1,"VOLT":1,"VOST":1,"VUT":1,"WAKT":1,"WAST":1,"WAT":1,"WEDT":1,"WEST":1,"WET":1,"WST":1,"YAKT":1,"YEKT":1,"Z":1};
+		return (timezones[value] === 1);
+	};
+	$D.validateTimezoneOffset= function(value) {
+		// timezones go from +14hrs to -12hrs, the +X hours are negative offsets.
+		return (value > -841 && value < 721);
+	};
 
+	var validateConfigObject = function (obj) {
+		var result = {}, self = this, prop, testFunc;
+		testFunc = function (prop, func, value) {
+			if (prop === "day") {
+				var month = (obj.month !== undefined) ? obj.month - self.getMonth() : self.getMonth();
+				var year = (obj.year !== undefined) ? obj.year - self.getFullYear() : self.getFullYear();
+				return $D[func](value, year, month);
+			} else {
+				return $D[func](value);
+			}
+		};
+		for (prop in obj) {
+			if (hasOwnProperty.call(obj, prop)) {
+				var func = "validate" + prop.charAt(0).toUpperCase() + prop.slice(1);
+				if ($D[func] && obj[prop] !== null && testFunc(prop, func, obj[prop])) {
+					result[prop] = obj[prop];
+				}
+			}
+		}
+		return result;
+	};
+
+	// var validateConfigObject = function (obj) {
+	// 	var result = {}, prop;
+	// 	for (prop in obj) {
+	// 		if (hasOwnProperty.call(obj, prop)) {
+	// 			var validationFunc = "validate" + prop.charAt(0).toUpperCase() + prop.slice(1);
+	// 			var args = (prop === "day") ? [obj[prop], this.getFullYear(), this.getMonth()] : [obj[prop]];
+	// 			if ($D[validationFunc] && obj[prop] !== null && $D[validationFunc].apply(this, args)) {
+	// 				result[prop] = obj[prop];
+	// 			}
+	// 		}
+	// 	}
+	// 	return result;
+	// };
 	/**
 	 * Set the value of year, month, day, hour, minute, second, millisecond of date instance using given configuration object.
 	 * Example
@@ -689,45 +732,32 @@
 	 * @return {Date}    this
 	 */
 	$P.set = function (config) {
-		if ($D.validateMillisecond(config.millisecond)) {
-			this.addMilliseconds(config.millisecond - this.getMilliseconds());
+		config = validateConfigObject.call(this, config);
+		var key;
+		for (key in config) {
+			if (hasOwnProperty.call(config, key)) {
+				var name = key.charAt(0).toUpperCase() + key.slice(1);
+				var addFunc, getFunc;
+				if (key !== "week" && key !== "month" && key !== "timezone" && key !== "timezoneOffset") {
+					name += "s";
+				}
+				addFunc = "add" + name;
+				getFunc = "get" + name;
+				if (key === "month") {
+					addFunc = addFunc + "s";
+				} else if (key === "year"){
+					getFunc = "getFullYear";
+				}
+				if (key !== "day" && key !== "timezone" && key !== "timezoneOffset"  && key !== "week") {
+						this[addFunc](config[key] - this[getFunc]());
+				} else if ( key === "timezone" || key === "timezoneOffset" || key === "week") {
+					this["set"+name](config[key]);
+				}
+			}
 		}
-		
-		if ($D.validateSecond(config.second)) {
-			this.addSeconds(config.second - this.getSeconds());
-		}
-		
-		if ($D.validateMinute(config.minute)) {
-			this.addMinutes(config.minute - this.getMinutes());
-		}
-		
-		if ($D.validateHour(config.hour)) {
-			this.addHours(config.hour - this.getHours());
-		}
-		
-		if ($D.validateMonth(config.month)) {
-			this.addMonths(config.month - this.getMonth());
-		}
-
-		if ($D.validateYear(config.year)) {
-			this.addYears(config.year - this.getFullYear());
-		}
-		
 		/* day has to go last because you can't validate the day without first knowing the month */
-		if ($D.validateDay(config.day, this.getFullYear(), this.getMonth())) {
+		if (config.day) {
 			this.addDays(config.day - this.getDate());
-		}
-		
-		if (config.timezone) {
-			this.setTimezone(config.timezone);
-		}
-		
-		if (config.timezoneOffset) {
-			this.setTimezoneOffset(config.timezoneOffset);
-		}
-
-		if (config.week && $D.validateWeek(config.week)) {
-			this.setWeek(config.week);
 		}
 		
 		return this;
@@ -786,27 +816,35 @@
 		return this.moveToFirstDayOfMonth().addDays(-1).moveToDayOfWeek(dayOfWeek, +1).addWeeks(shift);
 	};
 
+
+	var moveToN = function (getFunc, addFunc, nVal) {
+		return function (value, orient) {
+			var diff = (value - this[getFunc]() + nVal * (orient || +1)) % nVal;
+			return this[addFunc]((diff === 0) ? diff += nVal * (orient || +1) : diff);
+		};
+	};
 	/**
 	 * Move to the next or last dayOfWeek based on the orient value.
 	 * @param {Number}   The dayOfWeek to move to
 	 * @param {Number}   Forward (+1) or Back (-1). Defaults to +1. [Optional]
 	 * @return {Date}    this
 	 */
-	$P.moveToDayOfWeek = function (dayOfWeek, orient) {
-		var diff = (dayOfWeek - this.getDay() + 7 * (orient || +1)) % 7;
-		return this.addDays((diff === 0) ? diff += 7 * (orient || +1) : diff);
-	};
-
+	// $P.moveToDayOfWeek = function (dayOfWeek, orient) {
+	// 	var diff = (dayOfWeek - this.getDay() + 7 * (orient || +1)) % 7;
+	// 	return this.addDays((diff === 0) ? diff += 7 * (orient || +1) : diff);
+	// };
+	$P.moveToDayOfWeek = moveToN("getDay", "addDays", 7);
 	/**
 	 * Move to the next or last month based on the orient value.
 	 * @param {Number}   The month to move to. 0 = January, 11 = December
 	 * @param {Number}   Forward (+1) or Back (-1). Defaults to +1. [Optional]
 	 * @return {Date}    this
 	 */
-	$P.moveToMonth = function (month, orient) {
-		var diff = (month - this.getMonth() + 12 * (orient || +1)) % 12;
-		return this.addMonths((diff === 0) ? diff += 12 * (orient || +1) : diff);
-	};
+	// $P.moveToMonth = function (month, orient) {
+	// 	var diff = (month - this.getMonth() + 12 * (orient || +1)) % 12;
+	// 	return this.addMonths((diff === 0) ? diff += 12 * (orient || +1) : diff);
+	// };
+	$P.moveToMonth = moveToN("getMonth", "addMonths", 12);
 	/**
 	 * Get the Ordinate of the current day ("th", "st", "rd").
 	 * @return {String} 
@@ -883,69 +921,55 @@
 	/**
 	 * Converts the value of the current Date object to its equivalent string representation.
 	 * Format Specifiers
-	<pre>
-	CUSTOM DATE AND TIME FORMAT STRINGS
-	Format  Description                                                                  Example
-	------  ---------------------------------------------------------------------------  -----------------------
-	 s      The seconds of the minute between 0-59.                                      "0" to "59"
-	 ss     The seconds of the minute with leading zero if required.                     "00" to "59"
-	 
-	 m      The minute of the hour between 0-59.                                         "0"  or "59"
-	 mm     The minute of the hour with leading zero if required.                        "00" or "59"
-	 
-	 h      The hour of the day between 1-12.                                            "1"  to "12"
-	 hh     The hour of the day with leading zero if required.                           "01" to "12"
-	 
-	 H      The hour of the day between 0-23.                                            "0"  to "23"
-	 HH     The hour of the day with leading zero if required.                           "00" to "23"
-	 
-	 d      The day of the month between 1 and 31.                                       "1"  to "31"
-	 dd     The day of the month with leading zero if required.                          "01" to "31"
-	 ddd    Abbreviated day name. Date.CultureInfo.abbreviatedDayNames.                                "Mon" to "Sun" 
-	 dddd   The full day name. Date.CultureInfo.dayNames.                                              "Monday" to "Sunday"
-	 
-	 M      The month of the year between 1-12.                                          "1" to "12"
-	 MM     The month of the year with leading zero if required.                         "01" to "12"
-	 MMM    Abbreviated month name. Date.CultureInfo.abbreviatedMonthNames.                            "Jan" to "Dec"
-	 MMMM   The full month name. Date.CultureInfo.monthNames.                                          "January" to "December"
-
-	 yy     The year as a two-digit number.                                              "99" or "08"
-	 yyyy   The full four digit year.                                                    "1999" or "2008"
-	 
-	 t      Displays the first character of the A.M./P.M. designator.                    "A" or "P"
-			Date.CultureInfo.amDesignator or Date.CultureInfo.pmDesignator
-	 tt     Displays the A.M./P.M. designator.                                           "AM" or "PM"
-			Date.CultureInfo.amDesignator or Date.CultureInfo.pmDesignator
-	 
-	 S      The ordinal suffix ("st, "nd", "rd" or "th") of the current day.            "st, "nd", "rd" or "th"
-
-|| *Format* || *Description* || *Example* ||
-|| d      || The CultureInfo shortDate Format Pattern                                     || "M/d/yyyy" ||
-|| D      || The CultureInfo longDate Format Pattern                                      || "dddd, MMMM dd, yyyy" ||
-|| F      || The CultureInfo fullDateTime Format Pattern                                  || "dddd, MMMM dd, yyyy h:mm:ss tt" ||
-|| m      || The CultureInfo monthDay Format Pattern                                      || "MMMM dd" ||
-|| r      || The CultureInfo rfc1123 Format Pattern                                       || "ddd, dd MMM yyyy HH:mm:ss GMT" ||
-|| s      || The CultureInfo sortableDateTime Format Pattern                              || "yyyy-MM-ddTHH:mm:ss" ||
-|| t      || The CultureInfo shortTime Format Pattern                                     || "h:mm tt" ||
-|| T      || The CultureInfo longTime Format Pattern                                      || "h:mm:ss tt" ||
-|| u      || The CultureInfo universalSortableDateTime Format Pattern                     || "yyyy-MM-dd HH:mm:ssZ" ||
-|| y      || The CultureInfo yearMonth Format Pattern                                     || "MMMM, yyyy" ||
-	 
-
-	STANDARD DATE AND TIME FORMAT STRINGS
-	Format  Description                                                                  Example ("en-US")
-	------  ---------------------------------------------------------------------------  -----------------------
-	 d      The CultureInfo shortDate Format Pattern                                     "M/d/yyyy"
-	 D      The CultureInfo longDate Format Pattern                                      "dddd, MMMM dd, yyyy"
-	 F      The CultureInfo fullDateTime Format Pattern                                  "dddd, MMMM dd, yyyy h:mm:ss tt"
-	 m      The CultureInfo monthDay Format Pattern                                      "MMMM dd"
-	 r      The CultureInfo rfc1123 Format Pattern                                       "ddd, dd MMM yyyy HH:mm:ss GMT"
-	 s      The CultureInfo sortableDateTime Format Pattern                              "yyyy-MM-ddTHH:mm:ss"
-	 t      The CultureInfo shortTime Format Pattern                                     "h:mm tt"
-	 T      The CultureInfo longTime Format Pattern                                      "h:mm:ss tt"
-	 u      The CultureInfo universalSortableDateTime Format Pattern                     "yyyy-MM-dd HH:mm:ssZ"
-	 y      The CultureInfo yearMonth Format Pattern                                     "MMMM, yyyy"
-	</pre>
+	 * CUSTOM DATE AND TIME FORMAT STRINGS
+	 * Format  Description                                                                  Example
+	 * ------  ---------------------------------------------------------------------------  -----------------------
+	 * s      The seconds of the minute between 0-59.                                      "0" to "59"
+	 * ss     The seconds of the minute with leading zero if required.                     "00" to "59"
+	 * 
+	 * m      The minute of the hour between 0-59.                                         "0"  or "59"
+	 * mm     The minute of the hour with leading zero if required.                        "00" or "59"
+	 * 
+	 * h      The hour of the day between 1-12.                                            "1"  to "12"
+	 * hh     The hour of the day with leading zero if required.                           "01" to "12"
+	 * 
+	 * H      The hour of the day between 0-23.                                            "0"  to "23"
+	 * HH     The hour of the day with leading zero if required.                           "00" to "23"
+	 * 
+	 * d      The day of the month between 1 and 31.                                       "1"  to "31"
+	 * dd     The day of the month with leading zero if required.                          "01" to "31"
+	 * ddd    Abbreviated day name. Date.CultureInfo.abbreviatedDayNames.                                "Mon" to "Sun" 
+	 * dddd   The full day name. Date.CultureInfo.dayNames.                                              "Monday" to "Sunday"
+	 * 
+	 * M      The month of the year between 1-12.                                          "1" to "12"
+	 * MM     The month of the year with leading zero if required.                         "01" to "12"
+	 * MMM    Abbreviated month name. Date.CultureInfo.abbreviatedMonthNames.                            "Jan" to "Dec"
+	 * MMMM   The full month name. Date.CultureInfo.monthNames.                                          "January" to "December"
+	 *
+	 * yy     The year as a two-digit number.                                              "99" or "08"
+	 * yyyy   The full four digit year.                                                    "1999" or "2008"
+	 * 
+	 * t      Displays the first character of the A.M./P.M. designator.                    "A" or "P"
+	 *		Date.CultureInfo.amDesignator or Date.CultureInfo.pmDesignator
+	 * tt     Displays the A.M./P.M. designator.                                           "AM" or "PM"
+	 *		Date.CultureInfo.amDesignator or Date.CultureInfo.pmDesignator
+	 * 
+	 * S      The ordinal suffix ("st, "nd", "rd" or "th") of the current day.            "st, "nd", "rd" or "th"
+	 *
+	 * STANDARD DATE AND TIME FORMAT STRINGS
+	 * Format  Description                                                                  Example
+	 *------  ---------------------------------------------------------------------------  -----------------------
+	 * d      The CultureInfo shortDate Format Pattern                                     "M/d/yyyy"
+	 * D      The CultureInfo longDate Format Pattern                                      "dddd, MMMM dd, yyyy"
+	 * F      The CultureInfo fullDateTime Format Pattern                                  "dddd, MMMM dd, yyyy h:mm:ss tt"
+	 * m      The CultureInfo monthDay Format Pattern                                      "MMMM dd"
+	 * r      The CultureInfo rfc1123 Format Pattern                                       "ddd, dd MMM yyyy HH:mm:ss GMT"
+	 * s      The CultureInfo sortableDateTime Format Pattern                              "yyyy-MM-ddTHH:mm:ss"
+	 * t      The CultureInfo shortTime Format Pattern                                     "h:mm tt"
+	 * T      The CultureInfo longTime Format Pattern                                      "h:mm:ss tt"
+	 * u      The CultureInfo universalSortableDateTime Format Pattern                     "yyyy-MM-dd HH:mm:ssZ"
+	 * y      The CultureInfo yearMonth Format Pattern                                     "MMMM, yyyy"
+	 *
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
 	 * @return {String}  A string representation of the current Date object.
 	 */
@@ -1058,7 +1082,7 @@
 				return "Q" + x.getQuarter();
 			case "q":
 				return String(x.getQuarter());
-			default: 
+			default:
 				return m;
 			}
 		}).replace(/\[|\]/g, "") : this._toString();
