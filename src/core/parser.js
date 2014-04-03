@@ -936,7 +936,7 @@
 				} 
 			}
 
-			if (this.weekday && this.unit !=== "week" && !this.day && !this.days) {
+			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
 				var temp = Date[this.weekday]();
 				this.day = temp.getDate();
 				if (temp.getMonth() !== today.getMonth()) {
