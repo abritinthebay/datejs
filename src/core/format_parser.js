@@ -16,7 +16,6 @@
 		for (key in hash) {
 			if (Object.prototype.hasOwnProperty.call(hash, key)) {
 				var regex = (hash[key] instanceof RegExp) ? hash[key] : new RegExp(hash[key], "g");
-				var tmp = str;
 				str = str.replace(regex, key);
 			}
 		}
