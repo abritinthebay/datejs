@@ -141,51 +141,46 @@
 	};
 	$P.Normalizer = {
 		parse: function (s) {
-			var $C = Date.CultureInfo;
 			var $R = Date.CultureInfo.regexPatterns;
 			var __ = Date.i18n.__;
 
-			s = s.replace($R.jan.source, "January");
-			s = s.replace($R.feb, "February");
-			s = s.replace($R.mar, "March");
-			s = s.replace($R.apr, "April");
-			s = s.replace($R.may, "May");
-			s = s.replace($R.jun, "June");
-			s = s.replace($R.jul, "July");
-			s = s.replace($R.aug, "August");
-			s = s.replace($R.sep, "September");
-			s = s.replace($R.oct, "October");
-			s = s.replace($R.nov, "November");
-			s = s.replace($R.dec, "December");
+			s = s.replace($R.jan.source, "January")
+				.replace($R.feb, "February")
+				.replace($R.mar, "March")
+				.replace($R.apr, "April")
+				.replace($R.may, "May")
+				.replace($R.jun, "June")
+				.replace($R.jul, "July")
+				.replace($R.aug, "August")
+				.replace($R.sep, "September")
+				.replace($R.oct, "October")
+				.replace($R.nov, "November")
+				.replace($R.dec, "December")
+				.replace($R.tomorrow, Date.today().addDays(1).toString("d"))
+				.replace($R.yesterday, Date.today().addDays(-1).toString("d"))
+				.replace(/\bat\b/gi, "")
+				.replace(/\s{2,}/, " ");
 
-			
-			s = s.replace($R.tomorrow, Date.today().addDays(1).toString("d"));
-			s = s.replace($R.yesterday, Date.today().addDays(-1).toString("d"));
-			// s = s.replace(new RegExp($R.today.source + "\\b", "i"), Date.today().toString("d"));
-			s = s.replace(/\bat\b/gi, ""); // replace "at", eg: "tomorrow at 3pm"
-			s = s.replace(/\s{2,}/, " "); // repliace multiple spaces with one.
-
-			s = s.replace(new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i"), function(full, m1, m2, m3, m4) {
+			var regexStr = "(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")";
+			s = s.replace(new RegExp(regexStr, "i"), function(full, m1, m2, m3, m4) {
 				var t = Date.today().addDays(1).toString("d");
 				var s = t + " " + m1;
 				return s;
 			});
 
-			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.mon.source+'))'), Date.today().last().monday().toString("d"));
-			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.tue.source+'))'), Date.today().last().tuesday().toString("d"));
-			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.wed.source+'))'), Date.today().last().wednesday().toString("d"));
-			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.thu.source+'))'), Date.today().last().thursday().toString("d"));
-			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.fri.source+'))'), Date.today().last().friday().toString("d"));
-			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.sat.source+'))'), Date.today().last().saturday().toString("d"));
-			s = s.replace(new RegExp("(("+$R.past.source+')\\s('+$R.sun.source+'))'), Date.today().last().sunday().toString("d"));
-
-			// s = s.replace($R.thisMorning, "9am"))
-			s = s.replace($R.amThisMorning, function(str, am){return am;});
-			s = s.replace($R.inTheMorning, "am");
-			s = s.replace($R.thisMorning, "9am");
-			s = s.replace($R.amThisEvening, function(str, pm){return pm;});
-			s = s.replace($R.inTheEvening, "pm");
-			s = s.replace($R.thisEvening, "7pm");
+			s = s.replace(new RegExp("(("+$R.past.source+")\\s("+$R.mon.source+"))"), Date.today().last().monday().toString("d"))
+				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.tue.source+"))"), Date.today().last().tuesday().toString("d"))
+				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.wed.source+"))"), Date.today().last().wednesday().toString("d"))
+				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.thu.source+"))"), Date.today().last().thursday().toString("d"))
+				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.fri.source+"))"), Date.today().last().friday().toString("d"))
+				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.sat.source+"))"), Date.today().last().saturday().toString("d"))
+				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.sun.source+"))"), Date.today().last().sunday().toString("d"))
+				.replace($R.amThisMorning, function(str, am){return am;})
+				.replace($R.inTheMorning, "am")
+				.replace($R.thisMorning, "9am")
+				.replace($R.amThisEvening, function(str, pm){return pm;})
+				.replace($R.inTheEvening, "pm")
+				.replace($R.thisEvening, "7pm");
 
 			try {
 				var n = s.split(/([\s\-\.\,\/\x27]+)/);
@@ -194,8 +189,8 @@
 						if (n[2].length >= 4) {
 							// ok, so we're dealing with x/year. But that's not a full date.
 							// This fixes wonky dateElementOrder parsing when set to dmy order.
-							if (Date.CultureInfo.dateElementOrder[0] === 'd') {
-								s = '1/' + n[0] + '/' + n[2]; // set to 1st of month and normalize the seperator
+							if (Date.CultureInfo.dateElementOrder[0] === "d") {
+								s = "1/" + n[0] + "/" + n[2]; // set to 1st of month and normalize the seperator
 							}
 						}
 					}
@@ -226,18 +221,14 @@
 		},
 		token: function (s) { // whitespace-eating token
 			return function (s) {
-				return _.rtoken(new RegExp("^\s*" + s + "\s*"))(s);
-				// Removed .strip()
-				// return _.rtoken(new RegExp("^\s*" + s + "\s*"))(s).strip();
+				return _.rtoken(new RegExp("^\\s*" + s + "\\s*"))(s);
 			};
 		},
 		stoken: function (s) { // string token
 			return _.rtoken(new RegExp("^" + s));
 		},
 
-		//
 		// Atomic Operators
-		// 
 
 		until: function (p) {
 			return function (s) {
@@ -800,17 +791,17 @@
 			}
 
 			if (this.meridian && (this.hour || this.hour === 0)) {
-				if (this.meridian == "a" && this.hour > 11 && Date.Config.strict24hr){
+				if (this.meridian === "a" && this.hour > 11 && Date.Config.strict24hr){
 					throw "Invalid hour and meridian combination";
-				} else if (this.meridian == "p" && this.hour < 12 && Date.Config.strict24hr){
+				} else if (this.meridian === "p" && this.hour < 12 && Date.Config.strict24hr){
 					throw "Invalid hour and meridian combination";
-				} else if (this.meridian == "p" && this.hour < 12) {
+				} else if (this.meridian === "p" && this.hour < 12) {
 					this.hour = this.hour + 12;
-				} else if (this.meridian == "a" && this.hour == 12) {
+				} else if (this.meridian === "a" && this.hour === 12) {
 					this.hour = 0;
 				} 
 			}
-			
+
 			if (this.day > $D.getDaysInMonth(this.year, this.month)) {
 				throw new RangeError(this.day + " is not a valid value for days.");
 			}
@@ -835,7 +826,7 @@
 			}
 
 			for (var i = 0 ; i < x.length ; i++) {
-				if (typeof x[i] == "function") {
+				if (typeof x[i] === "function") {
 					x[i].call(this);
 				}
 			}
@@ -851,20 +842,20 @@
 			var expression = !!(this.days && this.days !== null || this.orient || this.operator);
 			
 			var gap, mod, orient;
-			orient = ((this.orient == "past" || this.operator == "subtract") ? -1 : 1);
+			orient = ((this.orient === "past" || this.operator === "subtract") ? -1 : 1);
 
-			if(!this.now && "hour minute second".indexOf(this.unit) != -1) {
+			if(!this.now && "hour minute second".indexOf(this.unit) !== -1) {
 				today.setTimeToNow();
 			}
 
-			if (this.month && this.unit == "week") {
+			if (this.month && this.unit === "week") {
 				this.value = this.month + 1;
 				delete this.month;
 				delete this.day;
 			}
 
 			if (this.month || this.month === 0) {
-				if ("year day hour minute second".indexOf(this.unit) != -1) {
+				if ("year day hour minute second".indexOf(this.unit) !== -1) {
 					if (!this.value) {
 						this.value = this.month + 1;
 					}
@@ -882,14 +873,14 @@
 				this.year = temp.getFullYear();
 			}
 
-			if (expression && this.weekday && this.unit != "month" && this.unit != "week") {
+			if (expression && this.weekday && this.unit !== "month" && this.unit !== "week") {
 				this.unit = "day";
 				gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
 				mod = 7;
 				this.days = gap ? ((gap + (orient * mod)) % mod) : (orient * mod);
 			}
 
-			if (this.month && this.unit == "day" && this.operator) {
+			if (this.month && this.unit === "day" && this.operator) {
 				if (!this.value) {
 					this.value = (this.month + 1);
 				}
@@ -907,12 +898,12 @@
 				}
 			}
 
-			if (!this.month && this.value && this.unit == "month" && !this.now) {
+			if (!this.month && this.value && this.unit === "month" && !this.now) {
 				this.month = this.value;
 				expression = true;
 			}
 
-			if (expression && (this.month || this.month === 0) && this.unit != "year") {
+			if (expression && (this.month || this.month === 0) && this.unit !== "year") {
 				this.unit = "month";
 				gap = (this.month - today.getMonth());
 				mod = 12;
@@ -925,7 +916,7 @@
 			}
 
 			if (!this.value && this.operator && this.operator !== null && this[this.unit + "s"] && this[this.unit + "s"] !== null) {
-				this[this.unit + "s"] = this[this.unit + "s"] + ((this.operator == "add") ? 1 : -1) + (this.value||0) * orient;
+				this[this.unit + "s"] = this[this.unit + "s"] + ((this.operator === "add") ? 1 : -1) + (this.value||0) * orient;
 			} else if (this[this.unit + "s"] == null || this.operator != null) {
 				if (!this.value) {
 					this.value = 1;
@@ -934,18 +925,18 @@
 			}
 
 			if (this.meridian && (this.hour || this.hour === 0)) {
-				if (this.meridian == "a" && this.hour > 11 && Date.Config.strict24hr){
+				if (this.meridian === "a" && this.hour > 11 && Date.Config.strict24hr){
 					throw "Invalid hour and meridian combination";
-				} else if (this.meridian == "p" && this.hour < 12 && Date.Config.strict24hr){
+				} else if (this.meridian === "p" && this.hour < 12 && Date.Config.strict24hr){
 					throw "Invalid hour and meridian combination";
-				} else if (this.meridian == "p" && this.hour < 12) {
+				} else if (this.meridian === "p" && this.hour < 12) {
 					this.hour = this.hour + 12;
-				} else if (this.meridian == "a" && this.hour == 12) {
+				} else if (this.meridian === "a" && this.hour === 12) {
 					this.hour = 0;
 				} 
 			}
 
-			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
+			if (this.weekday && this.unit !=== "week" && !this.day && !this.days) {
 				var temp = Date[this.weekday]();
 				this.day = temp.getDate();
 				if (temp.getMonth() !== today.getMonth()) {
