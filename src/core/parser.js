@@ -105,7 +105,7 @@
 		}
 	};
 	$P.Numeric = {
-		isNumeric: function (e){return!isNaN(parseFloat(e))&&isFinite(e)},
+		isNumeric: function (e){return!isNaN(parseFloat(e))&&isFinite(e);},
 		regex: /\b([0-1]?[0-9])([0-3]?[0-9])([0-2]?[0-9]?[0-9][0-9])\b/i,
 		parse: function (s) {
 			var data, i,
@@ -985,34 +985,38 @@
 	g.ctoken2 = function (key) {
 		return _.rtoken(Date.CultureInfo.regexPatterns[key]);
 	};
-
+	var cacheProcessRtoken = function (token, type, eachToken) {
+		if (eachToken) {
+			return _.cache(_.process(_.each(_.rtoken(token),_.optional(g.ctoken2(eachToken))), type));
+		} else {
+			return _.cache(_.process(_.rtoken(token), type));
+		}
+	};
 	// hour, minute, second, meridian, timezone
-	g.h = _.cache(_.process(_.rtoken(/^(0[0-9]|1[0-2]|[1-9])/), t.hour));
-	g.hh = _.cache(_.process(_.rtoken(/^(0[0-9]|1[0-2])/), t.hour));
-	g.H = _.cache(_.process(_.rtoken(/^([0-1][0-9]|2[0-3]|[0-9])/), t.hour));
-	g.HH = _.cache(_.process(_.rtoken(/^([0-1][0-9]|2[0-3])/), t.hour));
-	g.m = _.cache(_.process(_.rtoken(/^([0-5][0-9]|[0-9])/), t.minute));
-	g.mm = _.cache(_.process(_.rtoken(/^[0-5][0-9]/), t.minute));
-	g.s = _.cache(_.process(_.rtoken(/^([0-5][0-9]|[0-9])/), t.second));
-	g.ss = _.cache(_.process(_.rtoken(/^[0-5][0-9]/), t.second));
-	g["ss.s"] = _.cache(_.process(_.rtoken(/^[0-5][0-9]\.[0-9]{1,3}/), t.secondAndMillisecond));
+	g.h = cacheProcessRtoken(/^(0[0-9]|1[0-2]|[1-9])/, t.hour);
+	g.hh = cacheProcessRtoken(/^(0[0-9]|1[0-2])/, t.hour);
+	g.H = cacheProcessRtoken(/^([0-1][0-9]|2[0-3]|[0-9])/, t.hour);
+	g.HH = cacheProcessRtoken(/^([0-1][0-9]|2[0-3])/, t.hour);
+	g.m = cacheProcessRtoken(/^([0-5][0-9]|[0-9])/, t.minute);
+	g.mm = cacheProcessRtoken(/^[0-5][0-9]/, t.minute);
+	g.s = cacheProcessRtoken(/^([0-5][0-9]|[0-9])/, t.second);
+	g.ss = cacheProcessRtoken(/^[0-5][0-9]/, t.second);
+	g["ss.s"] = cacheProcessRtoken(/^[0-5][0-9]\.[0-9]{1,3}/, t.secondAndMillisecond);
 	g.hms = _.cache(_.sequence([g.H, g.m, g.s], g.timePartDelimiter));
   
 	// _.min(1, _.set([ g.H, g.m, g.s ], g._t));
 	g.t = _.cache(_.process(g.ctoken2("shortMeridian"), t.meridian));
 	g.tt = _.cache(_.process(g.ctoken2("longMeridian"), t.meridian));
-	g.z = _.cache(_.process(_.rtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/), t.timezone));
-	g.zz = _.cache(_.process(_.rtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/), t.timezone));
+	g.z = cacheProcessRtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/, t.timezone);
+	g.zz = cacheProcessRtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/, t.timezone);
 	
 	g.zzz = _.cache(_.process(g.ctoken2("timezone"), t.timezone));
 	g.timeSuffix = _.each(_.ignore(g.whiteSpace), _.set([ g.tt, g.zzz ]));
 	g.time = _.each(_.optional(_.ignore(_.stoken("T"))), g.hms, g.timeSuffix);
 		  
 	// days, months, years
-	g.d = _.cache(_.process(_.each(_.rtoken(/^([0-2]\d|3[0-1]|\d)/),
-		_.optional(g.ctoken2("ordinalSuffix"))), t.day));
-	g.dd = _.cache(_.process(_.each(_.rtoken(/^([0-2]\d|3[0-1])/),
-		_.optional(g.ctoken2("ordinalSuffix"))), t.day));
+	g.d = cacheProcessRtoken(/^([0-2]\d|3[0-1]|\d)/, t.day, "ordinalSuffix");
+	g.dd = cacheProcessRtoken(/^([0-2]\d|3[0-1])/, t.day, "ordinalSuffix");
 	g.ddd = g.dddd = _.cache(_.process(g.ctoken("sun mon tue wed thu fri sat"),
 		function (s) {
 			return function () {
@@ -1020,14 +1024,14 @@
 			};
 		}
 	));
-	g.M = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d|\d)/), t.month));
-	g.MM = _.cache(_.process(_.rtoken(/^(1[0-2]|0\d)/), t.month));
+	g.M = cacheProcessRtoken(/^(1[0-2]|0\d|\d)/, t.month);
+	g.MM = cacheProcessRtoken(/^(1[0-2]|0\d)/, t.month);
 	g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
 //	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join(" ")), t.month));
-	g.y = _.cache(_.process(_.rtoken(/^(\d\d?)/), t.year));
-	g.yy = _.cache(_.process(_.rtoken(/^(\d\d)/), t.year));
-	g.yyy = _.cache(_.process(_.rtoken(/^(\d\d?\d?\d?)/), t.year));
-	g.yyyy = _.cache(_.process(_.rtoken(/^(\d\d\d\d)/), t.year));
+	g.y = cacheProcessRtoken(/^(\d\d?)/, t.year);
+	g.yy = cacheProcessRtoken(/^(\d\d)/, t.year);
+	g.yyy = cacheProcessRtoken(/^(\d\d?\d?\d?)/, t.year);
+	g.yyyy = cacheProcessRtoken(/^(\d\d\d\d)/, t.year);
 	
 	// rolling these up into general purpose rules
 	_fn = function () {
