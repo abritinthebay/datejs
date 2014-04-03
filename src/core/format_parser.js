@@ -11,6 +11,21 @@
 		leap: [0,31,60,91,121,152,182,213,244,274,305,335]
 	};
 
+	var multiReplace = function (str, hash ) {
+		var key;
+		for (key in hash) {
+			if (Object.prototype.hasOwnProperty.call(hash, key)) {
+				var regex = (hash[key] instanceof RegExp) ? hash[key] : new RegExp(hash[key], "g");
+				var tmp = str;
+				str = str.replace(regex, key);
+				if (tmp != str) {
+					console.log(tmp, str);
+				}
+			}
+		}
+		return str;
+	};
+
 	$P.isLeapYear = function(year) {
 		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 	};
@@ -143,23 +158,29 @@
 		parse: function (s) {
 			var $R = Date.CultureInfo.regexPatterns;
 			var __ = Date.i18n.__;
+			var tomorrow = Date.today().addDays(1).toString("d");
+			var yesterday = Date.today().addDays(-1).toString("d");
 
-			s = s.replace($R.jan.source, "January")
-				.replace($R.feb, "February")
-				.replace($R.mar, "March")
-				.replace($R.apr, "April")
-				.replace($R.may, "May")
-				.replace($R.jun, "June")
-				.replace($R.jul, "July")
-				.replace($R.aug, "August")
-				.replace($R.sep, "September")
-				.replace($R.oct, "October")
-				.replace($R.nov, "November")
-				.replace($R.dec, "December")
-				.replace($R.tomorrow, Date.today().addDays(1).toString("d"))
-				.replace($R.yesterday, Date.today().addDays(-1).toString("d"))
-				.replace(/\bat\b/gi, "")
-				.replace(/\s{2,}/, " ");
+			var replaceHash = {
+				"January": $R.jan.source,
+				"February": $R.feb,
+				"March": $R.mar,
+				"April": $R.apr,
+				"May": $R.may,
+				"June": $R.jun,
+				"July": $R.jul,
+				"August": $R.aug,
+				"September": $R.sep,
+				"October": $R.oct,
+				"November": $R.nov,
+				"December": $R.dec,
+				"": /\bat\b/gi,
+				" ": /\s{2,}/
+			};
+			replaceHash[tomorrow] = $R.tomorrow;
+			replaceHash[yesterday] = $R.yesterday;
+
+			s = multiReplace(s, replaceHash);
 
 			var regexStr = "(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")";
 			s = s.replace(new RegExp(regexStr, "i"), function(full, m1) {
