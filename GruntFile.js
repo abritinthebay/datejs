@@ -65,6 +65,7 @@ module.exports = function(grunt) {
 				src: [
 					'<%= dirs.core %>/i18n.js',
 					'<%= dirs.core %>/core.js',
+					'<%= dirs.core %>/format_parser.js',
 					'<%= dirs.core %>/parser.js',
 					'<%= dirs.core %>/sugarpak.js',
 					'<%= dirs.core %>/extras.js',
@@ -76,6 +77,7 @@ module.exports = function(grunt) {
 				src: [
 					'<%= dirs.core %>/i18n.js',
 					'<%= dirs.core %>/core.js',
+					'<%= dirs.core %>/format_parser.js',
 					'<%= dirs.core %>/parser.js',
 					'<%= dirs.core %>/sugarpak.js',
 					'<%= dirs.core %>/extras.js',
@@ -91,22 +93,6 @@ module.exports = function(grunt) {
 				dest: '<%= dirs.build %>/development'   // destination *directory*, probably better than specifying same file names twice
 			}
 		},
-		jsdoc : {
-	        dist : {
-	            src: [
-					'<%= dirs.core %>/i18n.js',
-					'<%= dirs.core %>/core.js',
-					'<%= dirs.core %>/parser.js',
-					'<%= dirs.core %>/sugarpak.js',
-					'<%= dirs.core %>/extras.js',
-					'<%= dirs.core %>/time.js',
-					'/README.md'
-				],
-	            options: {
-	                destination: 'doc'
-	            }
-	        }
-	    },
 		shell: {
 			runTests: {
 				command: 'jasmine-node --captureExceptions specs/',
@@ -149,7 +135,7 @@ module.exports = function(grunt) {
 	// now set the default
 	grunt.registerTask('default', ['build_dev']);
 	// Load the plugin that provides the "minify" task.
-	grunt.loadNpmTasks('grunt-shell')
+	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-closurecompiler');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.registerTask('test', ['shell:runTests']);
