@@ -162,10 +162,9 @@
 				.replace(/\s{2,}/, " ");
 
 			var regexStr = "(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")";
-			s = s.replace(new RegExp(regexStr, "i"), function(full, m1, m2, m3, m4) {
+			s = s.replace(new RegExp(regexStr, "i"), function(full, m1) {
 				var t = Date.today().addDays(1).toString("d");
-				var s = t + " " + m1;
-				return s;
+				return (t + " " + m1);
 			});
 
 			s = s.replace(new RegExp("(("+$R.past.source+")\\s("+$R.mon.source+"))"), Date.today().last().monday().toString("d"))
@@ -219,7 +218,7 @@
 				}
 			};
 		},
-		token: function (s) { // whitespace-eating token
+		token: function () { // whitespace-eating token
 			return function (s) {
 				return _.rtoken(new RegExp("^\\s*" + s + "\\s*"))(s);
 			};
@@ -366,7 +365,7 @@
 			d = d || _.rtoken(/^\s*/);
 			c = c || null;
 			
-			if (px.length == 1) {
+			if (px.length === 1) {
 				return px[0];
 			}
 			return function (s) {
@@ -438,8 +437,7 @@
 					q = null;
 					p = null;
 					r = null;
-					last = (px.length == 1);
-
+					last = (px.length === 1);
 					// first, we try simply to match the current pattern
 					// if not, try the next pattern
 					try {
@@ -476,12 +474,12 @@
 					// so, if this isn't the last element, we're going to see if
 					// we can get any more matches from the remaining (unmatched)
 					// elements ...
-					if (!last) {	
+					if (!last) {
 						// build a list of the remaining rules we can match against,
 						// i.e., all but the one we just matched against
 						var qx = [];
 						for (var j = 0; j < px.length ; j++) {
-							if (i != j) {
+							if (i !== j) {
 								qx.push(px[j]);
 							}
 						}
@@ -664,6 +662,20 @@
 		}
 		return rx;
 	};
+
+	var parseMeridian = function () {
+		if (this.meridian && (this.hour || this.hour === 0)) {
+			if (this.meridian === "a" && this.hour > 11 && Date.Config.strict24hr){
+				throw "Invalid hour and meridian combination";
+			} else if (this.meridian === "p" && this.hour < 12 && Date.Config.strict24hr){
+				throw "Invalid hour and meridian combination";
+			} else if (this.meridian === "p" && this.hour < 12) {
+				this.hour = this.hour + 12;
+			} else if (this.meridian === "a" && this.hour === 12) {
+				this.hour = 0;
+			}
+		}
+	};
 	
 	$D.Grammar = {};
 	
@@ -790,17 +802,7 @@
 				this.millisecond = 0;
 			}
 
-			if (this.meridian && (this.hour || this.hour === 0)) {
-				if (this.meridian === "a" && this.hour > 11 && Date.Config.strict24hr){
-					throw "Invalid hour and meridian combination";
-				} else if (this.meridian === "p" && this.hour < 12 && Date.Config.strict24hr){
-					throw "Invalid hour and meridian combination";
-				} else if (this.meridian === "p" && this.hour < 12) {
-					this.hour = this.hour + 12;
-				} else if (this.meridian === "a" && this.hour === 12) {
-					this.hour = 0;
-				} 
-			}
+			parseMeridian.call(this);
 
 			if (this.day > $D.getDaysInMonth(this.year, this.month)) {
 				throw new RangeError(this.day + " is not a valid value for days.");
@@ -819,6 +821,7 @@
 			return r;
 		},
 		finish: function (x) {
+			var temp;
 			x = (x instanceof Array) ? flattenAndCompact(x) : [ x ];
 
 			if (x.length === 0) {
@@ -865,7 +868,7 @@
 			}
 
 			if (!expression && this.weekday && !this.day && !this.days) {
-				var temp = Date[this.weekday]();
+				temp = Date[this.weekday]();
 				this.day = temp.getDate();
 				if (!this.month) {
 					this.month = temp.getMonth();
@@ -924,20 +927,10 @@
 				this[this.unit + "s"] = this.value * orient;
 			}
 
-			if (this.meridian && (this.hour || this.hour === 0)) {
-				if (this.meridian === "a" && this.hour > 11 && Date.Config.strict24hr){
-					throw "Invalid hour and meridian combination";
-				} else if (this.meridian === "p" && this.hour < 12 && Date.Config.strict24hr){
-					throw "Invalid hour and meridian combination";
-				} else if (this.meridian === "p" && this.hour < 12) {
-					this.hour = this.hour + 12;
-				} else if (this.meridian === "a" && this.hour === 12) {
-					this.hour = 0;
-				} 
-			}
+			parseMeridian.call(this);
 
 			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
-				var temp = Date[this.weekday]();
+				temp = Date[this.weekday]();
 				this.day = temp.getDate();
 				if (temp.getMonth() !== today.getMonth()) {
 					this.month = temp.getMonth();
@@ -948,11 +941,11 @@
 				this.day = 1;
 			}
 
-			if (!this.orient && !this.operator && this.unit == "week" && this.value && !this.day && !this.month) {
+			if (!this.orient && !this.operator && this.unit === "week" && this.value && !this.day && !this.month) {
 				return Date.today().setWeek(this.value);
 			}
 
-			if (this.unit == "week" && this.weeks && !this.day && !this.month) {
+			if (this.unit === "week" && this.weeks && !this.day && !this.month) {
 				var weekday = (this.weekday) ? this.weekday : "today";
 				var d = Date[weekday]().addWeeks(this.weeks);
 				if (this.now) {
