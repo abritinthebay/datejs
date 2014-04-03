@@ -18,9 +18,6 @@
 				var regex = (hash[key] instanceof RegExp) ? hash[key] : new RegExp(hash[key], "g");
 				var tmp = str;
 				str = str.replace(regex, key);
-				if (tmp != str) {
-					console.log(tmp, str);
-				}
 			}
 		}
 		return str;
@@ -156,10 +153,17 @@
 	};
 	$P.Normalizer = {
 		parse: function (s) {
-			var $R = Date.CultureInfo.regexPatterns;
-			var __ = Date.i18n.__;
-			var tomorrow = Date.today().addDays(1).toString("d");
-			var yesterday = Date.today().addDays(-1).toString("d");
+			var $R = Date.CultureInfo.regexPatterns,
+				__ = Date.i18n.__,
+				tomorrow = Date.today().addDays(1).toString("d"),
+				yesterday = Date.today().addDays(-1).toString("d"),
+				lastMon = Date.today().last().monday().toString("d"),
+				lastTues = Date.today().last().tuesday().toString("d"),
+				lastWed = Date.today().last().wednesday().toString("d"),
+				lastThurs = Date.today().last().thursday().toString("d"),
+				lastFri = Date.today().last().friday().toString("d"),
+				lastSat = Date.today().last().saturday().toString("d"),
+				lastSun = Date.today().last().sunday().toString("d");
 
 			var replaceHash = {
 				"January": $R.jan.source,
@@ -175,12 +179,17 @@
 				"November": $R.nov,
 				"December": $R.dec,
 				"": /\bat\b/gi,
-				" ": /\s{2,}/
+				" ": /\s{2,}/,
 			};
 			replaceHash[tomorrow] = $R.tomorrow;
 			replaceHash[yesterday] = $R.yesterday;
-
-			s = multiReplace(s, replaceHash);
+			replaceHash[lastMon] = new RegExp("(("+$R.past.source+")\\s("+$R.mon.source+"))");
+			replaceHash[lastTues] = new RegExp("(("+$R.past.source+")\\s("+$R.tue.source+"))");
+			replaceHash[lastWed] = new RegExp("(("+$R.past.source+")\\s("+$R.wed.source+"))");
+			replaceHash[lastThurs] = new RegExp("(("+$R.past.source+")\\s("+$R.thu.source+"))");
+			replaceHash[lastFri] = new RegExp("(("+$R.past.source+")\\s("+$R.fri.source+"))");
+			replaceHash[lastSat] = new RegExp("(("+$R.past.source+")\\s("+$R.sat.source+"))");
+			replaceHash[lastSun] = new RegExp("(("+$R.past.source+")\\s("+$R.sun.source+"))");
 
 			var regexStr = "(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")";
 			s = s.replace(new RegExp(regexStr, "i"), function(full, m1) {
@@ -188,19 +197,14 @@
 				return (t + " " + m1);
 			});
 
-			s = s.replace(new RegExp("(("+$R.past.source+")\\s("+$R.mon.source+"))"), Date.today().last().monday().toString("d"))
-				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.tue.source+"))"), Date.today().last().tuesday().toString("d"))
-				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.wed.source+"))"), Date.today().last().wednesday().toString("d"))
-				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.thu.source+"))"), Date.today().last().thursday().toString("d"))
-				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.fri.source+"))"), Date.today().last().friday().toString("d"))
-				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.sat.source+"))"), Date.today().last().saturday().toString("d"))
-				.replace(new RegExp("(("+$R.past.source+")\\s("+$R.sun.source+"))"), Date.today().last().sunday().toString("d"))
-				.replace($R.amThisMorning, function(str, am){return am;})
+			s =	s.replace($R.amThisMorning, function(str, am){return am;})
 				.replace($R.inTheMorning, "am")
 				.replace($R.thisMorning, "9am")
 				.replace($R.amThisEvening, function(str, pm){return pm;})
 				.replace($R.inTheEvening, "pm")
 				.replace($R.thisEvening, "7pm");
+
+			s = multiReplace(s, replaceHash);
 
 			try {
 				var n = s.split(/([\s\-\.\,\/\x27]+)/);
