@@ -151,18 +151,29 @@
 		}
 	};
 	$P.Normalizer = {
+		combineRegex: function (r1, r2) {
+			return new RegExp("(("+r1.source+")\\s("+r2.source+"))");
+		},
+		getDateNthString: function(add, last, inc){
+			if (add) {
+				return Date.today().addDays(inc).toString("d");
+			} else if (last) {
+				return Date.today().last()[inc]().toString("d");
+			}
+			
+		},
 		parse: function (s) {
 			var $R = Date.CultureInfo.regexPatterns,
 				__ = Date.i18n.__,
-				tomorrow = Date.today().addDays(1).toString("d"),
-				yesterday = Date.today().addDays(-1).toString("d"),
-				lastMon = Date.today().last().monday().toString("d"),
-				lastTues = Date.today().last().tuesday().toString("d"),
-				lastWed = Date.today().last().wednesday().toString("d"),
-				lastThurs = Date.today().last().thursday().toString("d"),
-				lastFri = Date.today().last().friday().toString("d"),
-				lastSat = Date.today().last().saturday().toString("d"),
-				lastSun = Date.today().last().sunday().toString("d");
+				tomorrow = this.getDateNthString(true, false, 1),
+				yesterday = this.getDateNthString(true, false, -1),
+				lastMon = this.getDateNthString(false, true, "monday"),
+				lastTues = this.getDateNthString(false, true, "tuesday"),
+				lastWed = this.getDateNthString(false, true, "wednesday"),
+				lastThurs = this.getDateNthString(false, true, "thursday"),
+				lastFri = this.getDateNthString(false, true, "friday"),
+				lastSat = this.getDateNthString(false, true, "saturday"),
+				lastSun = this.getDateNthString(false, true, "sunday");
 
 			var replaceHash = {
 				"January": $R.jan.source,
@@ -186,13 +197,13 @@
 			};
 			replaceHash[tomorrow] = $R.tomorrow;
 			replaceHash[yesterday] = $R.yesterday;
-			replaceHash[lastMon] = new RegExp("(("+$R.past.source+")\\s("+$R.mon.source+"))");
-			replaceHash[lastTues] = new RegExp("(("+$R.past.source+")\\s("+$R.tue.source+"))");
-			replaceHash[lastWed] = new RegExp("(("+$R.past.source+")\\s("+$R.wed.source+"))");
-			replaceHash[lastThurs] = new RegExp("(("+$R.past.source+")\\s("+$R.thu.source+"))");
-			replaceHash[lastFri] = new RegExp("(("+$R.past.source+")\\s("+$R.fri.source+"))");
-			replaceHash[lastSat] = new RegExp("(("+$R.past.source+")\\s("+$R.sat.source+"))");
-			replaceHash[lastSun] = new RegExp("(("+$R.past.source+")\\s("+$R.sun.source+"))");
+			replaceHash[lastMon] = this.combineRegex($R.past.source, $R.mon.source);
+			replaceHash[lastTues] = this.combineRegex($R.past.source, $R.tue.source);
+			replaceHash[lastWed] = this.combineRegex($R.past.source, $R.wed.source);
+			replaceHash[lastThurs] = this.combineRegex($R.past.source, $R.thu.source);
+			replaceHash[lastFri] = this.combineRegex($R.past.source, $R.fri.source);
+			replaceHash[lastSat] = this.combineRegex($R.past.source, $R.sat.source);
+			replaceHash[lastSun] = this.combineRegex($R.past.source, $R.sun.source);
 
 			var regexStr = "(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")";
 			s = s.replace(new RegExp(regexStr, "i"), function(full, m1) {
