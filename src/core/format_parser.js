@@ -179,6 +179,10 @@
 				"December": $R.dec,
 				"": /\bat\b/gi,
 				" ": /\s{2,}/,
+				"am": $R.inTheMorning,
+				"9am": $R.thisMorning,
+				"pm": $R.inTheEvening,
+				"7pm":$R.thisEvening
 			};
 			replaceHash[tomorrow] = $R.tomorrow;
 			replaceHash[yesterday] = $R.yesterday;
@@ -197,30 +201,23 @@
 			});
 
 			s =	s.replace($R.amThisMorning, function(str, am){return am;})
-				.replace($R.inTheMorning, "am")
-				.replace($R.thisMorning, "9am")
-				.replace($R.amThisEvening, function(str, pm){return pm;})
-				.replace($R.inTheEvening, "pm")
-				.replace($R.thisEvening, "7pm");
+				.replace($R.amThisEvening, function(str, pm){return pm;});
 
 			s = multiReplace(s, replaceHash);
 
 			try {
 				var n = s.split(/([\s\-\.\,\/\x27]+)/);
-				if (n.length === 3) {
-					if ($P.Numeric.isNumeric(n[0]) && $P.Numeric.isNumeric(n[2])) {
-						if (n[2].length >= 4) {
-							// ok, so we're dealing with x/year. But that's not a full date.
-							// This fixes wonky dateElementOrder parsing when set to dmy order.
-							if (Date.CultureInfo.dateElementOrder[0] === "d") {
-								s = "1/" + n[0] + "/" + n[2]; // set to 1st of month and normalize the seperator
-							}
+				if (n.length === 3 &&
+					$P.Numeric.isNumeric(n[0]) &&
+					$P.Numeric.isNumeric(n[2]) &&
+					(n[2].length >= 4)) {
+						// ok, so we're dealing with x/year. But that's not a full date.
+						// This fixes wonky dateElementOrder parsing when set to dmy order.
+						if (Date.CultureInfo.dateElementOrder[0] === "d") {
+							s = "1/" + n[0] + "/" + n[2]; // set to 1st of month and normalize the seperator
 						}
-					}
 				}
-			} catch (e) {
-				// continue...
-			}
+			} catch (e) {}
 
 			return s;
 		}
