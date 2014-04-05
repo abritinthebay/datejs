@@ -25,22 +25,18 @@ var TimeSpan = function (days, hours, minutes, seconds, milliseconds) {
 		TimeSpan.prototype["get" + $b] = gFn($a);
 		TimeSpan.prototype["set" + $b] = sFn($a);
 	}
+	TimeSpan.prototype.set = function (days, hours, minutes, seconds, milliseconds){
+		this.setDays(days || this.getDays());
+		this.setHours(hours || this.getHours());
+		this.setMinutes(minutes || this.getMinutes());
+		this.setSeconds(seconds || this.getSeconds());
+		this.setMilliseconds(milliseconds || this.getMilliseconds());
+	};
 
-	if (arguments.length === 4) {
-		this.setDays(days);
-		this.setHours(hours);
-		this.setMinutes(minutes);
-		this.setSeconds(seconds);
-	} else if (arguments.length === 5) {
-		this.setDays(days);
-		this.setHours(hours);
-		this.setMinutes(minutes);
-		this.setSeconds(seconds);
-		this.setMilliseconds(milliseconds);
-	} else if (arguments.length === 1 && typeof days === "number") {
+	if (arguments.length === 1 && typeof days === "number") {
 		var orient = (days < 0) ? -1 : +1;
 		this.setMilliseconds(Math.abs(days));
-		
+
 		this.setDays(Math.floor(this.getMilliseconds() / 86400000) * orient);
 		this.setMilliseconds(this.getMilliseconds() % 86400000);
 
@@ -54,6 +50,8 @@ var TimeSpan = function (days, hours, minutes, seconds, milliseconds) {
 		this.setMilliseconds(this.getMilliseconds() % 1000);
 
 		this.setMilliseconds(this.getMilliseconds() * orient);
+	} else {
+		this.set(days, hours, minutes, seconds, milliseconds);
 	}
 
 	this.getTotalMilliseconds = function () {
