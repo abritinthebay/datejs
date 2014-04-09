@@ -36,21 +36,16 @@
 
 		if (arguments.length === 1 && typeof days === "number") {
 			var orient = (days < 0) ? -1 : +1;
-			this.setMilliseconds(Math.abs(days));
-
-			this.setDays(Math.floor(this.getMilliseconds() / 86400000) * orient);
-			this.setMilliseconds(this.getMilliseconds() % 86400000);
-
-			this.setHours(Math.floor(this.getMilliseconds() / 3600000) * orient);
-			this.setMilliseconds(this.getMilliseconds() % 3600000);
-
-			this.setMinutes(Math.floor(this.getMilliseconds() / 60000) * orient);
-			this.setMilliseconds(this.getMilliseconds() % 60000);
-
-			this.setSeconds(Math.floor(this.getMilliseconds() / 1000) * orient);
-			this.setMilliseconds(this.getMilliseconds() % 1000);
-
-			this.setMilliseconds(this.getMilliseconds() * orient);
+			var millsLeft = Math.abs(days);
+			this.setDays(Math.floor(millsLeft / 86400000) * orient);
+			millsLeft = millsLeft % 86400000;
+			this.setHours(Math.floor(millsLeft / 3600000) * orient);
+			millsLeft = millsLeft % 3600000;
+			this.setMinutes(Math.floor(millsLeft / 60000) * orient);
+			millsLeft = millsLeft % 60000;
+			this.setSeconds(Math.floor(millsLeft / 1000) * orient);
+			millsLeft = millsLeft % 1000;
+			this.setMilliseconds(millsLeft * orient);
 		} else {
 			this.set(days, hours, minutes, seconds, milliseconds);
 		}
