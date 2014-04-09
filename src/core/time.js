@@ -13,6 +13,14 @@
 		};
 	};
 	var attrs = ["years", "months", "days", "hours", "minutes", "seconds", "milliseconds"];
+	var addSetFuncs = function (context, attrs) {
+		for (var i = 0; i < attrs.length ; i++) {
+			var $a = attrs[i], $b = $a.slice(0, 1).toUpperCase() + $a.slice(1);
+			context.prototype[$a] = 0;
+			context.prototype["get" + $b] = gFn($a);
+			context.prototype["set" + $b] = sFn($a);
+		}
+	};
 	/* 
 	 * new TimeSpan(milliseconds);
 	 * new TimeSpan(days, hours, minutes, seconds);
@@ -141,12 +149,7 @@
 		};
 		return this;
 	};
-	for (var i = 2; i < attrs.length ; i++) {
-		var $a = attrs[i], $b = $a.slice(0, 1).toUpperCase() + $a.slice(1);
-		TimeSpan.prototype[$a] = 0;
-		TimeSpan.prototype["get" + $b] = gFn($a);
-		TimeSpan.prototype["set" + $b] = sFn($a);
-	}
+	addSetFuncs(TimeSpan, attrs.slice(2));
 	TimeSpan.prototype.set = function (days, hours, minutes, seconds, milliseconds){
 		this.setDays(days || this.getDays());
 		this.setHours(hours || this.getHours());
@@ -224,13 +227,7 @@
 		return this;
 	};
 	// create all the set functions.
-	for (var i = 0; i < attrs.length ; i++) {
-		var $a = attrs[i],
-			$b = $a.slice(0, 1).toUpperCase() + $a.slice(1);
-		TimePeriod.prototype[$a] = 0;
-		TimePeriod.prototype["get" + $b] = gFn($a);
-		TimePeriod.prototype["set" + $b] = sFn($a);
-	}
+	addSetFuncs(TimePeriod, attrs);
 	TimePeriod.prototype.set = function (years, months, days, hours, minutes, seconds, milliseconds){
 		this.setYears(years || this.getYears());
 		this.setMonths(months || this.getMonths());
