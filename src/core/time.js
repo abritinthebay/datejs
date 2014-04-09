@@ -170,15 +170,6 @@
 	 * TimePeriod(years, months, days, hours, minutes, seconds, milliseconds);
 	 */
 	var attrs = ["years", "months", "days", "hours", "minutes", "seconds", "milliseconds"];
-	var timePeriodSet = function (years, months, days, hours, minutes, seconds, milliseconds){
-		this.setYears(years || this.getYears());
-		this.setMonths(months || this.getMonths());
-		this.setDays(days || this.getDays());
-		this.setHours(hours || this.getHours());
-		this.setMinutes(minutes || this.getMinutes());
-		this.setSeconds(seconds || this.getSeconds());
-		this.setMilliseconds(milliseconds || this.getMilliseconds());
-	};
 	var setMonthsAndYears = function (orient, d1, d2, context) {
 		function inc() {
 			d1.addMonths(-orient);
@@ -201,7 +192,8 @@
 		context.months *= orient;
 		context.years *= orient;
 	};
-	var checkForDST = function(orient, startDate, endDate) {
+
+	var adjustForDST = function(orient, startDate, endDate) {
 		var hasDSTMismatch = (false === (startDate.isDaylightSavingTime() === endDate.isDaylightSavingTime()));
 		if (hasDSTMismatch && orient === 1) {
 			startDate.addHours(-1);
@@ -211,21 +203,9 @@
 	};
 
 	var TimePeriod = function (years, months, days, hours, minutes, seconds, milliseconds) {
-		for (var i = 0; i < attrs.length ; i++) {
-			var $a = attrs[i], $b = $a.slice(0, 1).toUpperCase() + $a.slice(1);
-			TimePeriod.prototype[$a] = 0;
-			TimePeriod.prototype["get" + $b] = gFn($a);
-			TimePeriod.prototype["set" + $b] = sFn($a);
-		}
-		TimePeriod.prototype.set = timePeriodSet;
-
 		if (arguments.length === 7) {
 			this.set(years, months, days, hours, minutes, seconds, milliseconds);
-		} else if (arguments.length === 2 &&
-			arguments[0] instanceof Date &&
-			arguments[1] instanceof Date) {
-			// TODO - add closure/some form of encapsulating original dates.
-			// startDate and endDate as arguments
+		} else if (arguments.length === 2 && arguments[0] instanceof Date && arguments[1] instanceof Date) {
 			var startDate = arguments[0].clone();
 			var endDate = arguments[1].clone();
 			var orient = (startDate > endDate) ? +1 : -1;
@@ -235,7 +215,7 @@
 			};
 
 			setMonthsAndYears(orient, startDate, endDate, this);
-			checkForDST(orient, startDate, endDate);
+			adjustForDST(orient, startDate, endDate);
 			// // TODO - adjust for DST
 			var diff = endDate - startDate;
 			if (diff !== 0) {
@@ -244,6 +224,23 @@
 			}
 		}
 		return this;
+	};
+	// create all the set functions.
+	for (var i = 0; i < attrs.length ; i++) {
+		var $a = attrs[i],
+			$b = $a.slice(0, 1).toUpperCase() + $a.slice(1);
+		TimePeriod.prototype[$a] = 0;
+		TimePeriod.prototype["get" + $b] = gFn($a);
+		TimePeriod.prototype["set" + $b] = sFn($a);
+	}
+	TimePeriod.prototype.set = function (years, months, days, hours, minutes, seconds, milliseconds){
+		this.setYears(years || this.getYears());
+		this.setMonths(months || this.getMonths());
+		this.setDays(days || this.getDays());
+		this.setHours(hours || this.getHours());
+		this.setMinutes(minutes || this.getMinutes());
+		this.setSeconds(seconds || this.getSeconds());
+		this.setMilliseconds(milliseconds || this.getMilliseconds());
 	};
 
 	Date.TimeSpan = TimeSpan;
