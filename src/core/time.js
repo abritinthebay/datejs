@@ -1,39 +1,24 @@
 (function () {
 	"use strict";
-		var gFn = function (attr) {
-			return function () {
-				return this[attr];
-			};
+	var gFn = function (attr) {
+		return function () {
+			return this[attr];
 		};
-		
-		var sFn = function (attr) {
-			return function (val) {
-				this[attr] = val;
-				return this;
-			};
+	};
+	
+	var sFn = function (attr) {
+		return function (val) {
+			this[attr] = val;
+			return this;
 		};
+	};
+	var attrs = ["years", "months", "days", "hours", "minutes", "seconds", "milliseconds"];
 	/* 
 	 * new TimeSpan(milliseconds);
 	 * new TimeSpan(days, hours, minutes, seconds);
 	 * new TimeSpan(days, hours, minutes, seconds, milliseconds);
 	 */
 	var TimeSpan = function (days, hours, minutes, seconds, milliseconds) {
-		var attrs = "days hours minutes seconds milliseconds".split(/\s+/);
-		
-		for (var i = 0; i < attrs.length ; i++) {
-			var $a = attrs[i], $b = $a.slice(0, 1).toUpperCase() + $a.slice(1);
-			TimeSpan.prototype[$a] = 0;
-			TimeSpan.prototype["get" + $b] = gFn($a);
-			TimeSpan.prototype["set" + $b] = sFn($a);
-		}
-		TimeSpan.prototype.set = function (days, hours, minutes, seconds, milliseconds){
-			this.setDays(days || this.getDays());
-			this.setHours(hours || this.getHours());
-			this.setMinutes(minutes || this.getMinutes());
-			this.setSeconds(seconds || this.getSeconds());
-			this.setMilliseconds(milliseconds || this.getMilliseconds());
-		};
-
 		if (arguments.length === 1 && typeof days === "number") {
 			var orient = (days < 0) ? -1 : +1;
 			var millsLeft = Math.abs(days);
@@ -156,6 +141,20 @@
 		};
 		return this;
 	};
+	for (var i = 2; i < attrs.length ; i++) {
+		var $a = attrs[i], $b = $a.slice(0, 1).toUpperCase() + $a.slice(1);
+		TimeSpan.prototype[$a] = 0;
+		TimeSpan.prototype["get" + $b] = gFn($a);
+		TimeSpan.prototype["set" + $b] = sFn($a);
+	}
+	TimeSpan.prototype.set = function (days, hours, minutes, seconds, milliseconds){
+		this.setDays(days || this.getDays());
+		this.setHours(hours || this.getHours());
+		this.setMinutes(minutes || this.getMinutes());
+		this.setSeconds(seconds || this.getSeconds());
+		this.setMilliseconds(milliseconds || this.getMilliseconds());
+	};
+
 
 	/**
 	 * Gets the time of day for this date instances. 
@@ -169,7 +168,6 @@
 	 * TimePeriod(startDate, endDate);
 	 * TimePeriod(years, months, days, hours, minutes, seconds, milliseconds);
 	 */
-	var attrs = ["years", "months", "days", "hours", "minutes", "seconds", "milliseconds"];
 	var setMonthsAndYears = function (orient, d1, d2, context) {
 		function inc() {
 			d1.addMonths(-orient);
