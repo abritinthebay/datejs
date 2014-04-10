@@ -26,34 +26,58 @@
 		return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 	};
 
+	var getDayOfYearFromWeek = function (obj) {
+		var d, jan4, offset;
+		obj.weekDay = (!obj.weekDay && obj.weekDay !== 0) ? 1 : obj.weekDay;
+		d = new Date(obj.year, 0, 4);
+		jan4 = d.getDay() === 0 ? 7 : d.getDay(); // JS is 0 indexed on Sunday.
+		offset = jan4+3;
+		obj.dayOfYear = ((obj.week * 7) + (obj.weekDay === 0 ? 7 : obj.weekDay))-offset;
+		return obj;
+	};
+	var getDayOfYear = function (obj, dayOffset) {
+		if (!obj.dayOfYear) {
+			obj = getDayOfYearFromWeek(obj);
+		}
+		for (var i=0;i <= dayOffset.length;i++) {
+			if (obj.dayOfYear < dayOffset[i] || i === dayOffset.length) {
+				obj.day = obj.day ? obj.day : (obj.dayOfYear - dayOffset[i-1]);
+				break;
+			} else {
+				obj.month = i;
+			}
+		}
+		return obj;
+	};
+	var adjustForTimeZone = function (obj, tzOffset) {
+		var offset;
+		if (obj.zone.toUpperCase() === "Z" || (obj.zone_hours === 0 && obj.zone_minutes === 0)) {
+			// it's UTC/GML so work out the current timeszone offset
+			offset = -tzOffset;
+		} else {
+			offset = (obj.zone_hours*60) + (obj.zone_minutes ? obj.zone_minutes : 0);
+			if (obj.zone_sign === "+") {
+				offset *= -1;
+			}
+			offset -= tzOffset;
+		}
+		return offset;
+	};
 	$P.processTimeObject = function (obj) {
-		var d, jan4, date, offset, dayOffset;
+		var d, date, offset, dayOffset;
 		d = new Date();
 		dayOffset = ($P.isLeapYear(obj.year)) ? dayOffsets.leap : dayOffsets.standard;
+
 		obj.hours = obj.hours ? obj.hours : 0;
 		obj.minutes = obj.minutes ? obj.minutes : 0;
 		obj.seconds = obj.seconds ? obj.seconds : 0;
 		obj.milliseconds = obj.milliseconds ? obj.milliseconds : 0;
+
 		if (!obj.year) {
 			obj.year = d.getFullYear();
 		}
 		if (!obj.month && (obj.week || obj.dayOfYear)) {
-			// work out the day of the year...
-			if (!obj.dayOfYear) {
-				obj.weekDay = (!obj.weekDay && obj.weekDay !== 0) ? 1 : obj.weekDay;
-				d = new Date(obj.year, 0, 4);
-				jan4 = d.getDay() === 0 ? 7 : d.getDay(); // JS is 0 indexed on Sunday.
-				offset = jan4+3;
-				obj.dayOfYear = ((obj.week * 7) + (obj.weekDay === 0 ? 7 : obj.weekDay))-offset;
-			}
-			for (var i=0;i <= dayOffset.length;i++) {
-				if (obj.dayOfYear < dayOffset[i] || i === dayOffset.length) {
-					obj.day = obj.day ? obj.day : (obj.dayOfYear - dayOffset[i-1]);
-					break;
-				} else {
-					obj.month = i;
-				}
-			}
+			getDayOfYear(obj, dayOffset);
 		} else {
 			obj.month = obj.month ? obj.month : 0;
 			obj.day = obj.day ? obj.day : 1;
@@ -63,16 +87,7 @@
 
 		if (obj.zone) {
 			// adjust (and calculate) for timezone here
-			if (obj.zone.toUpperCase() === "Z" || (obj.zone_hours === 0 && obj.zone_minutes === 0)) {
-				// it's UTC/GML so work out the current timeszone offset
-				offset = -date.getTimezoneOffset();
-			} else {
-				offset = (obj.zone_hours*60) + (obj.zone_minutes ? obj.zone_minutes : 0);
-				if (obj.zone_sign === "+") {
-					offset *= -1;
-				}
-				offset -= date.getTimezoneOffset();
-			}
+			offset = adjustForTimeZone(obj, date.getTimezoneOffset());
 			date.setMinutes(date.getMinutes()+offset);
 		}
 		return date;
