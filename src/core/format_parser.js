@@ -68,14 +68,12 @@
 		d = new Date();
 		dayOffset = ($P.isLeapYear(obj.year)) ? dayOffsets.leap : dayOffsets.standard;
 
-		obj.hours = obj.hours ? obj.hours : 0;
-		obj.minutes = obj.minutes ? obj.minutes : 0;
-		obj.seconds = obj.seconds ? obj.seconds : 0;
-		obj.milliseconds = obj.milliseconds ? obj.milliseconds : 0;
+		obj.year = obj.year || d.getFullYear();
+		obj.hours = obj.hours || 0;
+		obj.minutes = obj.minutes || 0;
+		obj.seconds = obj.seconds || 0;
+		obj.milliseconds = obj.milliseconds || 0;
 
-		if (!obj.year) {
-			obj.year = d.getFullYear();
-		}
 		if (!obj.month && (obj.week || obj.dayOfYear)) {
 			getDayOfYear(obj, dayOffset);
 		} else {
