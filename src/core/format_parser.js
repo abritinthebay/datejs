@@ -87,24 +87,47 @@
 				return (data && typeof data !== "undefined") ? dataNum : data;
 			}
 		},
+		timeDataProcess: function (obj) {
+			var timeObj = {};
+			for (var x in obj.data) {
+				if (obj.data.hasOwnProperty(x)) {
+					timeObj[x] = obj.ignore[x]? obj.data[x] : utils.dataNum(obj.data[x], obj.mods[x], obj.explict[x]);
+				}
+			}
+			return timeObj;
+		},
 		buildTimeObjectFromData: function (data) {
+			var time = utils.timeDataProcess({
+				data: {
+					year : data[1], //data[1] ? Number(data[1]) : data[1],
+					month : data[5], // data[5] ? (Number(data[5])-1) : data[5],
+					day : data[7], //data[7] ? Number(data[7]) : data[7],
+					week : data[8], //data[8] ? Number(data[8]) : data[8],
+					dayOfYear : data[10], //: data[10] ? Number(data[10]) : data[10],
+					hours : data[15], //data[15] ? Number(data[15]) : data[15],
+					zone_hours : data[23], //(data[23] && typeof data[23] !== "undefined") ? Number(data[23]) : data[23],
+					zone_minutes : data[24], //(data[24] && typeof data[24] !== "undefined") ? Number(data[24]) : data[24]
+					zone : data[21],
+					zone_sign : data[22],
+				},
+				mods: {
+					month: -1
+				},
+				explict: {
+					zone_hours: true,
+					zone_minutes: true
+				},
+				ignore: {
+					zone: true,
+					zone_sign: true
+				}
+			});
 
-			var time = {
-				year : utils.dataNum(data[1]), //data[1] ? Number(data[1]) : data[1],
-				month : utils.dataNum(data[5], -1), // data[5] ? (Number(data[5])-1) : data[5],
-				day : utils.dataNum(data[7]), //data[7] ? Number(data[7]) : data[7],
-				week : utils.dataNum(data[8]), //data[8] ? Number(data[8]) : data[8],
-				weekDay : data[9] ? (Math.abs(Number(data[9])) === 7 ? 0 : Math.abs(Number(data[9]))) : data[9], // 1-7, starts on Monday. Convert to JS's 0-6 index.
-				dayOfYear : utils.dataNum(data[10]), //: data[10] ? Number(data[10]) : data[10],
-				hours : utils.dataNum(data[15]), //data[15] ? Number(data[15]) : data[15],
-				minutes : data[16] ? Number(data[16].replace(":","")) : data[16],
-				seconds : data[19] ? Math.floor(Number(data[19].replace(":","").replace(",","."))) : data[19],
-				milliseconds : data[20] ? (Number(data[20].replace(",","."))*1000) : data[20],
-				zone : data[21],
-				zone_sign : data[22],
-				zone_hours : utils.dataNum(data[23]), //(data[23] && typeof data[23] !== "undefined") ? Number(data[23]) : data[23],
-				zone_minutes : utils.dataNum(data[24]), //(data[24] && typeof data[24] !== "undefined") ? Number(data[24]) : data[24]
-			};
+			time.weekDay = data[9] ? (Math.abs(Number(data[9])) === 7 ? 0 : Math.abs(Number(data[9]))) : data[9]; // 1-7, starts on Monday. Convert to JS's 0-6 index.
+			time.minutes = data[16] ? Number(data[16].replace(":","")) : data[16];
+			time.seconds = data[19] ? Math.floor(Number(data[19].replace(":","").replace(",","."))) : data[19];
+			time.milliseconds = data[20] ? (Number(data[20].replace(",","."))*1000) : data[20];
+
 			if (data[18]) {
 				data[18] = 60 * Number(data[18].replace(",", "."));
 				if (!time.minutes) {
