@@ -69,7 +69,8 @@ module.exports = function(grunt) {
 					'<%= dirs.core %>/parser.js',
 					'<%= dirs.core %>/sugarpak.js',
 					'<%= dirs.core %>/extras.js',
-					'<%= dirs.core %>/time.js'
+					'<%= dirs.core %>/time_span.js',
+					'<%= dirs.core %>/time_period.js'
 				],
 				dest: '<%= dirs.build %>/date-core.js'
 			},
@@ -81,7 +82,8 @@ module.exports = function(grunt) {
 					'<%= dirs.core %>/parser.js',
 					'<%= dirs.core %>/sugarpak.js',
 					'<%= dirs.core %>/extras.js',
-					'<%= dirs.core %>/time.js'
+					'<%= dirs.core %>/time_span.js',
+					'<%= dirs.core %>/time_period.js'
 				],
 				dest: '<%= dirs.build %>/development/date.js'
 			}
