@@ -134,7 +134,7 @@
 				return null;
 			}
 
-			time = buildTimeObjectFromData(data);
+			time = utils.buildTimeObjectFromData(data);
 
 			if (!time.year || (!time.year && (!time.month && !time.day) && (!time.week && !time.dayOfYear)) ) {
 				return null;
