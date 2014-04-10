@@ -49,44 +49,50 @@
 		}
 		return obj;
 	};
-	var adjustForTimeZone = function (obj, tzOffset) {
+	var adjustForTimeZone = function (obj, date) {
 		var offset;
 		if (obj.zone.toUpperCase() === "Z" || (obj.zone_hours === 0 && obj.zone_minutes === 0)) {
 			// it's UTC/GML so work out the current timeszone offset
-			offset = -tzOffset;
+			offset = -date.getTimezoneOffset();
 		} else {
-			offset = (obj.zone_hours*60) + (obj.zone_minutes ? obj.zone_minutes : 0);
+			offset = (obj.zone_hours*60) + (obj.zone_minutes || 0);
 			if (obj.zone_sign === "+") {
 				offset *= -1;
 			}
-			offset -= tzOffset;
+			offset -= date.getTimezoneOffset();
 		}
-		return offset;
+		date.setMinutes(date.getMinutes()+offset);
+		return date;
 	};
-	$P.processTimeObject = function (obj) {
-		var d, date, offset, dayOffset;
-		d = new Date();
-		dayOffset = ($P.isLeapYear(obj.year)) ? dayOffsets.leap : dayOffsets.standard;
-
-		obj.year = obj.year || d.getFullYear();
+	var setDefaults = function (obj) {
+		obj.year = obj.year || Date.today().getFullYear();
 		obj.hours = obj.hours || 0;
 		obj.minutes = obj.minutes || 0;
 		obj.seconds = obj.seconds || 0;
 		obj.milliseconds = obj.milliseconds || 0;
+		if (!(!obj.month && (obj.week || obj.dayOfYear))) {
+			// if we have a month, or if we don't but don't have the day calculation data
+			obj.month = obj.month || 0;
+			obj.day = obj.day || 1;
+		}
+		return obj;
+	};
+	$P.processTimeObject = function (obj) {
+		var date, dayOffset;
+
+		setDefaults(obj);
+		dayOffset = ($P.isLeapYear(obj.year)) ? dayOffsets.leap : dayOffsets.standard;
 
 		if (!obj.month && (obj.week || obj.dayOfYear)) {
 			getDayOfYear(obj, dayOffset);
 		} else {
-			obj.month = obj.month ? obj.month : 0;
-			obj.day = obj.day ? obj.day : 1;
 			obj.dayOfYear = dayOffset[obj.month] + obj.day;
 		}
+
 		date = new Date(obj.year, obj.month, obj.day, obj.hours, obj.minutes, obj.seconds, obj.milliseconds);
 
 		if (obj.zone) {
-			// adjust (and calculate) for timezone here
-			offset = adjustForTimeZone(obj, date.getTimezoneOffset());
-			date.setMinutes(date.getMinutes()+offset);
+			adjustForTimeZone(obj, date); // adjust (and calculate) for timezone
 		}
 		return date;
 	};
