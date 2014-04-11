@@ -77,10 +77,14 @@
 			}
 			return obj;
 		},
-		dataNum: function (data, mod, explict) {
-			var dataNum = Number(data);
+		dataNum: function (data, mod, explict, postProcess) {
+			var dataNum = data*1;
 			if (mod) {
-				return data ? (dataNum+mod) : data;
+				if (postProcess) {
+					return data ? mod(data)*1 : data;
+				} else {
+					return data ? mod(dataNum) : data;
+				}
 			} else if (!explict){
 				return data ? dataNum : data;
 			} else {
@@ -91,27 +95,61 @@
 			var timeObj = {};
 			for (var x in obj.data) {
 				if (obj.data.hasOwnProperty(x)) {
-					timeObj[x] = obj.ignore[x]? obj.data[x] : utils.dataNum(obj.data[x], obj.mods[x], obj.explict[x]);
+					timeObj[x] = obj.ignore[x] ? obj.data[x] : utils.dataNum(obj.data[x], obj.mods[x], obj.explict[x], obj.postProcess[x]);
 				}
+			}
+			if (obj.data.secmins) {
+				obj.data.secmins = obj.data.secmins.replace(",", ".") * 60;
+				if (!timeObj.minutes) {
+					timeObj.minutes = obj.data.secmins;
+				} else if (!timeObj.seconds) {
+					timeObj.seconds = obj.data.secmins;
+				}
+				delete obj.secmins;
 			}
 			return timeObj;
 		},
 		buildTimeObjectFromData: function (data) {
 			var time = utils.timeDataProcess({
 				data: {
-					year : data[1], //data[1] ? Number(data[1]) : data[1],
-					month : data[5], // data[5] ? (Number(data[5])-1) : data[5],
-					day : data[7], //data[7] ? Number(data[7]) : data[7],
-					week : data[8], //data[8] ? Number(data[8]) : data[8],
-					dayOfYear : data[10], //: data[10] ? Number(data[10]) : data[10],
-					hours : data[15], //data[15] ? Number(data[15]) : data[15],
-					zone_hours : data[23], //(data[23] && typeof data[23] !== "undefined") ? Number(data[23]) : data[23],
-					zone_minutes : data[24], //(data[24] && typeof data[24] !== "undefined") ? Number(data[24]) : data[24]
+					year : data[1],
+					month : data[5],
+					day : data[7],
+					week : data[8],
+					dayOfYear : data[10],
+					hours : data[15],
+					zone_hours : data[23],
+					zone_minutes : data[24],
 					zone : data[21],
 					zone_sign : data[22],
+					weekDay : data[9],
+					minutes: data[16],
+					seconds: data[19],
+					milliseconds: data[20],
+					secmins: data[18]
 				},
 				mods: {
-					month: -1
+					month: function(data) {
+						return data-1;
+					},
+					weekDay: function (data) {
+						data = Math.abs(data);
+						return (data === 7 ? 0 : data);
+					},
+					minutes: function (data) {
+						return data.replace(":","");
+					},
+					seconds: function (data) {
+						return Math.floor( (data.replace(":","").replace(",","."))*1 );
+					},
+					milliseconds: function (data) {
+						return (data.replace(",",".")*1000);
+					},
+				},
+				postProcess: {
+					minutes: true,
+					seconds: true,
+					milliseconds: true
 				},
 				explict: {
 					zone_hours: true,
@@ -119,23 +157,10 @@
 				},
 				ignore: {
 					zone: true,
-					zone_sign: true
+					zone_sign: true,
+					secmins: true
 				}
 			});
-
-			time.weekDay = data[9] ? (Math.abs(Number(data[9])) === 7 ? 0 : Math.abs(Number(data[9]))) : data[9]; // 1-7, starts on Monday. Convert to JS's 0-6 index.
-			time.minutes = data[16] ? Number(data[16].replace(":","")) : data[16];
-			time.seconds = data[19] ? Math.floor(Number(data[19].replace(":","").replace(",","."))) : data[19];
-			time.milliseconds = data[20] ? (Number(data[20].replace(",","."))*1000) : data[20];
-
-			if (data[18]) {
-				data[18] = 60 * Number(data[18].replace(",", "."));
-				if (!time.minutes) {
-					time.minutes = data[18];
-				} else if (!time.seconds) {
-					time.seconds = data[18];
-				}
-			}
 			return time;
 		}
 	};
