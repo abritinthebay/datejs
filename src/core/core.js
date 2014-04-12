@@ -206,6 +206,10 @@
 		}
 		return [31, ($D.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 	};
+
+	$P.getDaysInMonth = function () {
+		return $D.getDaysInMonth(this.getFullYear(), this.getMonth());
+	};
  
 	$D.getTimezoneAbbreviation = function (offset, dst) {
 		var p, n = (dst || false) ? Date.CultureInfo.abbreviatedTimeZoneDST : Date.CultureInfo.abbreviatedTimeZoneStandard;
