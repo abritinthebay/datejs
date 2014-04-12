@@ -368,6 +368,7 @@
 					}
 				}
 			}
+			$D.Parsing.Normalizer.buildReplaceHash(); // rebuild normalizer strings
 		},
 		getLoggedKeys: function () {
 			return loggedKeys;
