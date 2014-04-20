@@ -326,22 +326,34 @@
 				utils.getDateNthString(false, true, "sunday")		//last sun
 			];
 		},
-		buildReplaceHash: function () {
-			this.replaceHash = utils.addToHash(this.basicReplaceHash(), this.keys(), this.regexData());
-		},
-		parse: function (s) {
+		buildRegexFunctions: function () {
 			var $R = Date.CultureInfo.regexPatterns;
 			var __ = Date.i18n.__;
 			var regexStr = new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i");
 			
-			s = s.replace(regexStr, function(full, m1) {
-				var t = Date.today().addDays(1).toString("d");
-				return (t + " " + m1);
-			});
-
-			s =	s.replace($R.amThisMorning, function(str, am){return am;})
-				.replace($R.amThisEvening, function(str, pm){return pm;});
-
+			this.replaceFuncs = [
+				[regexStr,
+				function(full, m1) {
+					var t = Date.today().addDays(1).toString("d");
+					return (t + " " + m1);
+				}],
+				[$R.amThisMorning, function(str, am){return am;}],
+				[$R.pmThisEvening, function(str, pm){return pm;}]
+			];
+				
+		},
+		buildReplaceData: function () {
+			this.buildRegexFunctions();
+			this.replaceHash = utils.addToHash(this.basicReplaceHash(), this.keys(), this.regexData());
+		},
+		stringReplaceFuncs: function (s) {
+			for (var i=0; i < this.replaceFuncs.length; i++) {
+				s = s.replace(this.replaceFuncs[i][0], this.replaceFuncs[i][1]);
+			}
+			return s;
+		},
+		parse: function (s) {
+			s = this.stringReplaceFuncs(s);
 			s = utils.multiReplace(s, this.replaceHash);
 
 			try {
@@ -361,5 +373,5 @@
 			return s;
 		}
 	};
-	$P.Normalizer.buildReplaceHash();
+	$P.Normalizer.buildReplaceData();
 }());

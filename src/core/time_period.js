@@ -94,7 +94,7 @@
 
 	Date.TimePeriod = TimePeriod;
 
-	if (window) {
+	if (typeof window !== "undefined") {
 		// keeping API compatible for v1.x 
 		window.TimePeriod = TimePeriod;
 	}
