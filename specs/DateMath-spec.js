@@ -1,4 +1,4 @@
-/*globals require, jasmine, describe, it, expect, spyOn */
+/*globals require, describe, it, expect */
 if (typeof process !== "undefined") {
 	process.env.TZ = "America/Los_Angeles";
 }
@@ -25,16 +25,16 @@ describe("Date Math operations support", function() {
 		this.d.add(1).days();
 		var d2 = Date.parse("t+1d");
 		var d3 = Date.parse("t+1 d");
-		var d3 = Date.parse("t + 1 d");
-		var d4 = Date.parse("t+1day");
-		var d5 = Date.parse("t+1 day");
-		var d6 = Date.parse("t + 1 day");
-		var d7 = Date.parse("today+1d");
-		var d8 = Date.parse("today+1 d");
-		var d9 = Date.parse("today + 1 d");
-		var d10 = Date.parse("today+1day");
-		var d11 = Date.parse("today+1 day");
-		var d12 = Date.parse("today + 1 day");
+		var d4 = Date.parse("t + 1 d");
+		var d5 = Date.parse("t+1day");
+		var d6 = Date.parse("t+1 day");
+		var d7 = Date.parse("t + 1 day");
+		var d8 = Date.parse("today+1d");
+		var d9 = Date.parse("today+1 d");
+		var d10 = Date.parse("today + 1 d");
+		var d11 = Date.parse("today+1day");
+		var d12 = Date.parse("today+1 day");
+		var d13 = Date.parse("today + 1 day");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
@@ -47,21 +47,22 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t+15d and today+15d and variants", function () {
 		this.d.add(15).days();
 		var d2 = Date.parse("t+15d");
 		var d3 = Date.parse("t+15 d");
-		var d3 = Date.parse("t + 15 d");
-		var d4 = Date.parse("t+15day");
-		var d5 = Date.parse("t+15 day");
-		var d6 = Date.parse("t + 15 day");
-		var d7 = Date.parse("today+15d");
-		var d8 = Date.parse("today+15 d");
-		var d9 = Date.parse("today + 15 d");
-		var d10 = Date.parse("today+15day");
-		var d11 = Date.parse("today+15 day");
-		var d12 = Date.parse("today + 15 day");
+		var d4 = Date.parse("t + 15 d");
+		var d5 = Date.parse("t+15day");
+		var d6 = Date.parse("t+15 day");
+		var d7 = Date.parse("t + 15 day");
+		var d8 = Date.parse("today+15d");
+		var d9 = Date.parse("today+15 d");
+		var d10 = Date.parse("today + 15 d");
+		var d11 = Date.parse("today+15day");
+		var d12 = Date.parse("today+15 day");
+		var d13 = Date.parse("today + 15 day");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
@@ -74,12 +75,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t+100d and today+100d and variants", function () {
 		this.d.add(100).days();
 		var d2 = Date.parse("t+100d");
 		var d3 = Date.parse("t+100 d");
-		var d3 = Date.parse("t + 100 d");
+		var d13 = Date.parse("t + 100 d");
 		var d4 = Date.parse("t+100day");
 		var d5 = Date.parse("t+100 day");
 		var d6 = Date.parse("t + 100 day");
@@ -101,12 +103,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t+1m and today+1m and variants", function () {
 		this.d.add(1).months();
 		var d2 = Date.parse("t+1m");
 		var d3 = Date.parse("t+1 m");
-		var d3 = Date.parse("t + 1 m");
+		var d13 = Date.parse("t + 1 m");
 		var d4 = Date.parse("t+1month");
 		var d5 = Date.parse("t+1 month");
 		var d6 = Date.parse("t + 1 month");
@@ -128,12 +131,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t+15m and today+15m and variants", function () {
 		this.d.add(15).months();
 		var d2 = Date.parse("t+15m");
 		var d3 = Date.parse("t+15 m");
-		var d3 = Date.parse("t + 15 m");
+		var d13 = Date.parse("t + 15 m");
 		var d4 = Date.parse("t+15months");
 		var d5 = Date.parse("t+15 months");
 		var d6 = Date.parse("t + 15 months");
@@ -155,12 +159,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t+100d and today+100m and variants", function () {
 		this.d.add(100).months();
 		var d2 = Date.parse("t+100m");
 		var d3 = Date.parse("t+100 m");
-		var d3 = Date.parse("t + 100 m");
+		var d13 = Date.parse("t + 100 m");
 		var d4 = Date.parse("t+100months");
 		var d5 = Date.parse("t+100 months");
 		var d6 = Date.parse("t + 100 months");
@@ -182,12 +187,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t+1y and today+1y and variants", function () {
 		this.d.add(1).years();
 		var d2 = Date.parse("t+1y");
 		var d3 = Date.parse("t+1 y");
-		var d3 = Date.parse("t + 1 y");
+		var d13 = Date.parse("t + 1 y");
 		var d4 = Date.parse("t+1year");
 		var d5 = Date.parse("t+1 year");
 		var d6 = Date.parse("t + 1 year");
@@ -209,12 +215,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t+15y and today+15y and variants", function () {
 		this.d.add(15).years();
 		var d2 = Date.parse("t+15y");
 		var d3 = Date.parse("t+15 y");
-		var d3 = Date.parse("t + 15 y");
+		var d13 = Date.parse("t + 15 y");
 		var d4 = Date.parse("t+15years");
 		var d5 = Date.parse("t+15 years");
 		var d6 = Date.parse("t + 15 years");
@@ -236,12 +243,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t+100d and today+100y and variants", function () {
 		this.d.add(100).years();
 		var d2 = Date.parse("t+100y");
 		var d3 = Date.parse("t+100 y");
-		var d3 = Date.parse("t + 100 y");
+		var d13 = Date.parse("t + 100 y");
 		var d4 = Date.parse("t+100years");
 		var d5 = Date.parse("t+100 years");
 		var d6 = Date.parse("t + 100 years");
@@ -263,11 +271,12 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	
 	// now swtich to minus
- 
- 	it("t- and today-", function () {
+
+	it("t- and today-", function () {
 		this.d.add(-1).days();
 		var d2 = Date.parse("t-");
 		var d3 = Date.parse("today-");
@@ -278,7 +287,7 @@ describe("Date Math operations support", function() {
 		this.d.add(-1).days();
 		var d2 = Date.parse("t-1d");
 		var d3 = Date.parse("t-1 d");
-		var d3 = Date.parse("t - 1 d");
+		var d13 = Date.parse("t - 1 d");
 		var d4 = Date.parse("t-1day");
 		var d5 = Date.parse("t-1 day");
 		var d6 = Date.parse("t - 1 day");
@@ -300,12 +309,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t-15d and today-15d and variants", function () {
 		this.d.add(-15).days();
 		var d2 = Date.parse("t-15d");
 		var d3 = Date.parse("t-15 d");
-		var d3 = Date.parse("t - 15 d");
+		var d13 = Date.parse("t - 15 d");
 		var d4 = Date.parse("t-15day");
 		var d5 = Date.parse("t-15 day");
 		var d6 = Date.parse("t - 15 day");
@@ -327,12 +337,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t-100d and today-100d and variants", function () {
 		this.d.add(-100).days();
 		var d2 = Date.parse("t-100d");
 		var d3 = Date.parse("t-100 d");
-		var d3 = Date.parse("t - 100 d");
+		var d13 = Date.parse("t - 100 d");
 		var d4 = Date.parse("t-100day");
 		var d5 = Date.parse("t-100 day");
 		var d6 = Date.parse("t - 100 day");
@@ -354,12 +365,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t-1m and today-1m and variants", function () {
 		this.d.add(-1).months();
 		var d2 = Date.parse("t-1m");
 		var d3 = Date.parse("t-1 m");
-		var d3 = Date.parse("t - 1 m");
+		var d13 = Date.parse("t - 1 m");
 		var d4 = Date.parse("t-1month");
 		var d5 = Date.parse("t-1 month");
 		var d6 = Date.parse("t - 1 month");
@@ -381,12 +393,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t-15m and today-15m and variants", function () {
 		this.d.add(-15).months();
 		var d2 = Date.parse("t-15m");
 		var d3 = Date.parse("t-15 m");
-		var d3 = Date.parse("t - 15 m");
+		var d13 = Date.parse("t - 15 m");
 		var d4 = Date.parse("t-15months");
 		var d5 = Date.parse("t-15 months");
 		var d6 = Date.parse("t - 15 months");
@@ -408,12 +421,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t-100d and today-100m and variants", function () {
 		this.d.add(-100).months();
 		var d2 = Date.parse("t-100m");
 		var d3 = Date.parse("t-100 m");
-		var d3 = Date.parse("t - 100 m");
+		var d13 = Date.parse("t - 100 m");
 		var d4 = Date.parse("t-100months");
 		var d5 = Date.parse("t-100 months");
 		var d6 = Date.parse("t - 100 months");
@@ -435,12 +449,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t-1y and today-1y and variants", function () {
 		this.d.add(-1).years();
 		var d2 = Date.parse("t-1y");
 		var d3 = Date.parse("t-1 y");
-		var d3 = Date.parse("t - 1 y");
+		var d13 = Date.parse("t - 1 y");
 		var d4 = Date.parse("t-1year");
 		var d5 = Date.parse("t-1 year");
 		var d6 = Date.parse("t - 1 year");
@@ -462,12 +477,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t-15y and today-15y and variants", function () {
 		this.d.add(-15).years();
 		var d2 = Date.parse("t-15y");
 		var d3 = Date.parse("t-15 y");
-		var d3 = Date.parse("t - 15 y");
+		var d13 = Date.parse("t - 15 y");
 		var d4 = Date.parse("t-15years");
 		var d5 = Date.parse("t-15 years");
 		var d6 = Date.parse("t - 15 years");
@@ -489,12 +505,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 	it("t-100y and today-100y and variants", function () {
 		this.d.add(-100).years();
 		var d2 = Date.parse("t-100y");
 		var d3 = Date.parse("t-100 y");
-		var d3 = Date.parse("t - 100 y");
+		var d13 = Date.parse("t - 100 y");
 		var d4 = Date.parse("t-100years");
 		var d5 = Date.parse("t-100 years");
 		var d6 = Date.parse("t - 100 years");
@@ -516,6 +533,7 @@ describe("Date Math operations support", function() {
 		expect(this.d.equals(d10)).toBe(true);
 		expect(this.d.equals(d11)).toBe(true);
 		expect(this.d.equals(d12)).toBe(true);
+		expect(this.d.equals(d13)).toBe(true);
 	});
 
 	// switch to non t or today
@@ -529,141 +547,150 @@ describe("Date Math operations support", function() {
 		this.d.add(1).days();
 		var d2 = Date.parse("+1d");
 		var d3 = Date.parse("+1 d");
-		var d3 = Date.parse(" + 1 d");
-		var d4 = Date.parse("+1day");
-		var d5 = Date.parse("+1 day");
-		var d6 = Date.parse(" + 1 day");
+		var d4 = Date.parse(" + 1 d");
+		var d5 = Date.parse("+1day");
+		var d6 = Date.parse("+1 day");
+		var d7 = Date.parse(" + 1 day");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("+15d and variants", function () {
 		this.d.add(15).days();
 		var d2 = Date.parse("+15d");
 		var d3 = Date.parse("+15 d");
-		var d3 = Date.parse(" + 15 d");
-		var d4 = Date.parse("+15day");
-		var d5 = Date.parse("+15 day");
-		var d6 = Date.parse(" + 15 day");
+		var d4 = Date.parse(" + 15 d");
+		var d5 = Date.parse("+15day");
+		var d6 = Date.parse("+15 day");
+		var d7 = Date.parse(" + 15 day");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("+100d and variants", function () {
 		this.d.add(100).days();
 		var d2 = Date.parse("+100d");
 		var d3 = Date.parse("+100 d");
-		var d3 = Date.parse(" + 100 d");
-		var d4 = Date.parse("+100day");
-		var d5 = Date.parse("+100 day");
-		var d6 = Date.parse(" + 100 day");
+		var d4 = Date.parse(" + 100 d");
+		var d5 = Date.parse("+100day");
+		var d6 = Date.parse("+100 day");
+		var d7 = Date.parse(" + 100 day");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("+1m and variants", function () {
 		this.d.add(1).months();
 		var d2 = Date.parse("+1m");
 		var d3 = Date.parse("+1 m");
-		var d3 = Date.parse(" + 1 m");
-		var d4 = Date.parse("+1month");
-		var d5 = Date.parse("+1 month");
-		var d6 = Date.parse(" + 1 month");
+		var d4 = Date.parse(" + 1 m");
+		var d5 = Date.parse("+1month");
+		var d6 = Date.parse("+1 month");
+		var d7 = Date.parse(" + 1 month");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("+15m and variants", function () {
 		this.d.add(15).months();
 		var d2 = Date.parse("+15m");
 		var d3 = Date.parse("+15 m");
-		var d3 = Date.parse(" + 15 m");
-		var d4 = Date.parse("+15months");
-		var d5 = Date.parse("+15 months");
-		var d6 = Date.parse(" + 15 months");
+		var d4 = Date.parse(" + 15 m");
+		var d5 = Date.parse("+15months");
+		var d6 = Date.parse("+15 months");
+		var d7 = Date.parse(" + 15 months");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("+100d and variants", function () {
 		this.d.add(100).months();
 		var d2 = Date.parse("+100m");
 		var d3 = Date.parse("+100 m");
-		var d3 = Date.parse(" + 100 m");
-		var d4 = Date.parse("+100months");
-		var d5 = Date.parse("+100 months");
-		var d6 = Date.parse(" + 100 months");
+		var d4 = Date.parse(" + 100 m");
+		var d5 = Date.parse("+100months");
+		var d6 = Date.parse("+100 months");
+		var d7 = Date.parse(" + 100 months");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("+1y and variants", function () {
 		this.d.add(1).years();
 		var d2 = Date.parse("+1y");
 		var d3 = Date.parse("+1 y");
-		var d3 = Date.parse(" + 1 y");
-		var d4 = Date.parse("+1year");
-		var d5 = Date.parse("+1 year");
-		var d6 = Date.parse(" + 1 year");
+		var d4 = Date.parse(" + 1 y");
+		var d5 = Date.parse("+1year");
+		var d6 = Date.parse("+1 year");
+		var d7 = Date.parse(" + 1 year");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("+15y and variants", function () {
 		this.d.add(15).years();
 		var d2 = Date.parse("+15y");
 		var d3 = Date.parse("+15 y");
-		var d3 = Date.parse(" + 15 y");
-		var d4 = Date.parse("+15years");
-		var d5 = Date.parse("+15 years");
-		var d6 = Date.parse(" + 15 years");
+		var d4 = Date.parse(" + 15 y");
+		var d5 = Date.parse("+15years");
+		var d6 = Date.parse("+15 years");
+		var d7 = Date.parse(" + 15 years");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("+100d and variants", function () {
 		this.d.add(100).years();
 		var d2 = Date.parse("+100y");
 		var d3 = Date.parse("+100 y");
-		var d3 = Date.parse(" + 100 y");
-		var d4 = Date.parse("+100years");
-		var d5 = Date.parse("+100 years");
-		var d6 = Date.parse(" + 100 years");
+		var d4 = Date.parse(" + 100 y");
+		var d5 = Date.parse("+100years");
+		var d6 = Date.parse("+100 years");
+		var d7 = Date.parse(" + 100 years");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	
 	// now swtich to minus with no t or today
- 
- 	it("-", function () {
+
+	it("-", function () {
 		this.d.add(-1).days();
 		var d2 = Date.parse("-");
 		expect(this.d.equals(d2)).toBe(true);
@@ -672,137 +699,145 @@ describe("Date Math operations support", function() {
 		this.d.add(-1).days();
 		var d2 = Date.parse("-1d");
 		var d3 = Date.parse("-1 d");
-		var d3 = Date.parse(" - 1 d");
-		var d4 = Date.parse("-1day");
-		var d5 = Date.parse("-1 day");
-		var d6 = Date.parse(" - 1 day");
+		var d4 = Date.parse(" - 1 d");
+		var d5 = Date.parse("-1day");
+		var d6 = Date.parse("-1 day");
+		var d7 = Date.parse(" - 1 day");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
-
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("-15d and variants", function () {
 		this.d.add(-15).days();
 		var d2 = Date.parse("-15d");
 		var d3 = Date.parse("-15 d");
-		var d3 = Date.parse(" - 15 d");
-		var d4 = Date.parse("-15day");
-		var d5 = Date.parse("-15 day");
-		var d6 = Date.parse(" - 15 day");
+		var d4 = Date.parse(" - 15 d");
+		var d5 = Date.parse("-15day");
+		var d6 = Date.parse("-15 day");
+		var d7 = Date.parse(" - 15 day");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("-100d and variants", function () {
 		this.d.add(-100).days();
 		var d2 = Date.parse("-100d");
 		var d3 = Date.parse("-100 d");
-		var d3 = Date.parse(" - 100 d");
-		var d4 = Date.parse("-100day");
-		var d5 = Date.parse("-100 day");
-		var d6 = Date.parse(" - 100 day");
+		var d4 = Date.parse(" - 100 d");
+		var d5 = Date.parse("-100day");
+		var d6 = Date.parse("-100 day");
+		var d7 = Date.parse(" - 100 day");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("-1m and variants", function () {
 		this.d.add(-1).months();
 		var d2 = Date.parse("-1m");
 		var d3 = Date.parse("-1 m");
-		var d3 = Date.parse(" - 1 m");
-		var d4 = Date.parse("-1month");
-		var d5 = Date.parse("-1 month");
-		var d6 = Date.parse(" - 1 month");
+		var d4 = Date.parse(" - 1 m");
+		var d5 = Date.parse("-1month");
+		var d6 = Date.parse("-1 month");
+		var d7 = Date.parse(" - 1 month");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("-15m and variants", function () {
 		this.d.add(-15).months();
 		var d2 = Date.parse("-15m");
 		var d3 = Date.parse("-15 m");
-		var d3 = Date.parse(" - 15 m");
-		var d4 = Date.parse("-15months");
-		var d5 = Date.parse("-15 months");
-		var d6 = Date.parse(" - 15 months");
+		var d4 = Date.parse(" - 15 m");
+		var d5 = Date.parse("-15months");
+		var d6 = Date.parse("-15 months");
+		var d7 = Date.parse(" - 15 months");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("-100d and variants", function () {
 		this.d.add(-100).months();
 		var d2 = Date.parse("-100m");
 		var d3 = Date.parse("-100 m");
-		var d3 = Date.parse(" - 100 m");
-		var d4 = Date.parse("-100months");
-		var d5 = Date.parse("-100 months");
-		var d6 = Date.parse(" - 100 months");
+		var d4 = Date.parse(" - 100 m");
+		var d5 = Date.parse("-100months");
+		var d6 = Date.parse("-100 months");
+		var d7 = Date.parse(" - 100 months");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("-1y and variants", function () {
 		this.d.add(-1).years();
 		var d2 = Date.parse("-1y");
 		var d3 = Date.parse("-1 y");
-		var d3 = Date.parse(" - 1 y");
-		var d4 = Date.parse("-1year");
-		var d5 = Date.parse("-1 year");
-		var d6 = Date.parse(" - 1 year");
+		var d4 = Date.parse(" - 1 y");
+		var d5 = Date.parse("-1year");
+		var d6 = Date.parse("-1 year");
+		var d7 = Date.parse(" - 1 year");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("-15y and variants", function () {
 		this.d.add(-15).years();
 		var d2 = Date.parse("-15y");
 		var d3 = Date.parse("-15 y");
-		var d3 = Date.parse(" - 15 y");
-		var d4 = Date.parse("-15years");
-		var d5 = Date.parse("-15 years");
-		var d6 = Date.parse(" - 15 years");
+		var d4 = Date.parse(" - 15 y");
+		var d5 = Date.parse("-15years");
+		var d6 = Date.parse("-15 years");
+		var d7 = Date.parse(" - 15 years");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 	it("-100y and variants", function () {
 		this.d.add(-100).years();
 		var d2 = Date.parse("-100y");
 		var d3 = Date.parse("-100 y");
-		var d3 = Date.parse(" - 100 y");
-		var d4 = Date.parse("-100years");
-		var d5 = Date.parse("-100 years");
-		var d6 = Date.parse(" - 100 years");
+		var d4 = Date.parse(" - 100 y");
+		var d5 = Date.parse("-100years");
+		var d6 = Date.parse("-100 years");
+		var d7 = Date.parse(" - 100 years");
 
 		expect(this.d.equals(d2)).toBe(true);
 		expect(this.d.equals(d3)).toBe(true);
 		expect(this.d.equals(d4)).toBe(true);
 		expect(this.d.equals(d5)).toBe(true);
 		expect(this.d.equals(d6)).toBe(true);
+		expect(this.d.equals(d7)).toBe(true);
 	});
 
 	// switch to smaller formats
@@ -811,7 +846,7 @@ describe("Date Math operations support", function() {
 		this.d = (new Date()).add(+5).seconds();
 		var d2 = Date.parse("+5sec");
 		var d3 = Date.parse("+5 sec");
-		var d3 = Date.parse(" + 5 sec");
+		var d16 = Date.parse(" + 5 sec");
 		var d4 = Date.parse("+5second");
 		var d5 = Date.parse("+5 second");
 		var d6 = Date.parse(" + 5 second");
@@ -839,12 +874,13 @@ describe("Date Math operations support", function() {
 		expect(this.d.getSeconds()).toBe(d13.getSeconds());
 		expect(this.d.getSeconds()).toBe(d14.getSeconds());
 		expect(this.d.getSeconds()).toBe(d15.getSeconds());
+		expect(this.d.getSeconds()).toBe(d16.getSeconds());
 	});
 	it("-5 second and variants", function () {
 		this.d = (new Date()).add(-5).seconds();
 		var d2 = Date.parse("-5sec");
 		var d3 = Date.parse("-5 sec");
-		var d3 = Date.parse(" - 5 sec");
+		var d16 = Date.parse(" - 5 sec");
 		var d4 = Date.parse("-5second");
 		var d5 = Date.parse("-5 second");
 		var d6 = Date.parse(" - 5 second");
@@ -872,13 +908,14 @@ describe("Date Math operations support", function() {
 		expect(this.d.getSeconds()).toBe(d13.getSeconds());
 		expect(this.d.getSeconds()).toBe(d14.getSeconds());
 		expect(this.d.getSeconds()).toBe(d15.getSeconds());
+		expect(this.d.getSeconds()).toBe(d16.getSeconds());
 	});
 
 	it("+5 minute and variants", function () {
 		this.d = (new Date()).add(5).minutes();
 		var d2 = Date.parse("+5min");
 		var d3 = Date.parse("+5 min");
-		var d3 = Date.parse(" + 5 min");
+		var d16 = Date.parse(" + 5 min");
 		var d4 = Date.parse("+5minute");
 		var d5 = Date.parse("+5 minute");
 		var d6 = Date.parse(" + 5 minute");
@@ -906,13 +943,14 @@ describe("Date Math operations support", function() {
 		expect(this.d.getMinutes()).toBe(d13.getMinutes());
 		expect(this.d.getMinutes()).toBe(d14.getMinutes());
 		expect(this.d.getMinutes()).toBe(d15.getMinutes());
+		expect(this.d.getMinutes()).toBe(d16.getMinutes());
 	});
 
 	it("-5 minute and variants", function () {
 		this.d = (new Date()).add(-5).minutes();
 		var d2 = Date.parse("-5min");
 		var d3 = Date.parse("-5 min");
-		var d3 = Date.parse(" - 5 min");
+		var d16 = Date.parse(" - 5 min");
 		var d4 = Date.parse("-5minute");
 		var d5 = Date.parse("-5 minute");
 		var d6 = Date.parse(" - 5 minute");
@@ -940,13 +978,14 @@ describe("Date Math operations support", function() {
 		expect(this.d.getMinutes()).toBe(d13.getMinutes());
 		expect(this.d.getMinutes()).toBe(d14.getMinutes());
 		expect(this.d.getMinutes()).toBe(d15.getMinutes());
+		expect(this.d.getMinutes()).toBe(d16.getMinutes());
 	});
 
 	it("+5 hour and variants", function () {
 		this.d = (new Date()).add(5).hours();
 		var d2 = Date.parse("+5h");
 		var d3 = Date.parse("+5 h");
-		var d3 = Date.parse(" + 5 h");
+		var d16 = Date.parse(" + 5 h");
 		var d4 = Date.parse("+5hour");
 		var d5 = Date.parse("+5 hour");
 		var d6 = Date.parse(" + 5 hour");
@@ -974,13 +1013,14 @@ describe("Date Math operations support", function() {
 		expect(this.d.getHours()).toBe(d13.getHours());
 		expect(this.d.getHours()).toBe(d14.getHours());
 		expect(this.d.getHours()).toBe(d15.getHours());
+		expect(this.d.getHours()).toBe(d16.getHours());
 	});
 
 	it("-5 hour and variants", function () {
 		this.d = (new Date()).add(-5).hours();
 		var d2 = Date.parse("-5h");
 		var d3 = Date.parse("-5 h");
-		var d3 = Date.parse(" - 5 h");
+		var d16 = Date.parse(" - 5 h");
 		var d4 = Date.parse("-5hour");
 		var d5 = Date.parse("-5 hour");
 		var d6 = Date.parse(" - 5 hour");
@@ -1008,13 +1048,14 @@ describe("Date Math operations support", function() {
 		expect(this.d.getHours()).toBe(d13.getHours());
 		expect(this.d.getHours()).toBe(d14.getHours());
 		expect(this.d.getHours()).toBe(d15.getHours());
+		expect(this.d.getHours()).toBe(d16.getHours());
 	});
 
 	it("+5 week and variants", function () {
 		this.d = (new Date()).add(5).weeks();
 		var d2 = Date.parse("+5w");
 		var d3 = Date.parse("+5 w");
-		var d3 = Date.parse(" + 5 w");
+		var d16 = Date.parse(" + 5 w");
 		var d4 = Date.parse("+5week");
 		var d5 = Date.parse("+5 week");
 		var d6 = Date.parse(" + 5 week");
@@ -1042,13 +1083,14 @@ describe("Date Math operations support", function() {
 		expect(this.d.getWeek()).toBe(d13.getWeek());
 		expect(this.d.getWeek()).toBe(d14.getWeek());
 		expect(this.d.getWeek()).toBe(d15.getWeek());
+		expect(this.d.getWeek()).toBe(d16.getWeek());
 	});
 
 	it("-5 week and variants", function () {
 		this.d = (new Date()).add(-5).weeks();
 		var d2 = Date.parse("-5w");
 		var d3 = Date.parse("-5 w");
-		var d3 = Date.parse(" - 5 w");
+		var d16 = Date.parse(" - 5 w");
 		var d4 = Date.parse("-5week");
 		var d5 = Date.parse("-5 week");
 		var d6 = Date.parse(" - 5 week");
@@ -1076,6 +1118,7 @@ describe("Date Math operations support", function() {
 		expect(this.d.getWeek()).toBe(d13.getWeek());
 		expect(this.d.getWeek()).toBe(d14.getWeek());
 		expect(this.d.getWeek()).toBe(d15.getWeek());
+		expect(this.d.getWeek()).toBe(d16.getWeek());
 	});
 
 });
