@@ -5,4 +5,4 @@ node_js:
 notifications:
   email: false
 before_script:
-  - "npm i -g jasmine-node"
+  - "npm i -g jasmine-node@2.0.0-beta4"
