@@ -8,7 +8,8 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-closurecompiler": "~0.9.8",
     "grunt-shell": "~0.6.1",
-    "jasmine-node": "~1.12.0"
+    "jasmine-core": "~2.0.0",
+    "jasmine-node": "~2.0.0-beta4"
   },
   "dependencies": {},
   "repository": {
