@@ -4,10 +4,12 @@
  */
 require("./src/core/i18n.js");
 require("./src/core/core.js");
-require("./src/core/parser.js");
 require("./src/core/sugarpak.js");
+require("./src/core/format_parser.js");
+require("./src/core/parser.js");
 require("./src/core/extras.js");
-require("./src/core/time.js");
+require("./src/core/time_period.js");
+require("./src/core/time_span.js");
 /*
  * Notice that there is no model.export or exports. This is not required as it modifies the Date object and it's prototypes.
  */
