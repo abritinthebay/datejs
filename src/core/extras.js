@@ -159,14 +159,13 @@
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
 	 * @return {String}  A string representation of the current Date object.
 	 */
-	$P.$format = function (format) {
-		var x = this, y,
+	var formatReplace = function (context) {
+		var y, x = context,
 			t = function (v, overrideStandardFormats) {
-				$f.push(v);
-				return x.toString(v, overrideStandardFormats);
+					$f.push(v);
+					return x.toString(v, overrideStandardFormats);
 			};
-		return format ? format.replace(/(%|\\)?.|%%/g,
-		function (m) {
+		return function (m) {
 			if (m.charAt(0) === "\\" || m.substring(0, 2) === "%%") {
 				return m.replace("\\", "").replace("%%", "%");
 			}
@@ -299,7 +298,16 @@
 					$f.push(m);
 					return m;
 			}
-		}) : this._toString();
+		};
+	};
+
+	$P.$format = function (format) {
+		var formatter = formatReplace(this);
+		if (!format) {
+			return this._toString();
+		} else {
+			format.replace(/(%|\\)?.|%%/g, formatter);
+		}
 	};
 
 	if (!$P.format) {
