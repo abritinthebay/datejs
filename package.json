@@ -6,8 +6,11 @@
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.11",
     "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-connect": "^0.7.1",
+    "grunt-contrib-jshint": "^0.10.0",
     "grunt-closurecompiler": "~0.9.8",
     "grunt-shell": "~0.6.1",
+    "grunt-saucelabs": "^5.1.2",
     "jasmine-core": "~2.0.0",
     "jasmine-node": "~2.0.0-beta4"
   },
@@ -26,8 +29,8 @@
     "js",
     "mit"
   ],
-  "engines" : { 
-    "node" : ">=0.8" 
+  "engines": {
+    "node": ">=0.8"
   },
   "scripts": {
     "test": "grunt test"
@@ -36,13 +39,13 @@
     "name": "Gregory Wild-Smith",
     "email": "gregory@wild-smith.com"
   },
-  "maintainers" : [ 
+  "maintainers": [
     {
       "name": "Gregory Wild-Smith",
       "email": "gregory@wild-smith.com"
     }
   ],
-  "main" : "./index.js",
+  "main": "./index.js",
   "originator": "Geoffrey McGill",
   "license": "MIT",
   "readmeFilename": "README.md"
