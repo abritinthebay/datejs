@@ -1,13 +1,14 @@
-language: node_js
-node_js: 
-- "0.8"
-- "0.10"
-- "0.11"
-before_script: 
-- npm i -g jasmine-node@2.0.0-beta4
-notifications: 
-  email: false
 env: 
   global: 
   - secure: DG9gn0YVLiDRt93E9q/XpBiya/KhUncXhqL46xw32S52qh4kq//5wxIAZefwcpdq+VaP4kLfayBu/9Rt5enJvXUP/K7nyPHT+veNv03zwffClPiDXvNi61FDl4wQ5Z0MbNlsiDLSg8OG9fpzwGqAwGP0UWuepJqKcmuH2tAoYqk=
   - secure: kzB/ikqg9kyes4VlGvDTjECiE5TOeCwCjNLtg6b/m6vxUeTKYN1xinRKg9yPtfPLTsl0MghjuIA50fy/kKhfzsEn5Ce6GzAahiuqxvfOd6uafZ8GOADMiZJ9vQkUdz6U+UfHmVFMMVM/OP8SuqhWNyOPKABJejObxS/oKYUQHME=
+  - secure: d5YSjmCB1Mdkf3OOnDs+euroW5ZY4O8P/r1q0YvR8ltjnYrJM9Y/YDTqcFMH+SgZriC/YuIBFaes0YOtNNvJL6vc8jcO/p3MZD5GDH1pc/vGcnpP3iQqKOi54d9jfTj9+vWDsqhRDBo+8ObXtvMnzOuVul1OJc+MQp+D9nm5PLY=
+language: node_js
+notifications: 
+  email: false
+before_script: 
+- npm i -g jasmine-node@2.0.0-beta4
+node_js: 
+- "0.8"
+- "0.10"
+- "0.11"
