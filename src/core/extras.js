@@ -166,7 +166,7 @@
 					return x.toString(v, overrideStandardFormats);
 			};
 		return function (m) {
-			var formatString, result, override = false;
+			var formatString, override = false;
 			if (m.charAt(0) === "\\" || m.substring(0, 2) === "%%") {
 				return m.replace("\\", "").replace("%%", "%");
 			}
