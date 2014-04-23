@@ -166,27 +166,39 @@
 					return x.toString(v, overrideStandardFormats);
 			};
 		return function (m) {
+			var formatString, result, override = false;
 			if (m.charAt(0) === "\\" || m.substring(0, 2) === "%%") {
 				return m.replace("\\", "").replace("%%", "%");
 			}
 			switch (m) {
 				case "d":
 				case "%d":
-					return t("dd");
+					formatString = "dd";
+					break;
+					// return t("dd");
 				case "D":
 				case "%a":
-					return t("ddd");
+					formatString = "ddd";
+					break;
+					// return t("ddd");
 				case "j":
 				case "%e":
-					return t("d", true);
+					formatString = "d";
+					override = true;
+					break;
+					// return t("d", true);
 				case "l":
 				case "%A":
-					return t("dddd");
+					formatString = "dddd";
+					break;
+					// return t("dddd");
 				case "N":
 				case "%u":
 					return x.getDay() + 1;
 				case "S":
-					return t("S");
+					formatString = "S";
+					break;
+					// return t("S");
 				case "w":
 				case "%w":
 					return x.getDay();
@@ -205,16 +217,24 @@
 					return p(x.getWeek());
 				case "F":
 				case "%B":
-					return t("MMMM");
+					formatString = "MMMM";
+					break;
+					// return t("MMMM");
 				case "m":
 				case "%m":
-					return t("MM");
+					formatString = "MM";
+					break;
+					// return t("MM");
 				case "M":
 				case "%b":
 				case "%h":
-					return t("MMM");
+					formatString = "MMM";
+					break;
+					// return t("MMM");
 				case "n":
-					return t("M");
+					formatString = "M";
+					break;
+					// return t("M");
 				case "t":
 					return $D.getDaysInMonth(x.getFullYear(), x.getMonth());
 				case "L":
@@ -226,10 +246,14 @@
 					return x.$format("%G").slice(-2);
 				case "Y":
 				case "%Y":
-					return t("yyyy");
+					formatString = "yyyy";
+					break;
+					// return t("yyyy");
 				case "y":
 				case "%y":
-					return t("yy");
+					formatString = "yy";
+					break;
+					// return t("yy");
 				case "a":
 				case "%p":
 					return t("tt").toLowerCase();
@@ -237,20 +261,32 @@
 					return t("tt").toUpperCase();
 				case "g":
 				case "%I":
-					return t("h");
+					formatString = "h";
+					break;
+					// return t("h");
 				case "G":
-					return t("H");
+					formatString = "H";
+					break;
+					// return t("H");
 				case "h":
-					return t("hh");
+					formatString = "hh";
+					break;
+					// return t("hh");
 				case "H":
 				case "%H":
-					return t("HH");
+					formatString = "HH";
+					break;
+					// return t("HH");
 				case "i":
 				case "%M":
-					return t("mm");
+					formatString = "mm";
+					break;
+					// return t("mm");
 				case "s":
 				case "%S":
-					return t("ss");
+					formatString = "ss";
+					break;
+					// return t("ss");
 				case "u":
 					return p(x.getMilliseconds(), 3);
 				case "I":
@@ -297,6 +333,11 @@
 				default:
 					$f.push(m);
 					return m;
+			}
+			if (result) {
+				return result;
+			} else if (formatString) {
+				return t(formatString, override);
 			}
 		};
 	};
