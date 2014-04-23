@@ -86,6 +86,14 @@
 		}
 	};
 
+	var shallowMerge = function (obj1, obj2) {
+		for (var attrname in obj2) {
+			if (obj2.hasOwnProperty(attrname)) {
+				obj1[attrname] = obj2[attrname];
+			}
+		}
+	};
+
 	var __ = function (key, language) {
 		var countryCode = (language) ? language : lang;
 		loggedKeys[key] = key;
@@ -135,6 +143,15 @@
 	};
 
 	var buildInfo = {
+		buildFromMethodHash: function (obj) {
+			var key;
+			for(key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					obj[key] = buildInfo[obj[key]]();
+				}
+			}
+			return obj;
+		},
 		timeZoneDST: function () {
 			var DST = {
 				"CHADT": "+1345",
@@ -204,6 +221,7 @@
 		},
 		timeZones: function (data) {
 			var zone;
+			data.timezones = [];
 			for (zone in data.abbreviatedTimeZoneStandard) {
 				if (data.abbreviatedTimeZoneStandard.hasOwnProperty(zone)) {
 					data.timezones.push({ name: zone, offset: data.abbreviatedTimeZoneStandard[zone]});
@@ -301,32 +319,32 @@
 	};
 
 	var CultureInfo = function () {
-		var info =  {
-			name: __("name"),
-			englishName: __("englishName"),
-			nativeName: __("nativeName"),
-			timezones: [],
-			abbreviatedTimeZoneDST: {},
-			abbreviatedTimeZoneStandard: {},
-			dayNames: buildInfo.days(),
-			abbreviatedDayNames: buildInfo.dayAbbr(),
-			shortestDayNames: buildInfo.dayShortNames(),
-			firstLetterDayNames: buildInfo.dayFirstLetters(),
-			monthNames: buildInfo.months(),
-			abbreviatedMonthNames: buildInfo.monthAbbr(),
-			amDesignator: __("AM"),
-			pmDesignator: __("PM"),
-			firstDayOfWeek: __("firstDayOfWeek"),
-			twoDigitYearMax: __("twoDigitYearMax"),
-			dateElementOrder: __("mdy"),
-			formatPatterns: buildInfo.formatPatterns(),
-			regexPatterns: buildInfo.regex()
-		};
+		var info = getText.getFromObjectValues({
+			name: "name",
+			englishName: "englishName",
+			nativeName: "nativeName",
+			amDesignator: "AM",
+			pmDesignator: "PM",
+			firstDayOfWeek: "firstDayOfWeek",
+			twoDigitYearMax: "twoDigitYearMax",
+			dateElementOrder: "mdy"
+		});
 
-		info.abbreviatedTimeZoneDST = buildInfo.timeZoneDST();
-		info.abbreviatedTimeZoneStandard = buildInfo.timeZoneStandard();
+		var constructedInfo = buildInfo.buildFromMethodHash({
+			dayNames: "days",
+			abbreviatedDayNames: "dayAbbr",
+			shortestDayNames: "dayShortNames",
+			firstLetterDayNames: "dayFirstLetters",
+			monthNames: "months",
+			abbreviatedMonthNames: "monthAbbr",
+			formatPatterns: "formatPatterns",
+			regexPatterns: "regex",
+			abbreviatedTimeZoneDST: "timeZoneDST",
+			abbreviatedTimeZoneStandard: "timeZoneStandard"
+		});
+
+		shallowMerge(info, constructedInfo);
 		buildInfo.timeZones(info);
-
 		return info;
 	};
 
