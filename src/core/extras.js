@@ -2,7 +2,6 @@
 	var $D = Date,
 		$P = $D.prototype,
 		// $C = $D.CultureInfo, // not used atm
-		$f = [],
 		p = function (s, l) {
 			if (!l) {
 				l = 2;
@@ -162,7 +161,6 @@
 	var formatReplace = function (context) {
 		var y, x = context,
 			t = function (v, overrideStandardFormats) {
-					$f.push(v);
 					return x.toString(v, overrideStandardFormats);
 			};
 		return function (m) {
@@ -320,7 +318,6 @@
 					formatString = "t";
 					break;
 				default:
-					$f.push(m);
 					return m;
 			}
 			if (formatString) {
