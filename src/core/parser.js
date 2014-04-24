@@ -472,6 +472,68 @@
 			}
 		}
 	};
+
+	var setDefaults = function () {
+		var now = new Date();
+		if ((this.hour || this.minute) && (!this.month && !this.year && !this.day)) {
+			this.day = now.getDate();
+		}
+
+		if (!this.year) {
+			this.year = now.getFullYear();
+		}
+		
+		if (!this.month && this.month !== 0) {
+			this.month = now.getMonth();
+		}
+		
+		if (!this.day) {
+			this.day = 1;
+		}
+		
+		if (!this.hour) {
+			this.hour = 0;
+		}
+		
+		if (!this.minute) {
+			this.minute = 0;
+		}
+
+		if (!this.second) {
+			this.second = 0;
+		}
+		if (!this.millisecond) {
+			this.millisecond = 0;
+		}
+	};
+	var finishUtils = {
+		getToday: function () {
+			 if (this.now || "hour minute second".indexOf(this.unit) !== -1) {
+				return new Date();
+			} else {
+				return $D.today();
+			}
+		},
+		setDaysFromWeekday: function (today){
+			var gap;
+			this.unit = "day";
+			gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
+			this.days = gap ? ((gap + (orient * 7)) % 7) : (orient * 7);
+			return this;
+		},
+		setMonthsFromMonth: function (today, orient) {
+			var gap;
+			try {
+			this.unit = "month";
+			gap = (this.month - today.getMonth());
+			this.months = gap ? ((gap + (orient * 12)) % 12) : (orient * 12);
+			this.month = null;
+			} catch (e) {
+				console.log(e);
+			}
+			return this;
+		}
+	};
 	
 	$D.Grammar = {};
 	
@@ -558,7 +620,8 @@
 			};
 		},
 		finishExact: function (x) {
-			x = (x instanceof Array) ? x : [ x ];
+			var d;
+			x = (x instanceof Array) ? x : [x];
 
 			for (var i = 0 ; i < x.length ; i++) {
 				if (x[i]) {
@@ -566,58 +629,28 @@
 				}
 			}
 			
-			var now = new Date();
-			if ((this.hour || this.minute) && (!this.month && !this.year && !this.day)) {
-				this.day = now.getDate();
-			}
-
-			if (!this.year) {
-				this.year = now.getFullYear();
-			}
-			
-			if (!this.month && this.month !== 0) {
-				this.month = now.getMonth();
-			}
-			
-			if (!this.day) {
-				this.day = 1;
-			}
-			
-			if (!this.hour) {
-				this.hour = 0;
-			}
-			
-			if (!this.minute) {
-				this.minute = 0;
-			}
-
-			if (!this.second) {
-				this.second = 0;
-			}
-			if (!this.millisecond) {
-				this.millisecond = 0;
-			}
-
+			setDefaults.call(this);
 			parseMeridian.call(this);
 
 			if (this.day > $D.getDaysInMonth(this.year, this.month)) {
 				throw new RangeError(this.day + " is not a valid value for days.");
 			}
 
-			var r = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second, this.millisecond);
+			d = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second, this.millisecond);
 			if (this.year < 100) {
-				r.setFullYear(this.year); // means years less that 100 are process correctly. JS will parse it otherwise as 1900-1999.
+				d.setFullYear(this.year); // means years less that 100 are process correctly. JS will parse it otherwise as 1900-1999.
 			}
 			if (this.timezone) {
-				r.set({ timezone: this.timezone });
+				d.set({ timezone: this.timezone });
 			} else if (this.timezoneOffset) {
-				r.set({ timezoneOffset: this.timezoneOffset });
+				d.set({ timezoneOffset: this.timezoneOffset });
 			}
 			
-			return r;
+			return d;
 		},
 		finish: function (x) {
-			var temp;
+			var today, expression, orient, temp;
+
 			x = (x instanceof Array) ? flattenAndCompact(x) : [ x ];
 
 			if (x.length === 0) {
@@ -630,22 +663,14 @@
 				}
 			}
 
-			var today = $D.today();
-
 			if (this.now && !this.unit && !this.operator) {
 				return new Date();
-			} else if (this.now) {
-				today = new Date();
+			} else {
+				today = finishUtils.getToday.call(this);
 			}
 			
-			var expression = !!(this.days && this.days !== null || this.orient || this.operator);
-			
-			var gap, mod, orient;
+			expression = !!(this.days && this.days !== null || this.orient || this.operator);
 			orient = ((this.orient === "past" || this.operator === "subtract") ? -1 : 1);
-
-			if(!this.now && "hour minute second".indexOf(this.unit) !== -1) {
-				today.setTimeToNow();
-			}
 
 			if (this.month && this.unit === "week") {
 				this.value = this.month + 1;
@@ -653,14 +678,12 @@
 				delete this.day;
 			}
 
-			if (this.month || this.month === 0) {
-				if ("year day hour minute second".indexOf(this.unit) !== -1) {
-					if (!this.value) {
-						this.value = this.month + 1;
-					}
-					this.month = null;
-					expression = true;
+			if ((this.month || this.month === 0) && "year day hour minute second".indexOf(this.unit) !== -1) {
+				if (!this.value) {
+					this.value = this.month + 1;
 				}
+				this.month = null;
+				expression = true;
 			}
 
 			if (!expression && this.weekday && !this.day && !this.days) {
@@ -673,10 +696,7 @@
 			}
 
 			if (expression && this.weekday && this.unit !== "month" && this.unit !== "week") {
-				this.unit = "day";
-				gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
-				mod = 7;
-				this.days = gap ? ((gap + (orient * mod)) % mod) : (orient * mod);
+				finishUtils.setDaysFromWeekday.call(this, today);
 			}
 
 			if (this.month && this.unit === "day" && this.operator) {
@@ -703,11 +723,7 @@
 			}
 
 			if (expression && (this.month || this.month === 0) && this.unit !== "year") {
-				this.unit = "month";
-				gap = (this.month - today.getMonth());
-				mod = 12;
-				this.months = gap ? ((gap + (orient * mod)) % mod) : (orient * mod);
-				this.month = null;
+				finishUtils.setMonthsFromMonth.call(this, today, orient);
 			}
 
 			if (!this.unit) {
@@ -1092,8 +1108,35 @@
 	 * @param {String}   The string value to convert into a Date object [Required]
 	 * @return {Date}    A Date object or null if the string cannot be converted into a Date.
 	 */
+	var parseUtils = {
+		removeOrds: function (s) {
+			ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
+			s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
+			return s;
+		},
+		grammarParser: function (s) {
+			var r = null;
+			try {
+				r = $D.Grammar.start.call({}, s.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
+			} catch (e) {
+				return null;
+			}
+			
+			return ((r[1].length === 0) ? r[0] : null);
+		},
+		nativeFallback: function(s) {
+			var t;
+			try {
+				// ok we haven't parsed it, last ditch attempt with the built-in parser.
+				t = Date._parse(s);
+				return (t || t === 0) ? new Date(t) : null;
+			} catch (e) {
+				return null;
+			}
+		}
+	};
 	function parse (s) {
-		var ords, d, t, r = null;
+		var d;
 		if (!s) {
 			return null;
 		}
@@ -1108,26 +1151,13 @@
 			return d;
 		} else {
 			// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
-			ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
-			s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
-			s = $D.Parsing.Normalizer.parse(s);
-			try {
-				r = $D.Grammar.start.call({}, s.replace(/^\s*(\S*(\s+\S+)*)\s*$/, "$1"));
-			} catch (e) {
-				return null;
-			}
-			d = ((r[1].length === 0) ? r[0] : null);
-			
+			s = $D.Parsing.Normalizer.parse(parseUtils.removeOrds(s));
+			d = parseUtils.grammarParser(s);
+
 			if (d !== null) {
 				return d;
 			} else {
-				try {
-					// ok we haven't parsed it, last ditch attempt with the built-in parser.
-					t = Date._parse(s);
-					return (t || t === 0) ? new Date(t) : null;
-				} catch (e) {
-					return null;
-				}
+				return parseUtils.nativeFallback(s);
 			}
 		}
 	}
