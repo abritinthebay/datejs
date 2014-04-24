@@ -973,102 +973,109 @@
 			return "th";
 		}
 	};
+	var parseStandardFormats = function (format) {
+		var y, c = Date.CultureInfo.formatPatterns;
+		switch (format) {
+			case "d":
+				return this.toString(c.shortDate);
+			case "D":
+				return this.toString(c.longDate);
+			case "F":
+				return this.toString(c.fullDateTime);
+			case "m":
+				return this.toString(c.monthDay);
+			case "r":
+			case "R":
+				y = this.clone().addMinutes(this.getTimezoneOffset());
+				return y.toString(c.rfc1123) + " GMT";
+			case "s":
+				return this.toString(c.sortableDateTime);
+			case "t":
+				return this.toString(c.shortTime);
+			case "T":
+				return this.toString(c.longTime);
+			case "u":
+				y = this.clone().addMinutes(this.getTimezoneOffset());
+				return y.toString(c.universalSortableDateTime);
+			case "y":
+				return this.toString(c.yearMonth);
+			default:
+				return false;
+		}
+	};
+	var parseFormatStringsClosure = function (context) {
+		return function (m) {
+			if (m.charAt(0) === "\\") {
+				return m.replace("\\", "");
+			}
+			switch (m) {
+			case "hh":
+				return p(context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12));
+			case "h":
+				return context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12);
+			case "HH":
+				return p(context.getHours());
+			case "H":
+				return context.getHours();
+			case "mm":
+				return p(context.getMinutes());
+			case "m":
+				return context.getMinutes();
+			case "ss":
+				return p(context.getSeconds());
+			case "s":
+				return context.getSeconds();
+			case "yyyy":
+				return p(context.getFullYear(), 4);
+			case "yy":
+				return p(context.getFullYear());
+			case "dddd":
+				return Date.CultureInfo.dayNames[context.getDay()];
+			case "ddd":
+				return Date.CultureInfo.abbreviatedDayNames[context.getDay()];
+			case "dd":
+				return p(context.getDate());
+			case "d":
+				return context.getDate();
+			case "MMMM":
+				return Date.CultureInfo.monthNames[context.getMonth()];
+			case "MMM":
+				return Date.CultureInfo.abbreviatedMonthNames[context.getMonth()];
+			case "MM":
+				return p((context.getMonth() + 1));
+			case "M":
+				return context.getMonth() + 1;
+			case "t":
+				return context.getHours() < 12 ? Date.CultureInfo.amDesignator.substring(0, 1) : Date.CultureInfo.pmDesignator.substring(0, 1);
+			case "tt":
+				return context.getHours() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
+			case "S":
+				return ord(context.getDate());
+			case "W":
+				return context.getWeek();
+			case "WW":
+				return context.getISOWeek();
+			case "Q":
+				return "Q" + context.getQuarter();
+			case "q":
+				return String(context.getQuarter());
+			default:
+				return m;
+			}
+		};
+	};
 	$P.toString = function (format, ignoreStandards) {
-		var x = this;
 		
 		// Standard Date and Time Format Strings. Formats pulled from CultureInfo file and
 		// may vary by culture. 
 		if (!ignoreStandards && format && format.length === 1) {
-			var y, c = Date.CultureInfo.formatPatterns;
-			x.t = x.toString;
-			switch (format) {
-			case "d":
-				return x.t(c.shortDate);
-			case "D":
-				return x.t(c.longDate);
-			case "F":
-				return x.t(c.fullDateTime);
-			case "m":
-				return x.t(c.monthDay);
-			case "r":
-			case "R":
-				y = x.clone().addMinutes(x.getTimezoneOffset());
-				return y.toString(c.rfc1123) + " GMT";
-			case "s":
-				return x.t(c.sortableDateTime);
-			case "t":
-				return x.t(c.shortTime);
-			case "T":
-				return x.t(c.longTime);
-			case "u":
-				y = x.clone().addMinutes(x.getTimezoneOffset());
-				return y.toString(c.universalSortableDateTime);
-			case "y":
-				return x.t(c.yearMonth);
+			output = parseStandardFormats.call(this, format);
+			if (output) {
+				return output;
 			}
 		}
-
-		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S|q|Q|WW?W?W?)(?![^\[]*\]))/g,
-		function (m) {
-			if (m.charAt(0) === "\\") {
-				return m.replace("\\", "");
-			}
-			x.h = x.getHours;
-			switch (m) {
-			case "hh":
-				return p(x.h() < 13 ? (x.h() === 0 ? 12 : x.h()) : (x.h() - 12));
-			case "h":
-				return x.h() < 13 ? (x.h() === 0 ? 12 : x.h()) : (x.h() - 12);
-			case "HH":
-				return p(x.h());
-			case "H":
-				return x.h();
-			case "mm":
-				return p(x.getMinutes());
-			case "m":
-				return x.getMinutes();
-			case "ss":
-				return p(x.getSeconds());
-			case "s":
-				return x.getSeconds();
-			case "yyyy":
-				return p(x.getFullYear(), 4);
-			case "yy":
-				return p(x.getFullYear());
-			case "dddd":
-				return Date.CultureInfo.dayNames[x.getDay()];
-			case "ddd":
-				return Date.CultureInfo.abbreviatedDayNames[x.getDay()];
-			case "dd":
-				return p(x.getDate());
-			case "d":
-				return x.getDate();
-			case "MMMM":
-				return Date.CultureInfo.monthNames[x.getMonth()];
-			case "MMM":
-				return Date.CultureInfo.abbreviatedMonthNames[x.getMonth()];
-			case "MM":
-				return p((x.getMonth() + 1));
-			case "M":
-				return x.getMonth() + 1;
-			case "t":
-				return x.h() < 12 ? Date.CultureInfo.amDesignator.substring(0, 1) : Date.CultureInfo.pmDesignator.substring(0, 1);
-			case "tt":
-				return x.h() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
-			case "S":
-				return ord(x.getDate());
-			case "W":
-				return x.getWeek();
-			case "WW":
-				return x.getISOWeek();
-			case "Q":
-				return "Q" + x.getQuarter();
-			case "q":
-				return String(x.getQuarter());
-			default:
-				return m;
-			}
-		}).replace(/\[|\]/g, "") : this._toString();
+		var parseFormatStrings = parseFormatStringsClosure(this);
+		return format ? format.replace(/((\\)?(dd?d?d?|MM?M?M?|yy?y?y?|hh?|HH?|mm?|ss?|tt?|S|q|Q|WW?W?W?)(?![^\[]*\]))/g, parseFormatStrings).replace(/\[|\]/g, "") : this._toString();
 	};
 
 }());
