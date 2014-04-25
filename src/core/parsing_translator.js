@@ -85,6 +85,33 @@
 			this.months = gap ? ((gap + (orient * 12)) % 12) : (orient * 12);
 			this.month = null;
 			return this;
+		},
+		setDMYFromWeekday: function () {
+			var d = Date[this.weekday]();
+			this.day = d.getDate();
+			if (!this.month) {
+				this.month = d.getMonth();
+			}
+			this.year = d.getFullYear();
+			return this;
+		},
+		setUnitValue: function (orient) {
+			if (!this.value && this.operator && this.operator !== null && this[this.unit + "s"] && this[this.unit + "s"] !== null) {
+				this[this.unit + "s"] = this[this.unit + "s"] + ((this.operator === "add") ? 1 : -1) + (this.value||0) * orient;
+			} else if (this[this.unit + "s"] == null || this.operator != null) {
+				if (!this.value) {
+					this.value = 1;
+				}
+				this[this.unit + "s"] = this.value * orient;
+			}
+		},
+		generateDateFromWeeks: function () {
+			var weekday = (this.weekday !== undefined) ? this.weekday : "today";
+			var d = Date[weekday]().addWeeks(this.weeks);
+			if (this.now) {
+				d.setTimeToNow();
+			}
+			return d;
 		}
 	};
 
@@ -238,12 +265,14 @@
 			}
 
 			if (!expression && this.weekday && !this.day && !this.days) {
+				finishUtils.setDMYFromWeekday.call(this);
+			}
+			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
 				temp = Date[this.weekday]();
 				this.day = temp.getDate();
-				if (!this.month) {
+				if (temp.getMonth() !== today.getMonth()) {
 					this.month = temp.getMonth();
 				}
-				this.year = temp.getFullYear();
 			}
 
 			if (expression && this.weekday && this.unit !== "month" && this.unit !== "week") {
@@ -281,24 +310,8 @@
 				this.unit = "day";
 			}
 
-			if (!this.value && this.operator && this.operator !== null && this[this.unit + "s"] && this[this.unit + "s"] !== null) {
-				this[this.unit + "s"] = this[this.unit + "s"] + ((this.operator === "add") ? 1 : -1) + (this.value||0) * orient;
-			} else if (this[this.unit + "s"] == null || this.operator != null) {
-				if (!this.value) {
-					this.value = 1;
-				}
-				this[this.unit + "s"] = this.value * orient;
-			}
-
+			finishUtils.setUnitValue.call(this, orient);
 			parseMeridian.call(this);
-
-			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
-				temp = Date[this.weekday]();
-				this.day = temp.getDate();
-				if (temp.getMonth() !== today.getMonth()) {
-					this.month = temp.getMonth();
-				}
-			}
 			
 			if ((this.month || this.month === 0) && !this.day) {
 				this.day = 1;
@@ -309,12 +322,7 @@
 			}
 
 			if (this.unit === "week" && this.weeks && !this.day && !this.month) {
-				var weekday = (this.weekday) ? this.weekday : "today";
-				var d = Date[weekday]().addWeeks(this.weeks);
-				if (this.now) {
-					d.setTimeToNow();
-				}
-				return d;
+				return finishUtils.generateDateFromWeeks.call(this);
 			}
 
 			if (expression && this.timezone && this.day && this.days) {
