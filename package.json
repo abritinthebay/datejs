@@ -10,7 +10,7 @@
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-closurecompiler": "~0.9.8",
     "grunt-shell": "~0.6.1",
-    "grunt-saucelabs": "^5.1.2",
+    "grunt-saucelabs": "~5.1.2",
     "jasmine-core": "~2.0.0",
     "jasmine-node": "~2.0.0-beta4"
   },
