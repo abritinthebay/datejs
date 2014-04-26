@@ -117,7 +117,7 @@
 
 		var completed = false;
 		var events = {
-			done: function (){} // dummy function
+			done: function (){} // placeholder function
 		};
 		// Attach handlers for all browsers
 		script.onload = script.onreadystatechange = function() {
@@ -135,7 +135,7 @@
 			done: function (cb) {
 				events.done = function() {
 					if (cb) {
-						cb();
+						setTimeout(cb,0);
 					}
 				};
 			}
@@ -328,7 +328,7 @@
 			firstDayOfWeek: "firstDayOfWeek",
 			twoDigitYearMax: "twoDigitYearMax",
 			dateElementOrder: "mdy"
-		});
+		}, Date.i18n.currentLanguage());
 
 		var constructedInfo = buildInfo.buildFromMethodHash({
 			dayNames: "days",
@@ -355,9 +355,11 @@
 		currentLanguage: function () {
 			return lang || "en-US";
 		},
-		setLanguage: function (code, force) {
+		setLanguage: function (code, force, cb) {
+			var async = false;
 			if (force || code === "en-US" || (!!Date.CultureStrings && !!Date.CultureStrings[code])) {
 				lang = code;
+				Date.CultureStrings = Date.CultureStrings || {};
 				Date.CultureStrings.lang = code;
 				Date.CultureInfo = new CultureInfo();
 			} else {
@@ -375,18 +377,26 @@
 						}
 					} else if (Date.Config && Date.Config.i18n) {
 						// we know the location of the files, so lets load them
+						async = true;
 						loadI18nScript(code).done(function(){
 							lang = code;
+							Date.CultureStrings = Date.CultureStrings || {};
 							Date.CultureStrings.lang = code;
 							Date.CultureInfo = new CultureInfo();
+							$D.Parsing.Normalizer.buildReplaceData(); // because this is async
+							if (cb) {
+								setTimeout(cb,0);
+							}
 						});
 					} else {
 						Date.console.error("The DateJS IETF language tag '" + code + "' is not available and has not been loaded.");
-				
 					}
 				}
 			}
 			$D.Parsing.Normalizer.buildReplaceData(); // rebuild normalizer strings
+			if (!async && cb) {
+				setTimeout(cb,0);
+			}
 		},
 		getLoggedKeys: function () {
 			return loggedKeys;

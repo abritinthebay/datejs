@@ -3,18 +3,26 @@ if (typeof process !== "undefined") {
 	process.env.TZ = 'America/Los_Angeles';
 }
 require("../build/development/date.js");
-require("../src/i18n/de-DE.js");
 
 describe("Internationalization Module", function() {
-	it("can support other languages", function() {
-		Date.i18n.setLanguage("de-DE");
-		var d = Date.parse("31/Oktober/2013");
-		expect(d.getDate()).toBe(31);
-		expect(d.getMonth()).toBe(9);
-		expect(d.getFullYear()).toBe(2013);
-		expect(Date.i18n.__("Sunday")).toBe("Sonntag");
-		expect(Date.getDayNumberFromName("Sonntag")).toBe(0);
-
+	it("can support other languages", function(done) {
+		// this is an async spec
+		function cb(){
+			setTimeout(function(){
+				var d = Date.parse("31/Oktober/2013");
+				expect(d).not.toBeNull();
+				if (d) {
+					expect(d.getDate()).toBe(31);
+					expect(d.getMonth()).toBe(9);
+					expect(d.getFullYear()).toBe(2013);
+				}
+				expect(Date.i18n.__("Sunday")).toBe("Sonntag");
+				expect(Date.getDayNumberFromName("Sonntag")).toBe(0);
+				done();
+			},0);
+		}
+		
+		Date.i18n.setLanguage("de-DE",false, cb);
 	});
 	it("defaults to US English when no other language is loaded", function() {
 		// now force language to be null

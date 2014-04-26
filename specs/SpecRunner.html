@@ -11,6 +11,10 @@
 		function require() {}; // stub out a dummy require for node compatibility with the specs
 	</script>
 
+	<script>
+		Date.Config = Date.Config || {};
+		Date.Config.i18n="../src/i18n/";
+	</script>
 	<script type="text/javascript" src="jasmine/jasmine.js"></script>
 	<script type="text/javascript" src="jasmine/jasmine-html.js"></script>
 	<script type="text/javascript" src="jasmine/boot.js"></script>
@@ -18,8 +22,6 @@
 	<script type="text/javascript" src="jasmine/jasmine2-blanket.js"></script> -->
 
 	<!-- Source files -->
-	<script type="text/javascript" src="../src/i18n/de-DE.js"></script>
-	<script type="text/javascript" src="../src/i18n/en-US.js"></script>
 	<script type="text/javascript" src="../src/core/i18n.js" data-cover></script>
 	<script type="text/javascript" src="../src/core/core.js" data-cover></script>
 	<script type="text/javascript" src="../src/core/sugarpak.js" data-cover></script>
@@ -41,7 +43,6 @@
 
 	<!-- Acceptance tests of features -->
 	<script type="text/javascript" src="DateMath-spec.js"></script> 
-
 </head>
 <body id="datejs">
 	<div id="blanket-main"></div>

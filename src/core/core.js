@@ -17,7 +17,7 @@
 			error: function(){}
 		};
 	}
-	$D.Config = {};
+	$D.Config = $D.Config || {};
 
 	$D.initOverloads = function() {
 		/** 
