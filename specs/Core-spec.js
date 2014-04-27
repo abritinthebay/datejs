@@ -539,6 +539,9 @@ describe("Core Module", function() {
 			d2 = new Date(2011, 1, 10, 10, 10, 10, 10);
 			expect(d.equals(d2)).toBe(true);
 		});
+		it("validates undefined values correctly", function () {
+			expect(Date.validateSecond(undefined)).toBe(false);
+		});
 
 	});
 	describe("has Timezone support that", function() {
@@ -594,6 +597,17 @@ describe("Core Module", function() {
 			});
 			it("y == yearMonth", function() {
 				expect(d.toString("y")).toBe("December, 1995");
+			});
+			it("W == Week Number", function() {
+				expect(d.toString("W")).toBe("49");
+				var d2 = d.clone();
+				d2.addWeeks(4);
+				expect(d2.toString("W")).toBe("1");
+			});
+			it("WW == ISO Week Number", function() {
+				var d2 = d.clone();
+				d2.addWeeks(4);
+				expect(d2.toString("WW")).toBe("01");
 			});
 		});
 

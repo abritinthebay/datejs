@@ -6,7 +6,7 @@ require("../build/development/date.js");
 
 describe("Parsing Module", function() {
 	var correctDate = new Date(1995, 11, 4, 0, 0, 0, 0);
-	describe("can work with Time objects", function(){
+	describe("can work with Time and Date objects", function(){
 		it("simple example", function () {
 			var d = Date.parse("December 4th, 1995");
 			expect(d.getTime()).toBe(correctDate.getTime());
@@ -15,6 +15,11 @@ describe("Parsing Module", function() {
 			var now = Date.today();
 			var t = {day: now.getDate(), month: now.getMonth()};
 			var d = Date.Parsing.processTimeObject(t);
+			expect(d.getTime()).toBe(now.getTime());
+		});
+		it("processes Date objects correctly", function () {
+			var now = Date.today();
+			var d = Date.parse(now);
 			expect(d.getTime()).toBe(now.getTime());
 		});
 	});
