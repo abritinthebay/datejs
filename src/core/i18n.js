@@ -384,6 +384,9 @@
 							Date.CultureStrings.lang = code;
 							Date.CultureInfo = new CultureInfo();
 							$D.Parsing.Normalizer.buildReplaceData(); // because this is async
+							if ($D.Grammar) {
+								$D.Grammar.buildGrammarFormats(); // so we can parse those strings...
+							}
 							if (cb) {
 								setTimeout(cb,0);
 							}
@@ -394,6 +397,9 @@
 				}
 			}
 			$D.Parsing.Normalizer.buildReplaceData(); // rebuild normalizer strings
+			if ($D.Grammar) {
+				$D.Grammar.buildGrammarFormats(); // so we can parse those strings...
+			}
 			if (!async && cb) {
 				setTimeout(cb,0);
 			}
