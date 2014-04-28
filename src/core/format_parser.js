@@ -149,7 +149,7 @@
 					},
 					milliseconds: function (data) {
 						return (data.replace(",",".")*1000);
-					},
+					}
 				},
 				postProcess: {
 					minutes: true,
