@@ -294,7 +294,7 @@
 				fri: "/fr(i(day)?)?/",
 				sat: "/^sa(t(urday)?)?/",
 				future: "/^next/",
-				past: "/last|past|prev(ious)?/",
+				past: "/^last|past|prev(ious)?/",
 				add: "/^(\\+|aft(er)?|from|hence)/",
 				subtract: "/^(\\-|bef(ore)?|ago)/",
 				yesterday: "/^yes(terday)?/",
