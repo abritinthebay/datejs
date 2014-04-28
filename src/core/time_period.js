@@ -53,7 +53,7 @@
 			startDate.addHours(1);
 		}
 	};
-	/* 
+	/**
 	 * TimePeriod(startDate, endDate);
 	 * TimePeriod(years, months, days, hours, minutes, seconds, milliseconds);
 	 */

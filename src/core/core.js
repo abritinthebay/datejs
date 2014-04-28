@@ -355,7 +355,7 @@
 	 */
 	$P.addMinutes = function (value) {
 		if (!value) { return this; }
-		return this.addMilliseconds(value * 60000); /* 60*1000 */
+		return this.addMilliseconds(value * 60000); // 60*1000
 	};
 
 	/**
@@ -365,7 +365,7 @@
 	 */
 	$P.addHours = function (value) {
 		if (!value) { return this; }
-		return this.addMilliseconds(value * 3600000); /* 60*60*1000 */
+		return this.addMilliseconds(value * 3600000); // 60*60*1000
 	};
 
 	/**
@@ -746,7 +746,7 @@
 				}
 			}
 		}
-		/* day has to go last because you can't validate the day without first knowing the month */
+		// day has to go last because you can't validate the day without first knowing the month
 		if (config.day) {
 			this.addDays(config.day - this.getDate());
 		}

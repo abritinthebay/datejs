@@ -8,7 +8,7 @@
 			}
 			return ("000" + s).slice(l * -1);
 		};
-	/*
+	/**
 	 * Converts a PHP format string to Java/.NET format string. 
 	 * A PHP format string can be used with .$format or .format.
 	 * A Java/.NET format string can be used with .toString().
@@ -65,7 +65,7 @@
 		d.addMinutes(d.getTimezoneOffset() * -1);
 		return Math.round($D.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()) / 1000);
 	};
-	/*
+	/**
 	 * Converts the value of the current Date object to its equivalent string representation using a PHP/Unix style of date format specifiers.
 	 * Format Specifiers
 	 * Format  Description																	Example

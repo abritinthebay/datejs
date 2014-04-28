@@ -21,7 +21,7 @@
 			context.prototype["set" + $b] = sFn($a);
 		}
 	};
-	/* 
+	/**
 	 * new TimeSpan(milliseconds);
 	 * new TimeSpan(days, hours, minutes, seconds);
 	 * new TimeSpan(days, hours, minutes, seconds, milliseconds);

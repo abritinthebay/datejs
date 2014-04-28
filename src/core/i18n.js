@@ -34,8 +34,8 @@
 			return output;
 		},
 		getFromArray: function (arr, countryCode) {
-			var i =0, output = [];
-			for (i; i < arr.length; i++){
+			var output = [];
+			for (var i=0; i < arr.length; i++){
 				if (i in arr) {
 					output[i] = getText.getFromKey(arr[i], countryCode);
 				}
@@ -294,7 +294,7 @@
 				fri: "/fr(i(day)?)?/",
 				sat: "/^sa(t(urday)?)?/",
 				future: "/^next/",
-				past: "/last|past|prev(ious)?/",
+				past: "/^last|past|prev(ious)?/",
 				add: "/^(\\+|aft(er)?|from|hence)/",
 				subtract: "/^(\\-|bef(ore)?|ago)/",
 				yesterday: "/^yes(terday)?/",
