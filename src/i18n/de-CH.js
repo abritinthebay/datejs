@@ -97,7 +97,7 @@ Date.CultureStrings["de-CH"] = {
         "/^fr(i(day)?)?/": "^freitag",
         "/^sa(t(urday)?)?/": "^samstag",
         "/^next/": "^nächste(r|s)?",
-        "/^last|past|prev(ious)?/": "^letzte(r|s)?|vergangene(r)?|vorherige(r)?|",
+        "/^last|past|prev(ious)?/": "^letzte(r|s)?|vergangene(r)?|vorherige(r)?",
         "/^(\\+|aft(er)?|from|hence)/": "^(\\+|(da)?nach(er)?|von|daher)",
         "/^(\\-|bef(ore)?|ago)/": "^(\\-|(be|zu)?vor|früher)",
         "/^yes(terday)?/": "^gestern",
