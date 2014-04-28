@@ -34,8 +34,8 @@
 			return output;
 		},
 		getFromArray: function (arr, countryCode) {
-			var i =0, output = [];
-			for (i; i < arr.length; i++){
+			var output = [];
+			for (var i=0; i < arr.length; i++){
 				if (i in arr) {
 					output[i] = getText.getFromKey(arr[i], countryCode);
 				}
