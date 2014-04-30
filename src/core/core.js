@@ -1029,6 +1029,8 @@
 				return p(context.getFullYear(), 4);
 			case "yy":
 				return p(context.getFullYear());
+			case "y":
+				return context.getFullYear();
 			case "dddd":
 				return Date.CultureInfo.dayNames[context.getDay()];
 			case "ddd":
