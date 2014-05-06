@@ -9,7 +9,7 @@
 			return ("000" + s).slice(l * -1);
 		};
 	/**
-	 * Converts a PHP format string to Java/.NET format string. 
+	 * Converts a PHP format string to Java/.NET format string.
 	 * A PHP format string can be used with .$format or .format.
 	 * A Java/.NET format string can be used with .toString().
 	 * The .parseExact function will only accept a Java/.NET format string
@@ -17,45 +17,41 @@
 	 * Example
 	 * var f1 = "%m/%d/%y"
 	 * var f2 = Date.normalizeFormat(f1);	// "MM/dd/yy"
-	 * 
+	 *
 	 * new Date().format(f1);	// "04/13/08"
 	 * new Date().$format(f1);	// "04/13/08"
 	 * new Date().toString(f2);	// "04/13/08"
-	 *  
+	 *
 	 * var date = Date.parseExact("04/13/08", f2); // Sun Apr 13 2008
-	 * 
+	 *
 	 * @param {String}   A PHP format string consisting of one or more format spcifiers.
 	 * @return {String}  The PHP format converted to a Java/.NET format string.
 	 */
 	$D.normalizeFormat = function (format) {
-		// function does nothing atm
-		// $f = [];
-		// var t = new Date().$format(format);
-		// return $f.join("");
-		return format;
+		return Date.prototype.format(format);
 	};
 	/**
 	 * Format a local Unix timestamp according to locale settings
-	 * 
+	 *
 	 * Example:
 	 * Date.strftime("%m/%d/%y", new Date());		// "04/13/08"
 	 * Date.strftime("c", "2008-04-13T17:52:03Z");	// "04/13/08"
-	 * 
+	 *
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
-	 * @param {Number}   The number representing the number of seconds that have elapsed since January 1, 1970 (local time). 
+	 * @param {Number}   The number representing the number of seconds that have elapsed since January 1, 1970 (local time).
 	 * @return {String}  A string representation of the current Date object.
 	 */
 	$D.strftime = function (format, time) {
 		return new Date(time * 1000).$format(format);
 	};
 	/**
-	 * Parse any textual datetime description into a Unix timestamp. 
+	 * Parse any textual datetime description into a Unix timestamp.
 	 * A Unix timestamp is the number of seconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
-	 * 
+	 *
 	 * Example:
 	 * Date.strtotime("04/13/08");				// 1208044800
 	 * Date.strtotime("1970-01-01T00:00:00Z");	// 0
-	 * 
+	 *
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
 	 * @param {Object}   A string or date object.
 	 * @return {String}  A string representation of the current Date object.
@@ -113,7 +109,7 @@
 	 * %y		year as a decimal number without a century									"00" "99"
 	 * %Y		year as a decimal number including the century								"2008"
 	 * %Z		time zone or name or abbreviation											"UTC", "EST", "PST"
-	 * %z		same as %Z 
+	 * %z		same as %Z
 	 * %%		a literal "%" characters													"%"
 	 * d		Day of the month, 2 digits with leading zeros								"01" to "31"
 	 * D		A textual representation of a day, three letters							"Mon" through "Sun"
@@ -122,7 +118,7 @@
 	 * N		ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0)	"1" (for Monday) through "7" (for Sunday)
 	 * S		English ordinal suffix for the day of the month, 2 characters				"st", "nd", "rd" or "th". Works well with j
 	 * w		Numeric representation of the day of the week								"0" (for Sunday) through "6" (for Saturday)
-	 * z		The day of the year (starting from "0")										"0" through "365"		
+	 * z		The day of the year (starting from "0")										"0" through "365"
 	 * W		ISO-8601 week number of year, weeks starting on Monday						"00" to ("52" or "53")
 	 * F		A full textual representation of a month, such as January or March			"January" through "December"
 	 * m		Numeric representation of a month, with leading zeros						"01" through "12"
@@ -131,7 +127,7 @@
 	 * t		Number of days in the given month											"28" through "31"
 	 * L		Whether it's a leap year													"1" if it is a leap year, "0" otherwise
 	 * o		ISO-8601 year number. This has the same value as Y, except that if the		"2008"
-	 *		ISO week number (W) belongs to the previous or next year, that year 
+	 *		ISO week number (W) belongs to the previous or next year, that year
 	 *		is used instead.
 	 * Y		A full numeric representation of a year, 4 digits							"2008"
 	 * y		A two digit representation of a year										"08"
@@ -159,10 +155,14 @@
 	 * @return {String}  A string representation of the current Date object.
 	 */
 	var formatReplace = function (context) {
-		var y, x = context,
+		var y, x = context.isPrototypeOf(new Date()) ? new Date() : context,
+			format_only = false,
 			t = function (v, overrideStandardFormats) {
-					return x.toString(v, overrideStandardFormats);
+				return x.toString(v, overrideStandardFormats);
 			};
+		if (context.isPrototypeOf(new Date())) {
+			format_only = true;
+		}
 		return function (m) {
 			var formatString, override = false;
 			if (m.charAt(0) === "\\" || m.substring(0, 2) === "%%") {
@@ -320,6 +320,9 @@
 				default:
 					return m;
 			}
+			if (format_only) {
+				return formatString;
+			}
 			if (formatString) {
 				return t(formatString, override);
 			}
@@ -331,7 +334,7 @@
 		if (!format) {
 			return this._toString();
 		} else {
-			format.replace(/(%|\\)?.|%%/g, formatter);
+			return format.replace(/(%|\\)?.|%%/g, formatter);
 		}
 	};
 
