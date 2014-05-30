@@ -113,7 +113,7 @@
 		g.MM = cacheProcessRtoken(/^(1[0-2]|0\d)/, t.month);
 		g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
 	//	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join(" ")), t.month));
-		g.y = cacheProcessRtoken(/^(\d\d?)/, t.year);
+		g.y = cacheProcessRtoken(/^(\d+)/, t.year);
 		g.yy = cacheProcessRtoken(/^(\d\d)/, t.year);
 		g.yyy = cacheProcessRtoken(/^(\d\d?\d?\d?)/, t.year);
 		g.yyyy = cacheProcessRtoken(/^(\d\d\d\d)/, t.year);
