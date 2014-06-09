@@ -22,12 +22,12 @@
     ],
     "browsers": [
       "ie/6..latest",
-      "chrome/22..latest",
-      "firefox/16..latest",
-      "safari/5..latest",
-      "opera/11.0..latest",
-      "iphone/6..latest",
-      "ipad/6..latest",
+      "chrome/4.0..latest",
+      "ff/3.0..latest",
+      "safari/4..6",
+      "opera/10.0..latest",
+      "iphone/6",
+      "ipad/6",
       "android-browser/latest"
     ]
   },
