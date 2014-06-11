@@ -13,21 +13,26 @@ This fork was started improve and maintain DateJS. To keep what is still the mos
 ### How to Install/Use
 DateJS supports running either your regular web browser as a client library or Node.js.
 
-#### Node.js
+#### In Node.js
 Installation is as easy as running:
 
     npm install datejs
 
-#### Web Browser 
+#### For a Browser 
+If you use [Bower](http://bower.io/) to manage your frontend packages then it's also really simple:
+
+    bower install datejs
+
+Otherwise...
  * For production environments include [the production ready minified file from the Build directory](https://github.com/abritinthebay/datejs/blob/master/build/production/date.min.js) on your page. 
- * For debugging (eg, in development) include [the unminified and fully commented version](https://github.com/abritinthebay/datejs/blob/master/build/development/date.js)
+ * For debugging (eg, in development) include [the unminified and fully commented version](https://github.com/abritinthebay/datejs/blob/master/build/date.js)
 
 Support for the Bower package manager is on the roadmap, but is not implemented yet.
 
 #### International Language Versions
 In Node.js you can just call `Date.i18n.setLanguage` with the IETF appropriate code (e.g. "de-DE", or "es-MX") and DateJS will load the file automatically. For the browser DateJS has langauge support in one of two ways:
- 1. Download the appropriate file from [the Build directory](https://github.com/abritinthebay/datejs/blob/master/build/). Files are named after the IETF code the load (i.e. `date-es-MX.js` loads Mexican Spanish).
- 2. Set `Date.Config.i18n` to the location of [the internationalization files](https://github.com/abritinthebay/datejs/blob/master/src/i18n/) on your server and DateJS will dynamically load the files by script element insertion. 
+ 1. Either download the appropriate file from [the Build directory of your choice](https://github.com/abritinthebay/datejs/blob/master/build/). Files are named after the IETF code the load (i.e. `date-es-MX.js` loads Mexican Spanish).
+ 2. Or set `Date.Config.i18n` to the location of [the internationalization files](https://github.com/abritinthebay/datejs/blob/master/build/i18n/) on your server and DateJS will dynamically load the files by script element insertion. 
 
 DateJS will always support loading US English via `Date.i18n.setLanguage("en-US")` no matter what other language is specifically loaded. So you can always support both your localization and the English speaking world.
 
