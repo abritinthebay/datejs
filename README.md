@@ -27,8 +27,6 @@ Otherwise...
  * For production environments include [the production ready minified file from the Build directory](https://github.com/abritinthebay/datejs/blob/master/build/production/date.min.js) on your page. 
  * For debugging (eg, in development) include [the unminified and fully commented version](https://github.com/abritinthebay/datejs/blob/master/build/date.js)
 
-Support for the Bower package manager is on the roadmap, but is not implemented yet.
-
 #### International Language Versions
 In Node.js you can just call `Date.i18n.setLanguage` with the IETF appropriate code (e.g. "de-DE", or "es-MX") and DateJS will load the file automatically. For the browser DateJS has langauge support in one of two ways:
  1. Either download the appropriate file from [the Build directory of your choice](https://github.com/abritinthebay/datejs/blob/master/build/). Files are named after the IETF code the load (i.e. `date-es-MX.js` loads Mexican Spanish).
