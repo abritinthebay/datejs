@@ -11,23 +11,23 @@ var getI18NFiles = function () {
 };
 
 var buildMinifyFileList = function (dev) {
-	var output_path = dev ? 'development' : 'production';
+	var output_path = dev ? '' : 'production/';
 	var output_ext = dev ? '.' : '.min.';
 	var files = getI18NFiles();
 	var output = {};
 	files.map(function(item){
 		var file_core_name = 'date-' + item.replace('.js', '');
-		var dest = dirs.build + '/'+output_path+'/' + file_core_name + output_ext + 'js';
-		output[dest] = [dirs.build + '/development/' + file_core_name + '.js'];
+		var dest = dirs.build + '/'+output_path + file_core_name + output_ext + 'js';
+		output[dest] = [dirs.build + '/' + file_core_name + '.js'];
 		return dest;
 	});
-	output[dirs.build + '/'+output_path+'/' + 'date'+output_ext+'js'] = [dirs.build + '/development/' + 'date.js'];
+	output[dirs.build + '/'+output_path + 'date'+output_ext+'js'] = [dirs.build + '/' + 'date.js'];
 	return output;
 };
 
 var banner = '/** \n' +
 			' * @overview <%= pkg.name %>\n' +
-			' * @version <%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>\n' +
+			' * @version <%= pkg.version %>\n' +
 			' * @author <%= pkg.author.name %> <<%= pkg.author.email %>>\n' +
 			' * @copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
 			' * @license <%= pkg.license %>\n' +
@@ -91,14 +91,14 @@ module.exports = function(grunt) {
 					'<%= dirs.core %>/time_span.js',
 					'<%= dirs.core %>/time_period.js'
 				],
-				dest: '<%= dirs.build %>/development/date.js'
+				dest: '<%= dirs.build %>/date.js'
 			}
 		},
 		i18n: {
 			core: {
 				core: '<%= dirs.build %>/date-core.js',
 				src: ['<%= dirs.i18n %>/*.js'],
-				dest: '<%= dirs.build %>/development'   // destination *directory*, probably better than specifying same file names twice
+				dest: '<%= dirs.build %>/'   // destination *directory*, probably better than specifying same file names twice
 			}
 		},
 		shell: {
