@@ -1,6 +1,6 @@
 /** 
  * @overview datejs
- * @version 1.0.0-beta2-2014-06-10
+ * @version 1.0.0-rc1
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -187,7 +187,7 @@ Date.CultureStrings.lang = "fr-MC";
 
 /** 
  * @overview datejs
- * @version 1.0.0-beta2-2014-06-10
+ * @version 1.0.0-rc1
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
