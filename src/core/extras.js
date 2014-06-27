@@ -331,7 +331,7 @@
 		if (!format) {
 			return this._toString();
 		} else {
-			format.replace(/(%|\\)?.|%%/g, formatter);
+			return format.replace(/(%|\\)?.|%%/g, formatter);
 		}
 	};
 
