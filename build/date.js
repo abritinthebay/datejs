@@ -1,6 +1,6 @@
 /** 
  * @overview datejs
- * @version 1.0.0-rc1
+ * @version 1.0.0-rc2
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -3942,7 +3942,7 @@
 		if (!format) {
 			return this._toString();
 		} else {
-			format.replace(/(%|\\)?.|%%/g, formatter);
+			return format.replace(/(%|\\)?.|%%/g, formatter);
 		}
 	};
 
