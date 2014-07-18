@@ -2,7 +2,7 @@
 if (typeof process !== "undefined") {
 	process.env.TZ = 'America/Los_Angeles';
 }
-require("../build/development/date.js");
+require("../index.js");
 
 describe("Core Module", function() {
 	describe("has Exception handling for when", function() {
