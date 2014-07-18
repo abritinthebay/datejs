@@ -10,6 +10,5 @@ before_script:
 - npm i -g jasmine-node@2.0.0-beta4
 - npm install -g codeclimate-test-reporter
 node_js: 
-- "0.8"
 - "0.10"
 - "0.11"
