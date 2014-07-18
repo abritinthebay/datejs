@@ -74,83 +74,107 @@
 		}
 	};
 
+	var grammarFormats = {
+		 timeFormats: function(){
+		 	// hour, minute, second, meridian, timezone
+			g.h = cacheProcessRtoken(/^(0[0-9]|1[0-2]|[1-9])/, t.hour);
+			g.hh = cacheProcessRtoken(/^(0[0-9]|1[0-2])/, t.hour);
+			g.H = cacheProcessRtoken(/^([0-1][0-9]|2[0-3]|[0-9])/, t.hour);
+			g.HH = cacheProcessRtoken(/^([0-1][0-9]|2[0-3])/, t.hour);
+			g.m = cacheProcessRtoken(/^([0-5][0-9]|[0-9])/, t.minute);
+			g.mm = cacheProcessRtoken(/^[0-5][0-9]/, t.minute);
+			g.s = cacheProcessRtoken(/^([0-5][0-9]|[0-9])/, t.second);
+			g.ss = cacheProcessRtoken(/^[0-5][0-9]/, t.second);
+			g["ss.s"] = cacheProcessRtoken(/^[0-5][0-9]\.[0-9]{1,3}/, t.secondAndMillisecond);
+			g.hms = _.cache(_.sequence([g.H, g.m, g.s], g.timePartDelimiter));
+		  
+			// _.min(1, _.set([ g.H, g.m, g.s ], g._t));
+			g.t = _.cache(_.process(g.ctoken2("shortMeridian"), t.meridian));
+			g.tt = _.cache(_.process(g.ctoken2("longMeridian"), t.meridian));
+			g.z = cacheProcessRtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/, t.timezone);
+			g.zz = cacheProcessRtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/, t.timezone);
+			
+			g.zzz = _.cache(_.process(g.ctoken2("timezone"), t.timezone));
+			g.timeSuffix = _.each(_.ignore(g.whiteSpace), _.set([ g.tt, g.zzz ]));
+			g.time = _.each(_.optional(_.ignore(_.stoken("T"))), g.hms, g.timeSuffix);
+		 },
+		 dateFormats: function () {
+			// Allow rolling these up into general purpose rules
+		 	_fn = function () {
+				return _.each(_.any.apply(null, arguments), _.not(g.ctoken2("timeContext")));
+			};
+		 	// days, months, years
+			g.d = cacheProcessRtoken(/^([0-2]\d|3[0-1]|\d)/, t.day, "ordinalSuffix");
+			g.dd = cacheProcessRtoken(/^([0-2]\d|3[0-1])/, t.day, "ordinalSuffix");
+			g.ddd = g.dddd = _.cache(_.process(g.ctoken("sun mon tue wed thu fri sat"),
+				function (s) {
+					return function () {
+						this.weekday = s;
+					};
+				}
+			));
+			g.M = cacheProcessRtoken(/^(1[0-2]|0\d|\d)/, t.month);
+			g.MM = cacheProcessRtoken(/^(1[0-2]|0\d)/, t.month);
+			g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
+			//g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join(" ")), t.month));
+			g.y = cacheProcessRtoken(/^(\d+)/, t.year);
+			g.yy = cacheProcessRtoken(/^(\d\d)/, t.year);
+			g.yyy = cacheProcessRtoken(/^(\d\d?\d?\d?)/, t.year);
+			g.yyyy = cacheProcessRtoken(/^(\d\d\d\d)/, t.year);
+
+			g.day = _fn(g.d, g.dd);
+			g.month = _fn(g.M, g.MMM);
+			g.year = _fn(g.yyyy, g.yy);
+
+			// pre-loaded rules for different date part order preferences
+			_setfn = function () {
+				return  _.set(arguments, g.datePartDelimiter);
+			};
+			g.mdy = _setfn(g.ddd, g.month, g.day, g.year);
+			g.ymd = _setfn(g.ddd, g.year, g.month, g.day);
+			g.dmy = _setfn(g.ddd, g.day, g.month, g.year);
+						
+			g.date = function (s) {
+				return ((g[Date.CultureInfo.dateElementOrder] || g.mdy).call(this, s));
+			};
+		 },
+		 relative: function () {
+		 	// relative date / time expressions
+			g.orientation = _.process(g.ctoken("past future"),
+				function (s) {
+					return function () {
+						this.orient = s;
+					};
+				}
+			);
+
+			g.operator = _.process(g.ctoken("add subtract"),
+				function (s) {
+					return function () {
+						this.operator = s;
+					};
+				}
+			);
+			g.rday = _.process(g.ctoken("yesterday tomorrow today now"), t.rday);
+			g.unit = _.process(g.ctoken("second minute hour day week month year"),
+				function (s) {
+					return function () {
+						this.unit = s;
+					};
+				}
+			);
+		 }
+	};
+
 	g.buildGrammarFormats = function () {
 		// these need to be rebuilt every time the language changes.
 		_C = {};
-		// hour, minute, second, meridian, timezone
-		g.h = cacheProcessRtoken(/^(0[0-9]|1[0-2]|[1-9])/, t.hour);
-		g.hh = cacheProcessRtoken(/^(0[0-9]|1[0-2])/, t.hour);
-		g.H = cacheProcessRtoken(/^([0-1][0-9]|2[0-3]|[0-9])/, t.hour);
-		g.HH = cacheProcessRtoken(/^([0-1][0-9]|2[0-3])/, t.hour);
-		g.m = cacheProcessRtoken(/^([0-5][0-9]|[0-9])/, t.minute);
-		g.mm = cacheProcessRtoken(/^[0-5][0-9]/, t.minute);
-		g.s = cacheProcessRtoken(/^([0-5][0-9]|[0-9])/, t.second);
-		g.ss = cacheProcessRtoken(/^[0-5][0-9]/, t.second);
-		g["ss.s"] = cacheProcessRtoken(/^[0-5][0-9]\.[0-9]{1,3}/, t.secondAndMillisecond);
-		g.hms = _.cache(_.sequence([g.H, g.m, g.s], g.timePartDelimiter));
-	  
-		// _.min(1, _.set([ g.H, g.m, g.s ], g._t));
-		g.t = _.cache(_.process(g.ctoken2("shortMeridian"), t.meridian));
-		g.tt = _.cache(_.process(g.ctoken2("longMeridian"), t.meridian));
-		g.z = cacheProcessRtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/, t.timezone);
-		g.zz = cacheProcessRtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/, t.timezone);
-		
-		g.zzz = _.cache(_.process(g.ctoken2("timezone"), t.timezone));
-		g.timeSuffix = _.each(_.ignore(g.whiteSpace), _.set([ g.tt, g.zzz ]));
-		g.time = _.each(_.optional(_.ignore(_.stoken("T"))), g.hms, g.timeSuffix);
-			  
-		// days, months, years
-		g.d = cacheProcessRtoken(/^([0-2]\d|3[0-1]|\d)/, t.day, "ordinalSuffix");
-		g.dd = cacheProcessRtoken(/^([0-2]\d|3[0-1])/, t.day, "ordinalSuffix");
-		g.ddd = g.dddd = _.cache(_.process(g.ctoken("sun mon tue wed thu fri sat"),
-			function (s) {
-				return function () {
-					this.weekday = s;
-				};
-			}
-		));
-		g.M = cacheProcessRtoken(/^(1[0-2]|0\d|\d)/, t.month);
-		g.MM = cacheProcessRtoken(/^(1[0-2]|0\d)/, t.month);
-		g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
-	//	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join(" ")), t.month));
-		g.y = cacheProcessRtoken(/^(\d+)/, t.year);
-		g.yy = cacheProcessRtoken(/^(\d\d)/, t.year);
-		g.yyy = cacheProcessRtoken(/^(\d\d?\d?\d?)/, t.year);
-		g.yyyy = cacheProcessRtoken(/^(\d\d\d\d)/, t.year);
-		
-		// rolling these up into general purpose rules
-		_fn = function () {
-			return _.each(_.any.apply(null, arguments), _.not(g.ctoken2("timeContext")));
-		};
-		
-		g.day = _fn(g.d, g.dd);
-		g.month = _fn(g.M, g.MMM);
-		g.year = _fn(g.yyyy, g.yy);
 
-		// relative date / time expressions
-		g.orientation = _.process(g.ctoken("past future"),
-			function (s) {
-				return function () {
-					this.orient = s;
-				};
-			}
-		);
+	  	grammarFormats.timeFormats();
+	  	grammarFormats.dateFormats();
+	  	grammarFormats.relative();
 
-		g.operator = _.process(g.ctoken("add subtract"),
-			function (s) {
-				return function () {
-					this.operator = s;
-				};
-			}
-		);
-		g.rday = _.process(g.ctoken("yesterday tomorrow today now"), t.rday);
-		g.unit = _.process(g.ctoken("second minute hour day week month year"),
-			function (s) {
-				return function () {
-					this.unit = s;
-				};
-			}
-		);
+		
 		g.value = _.process(_.rtoken(/^([-+]?\d+)?(st|nd|rd|th)?/),
 			function (s) {
 				return function () {
@@ -158,18 +182,7 @@
 				};
 			}
 		);
-		g.expression = _.set([ g.rday, g.operator, g.value, g.unit, g.orientation, g.ddd, g.MMM ]);
-
-		// pre-loaded rules for different date part order preferences
-		_fn = function () {
-			return  _.set(arguments, g.datePartDelimiter);
-		};
-		g.mdy = _fn(g.ddd, g.month, g.day, g.year);
-		g.ymd = _fn(g.ddd, g.year, g.month, g.day);
-		g.dmy = _fn(g.ddd, g.day, g.month, g.year);
-		g.date = function (s) {
-			return ((g[Date.CultureInfo.dateElementOrder] || g.mdy).call(this, s));
-		};
+		g.expression = _.set([g.rday, g.operator, g.value, g.unit, g.orientation, g.ddd, g.MMM ]);
 
 		g.format = _.process(_.many(
 			_.any(
@@ -202,14 +215,11 @@
 		g._start = _.process(_.set([ g.date, g.time, g.expression ],
 		g.generalDelimiter, g.whiteSpace), t.finish);
 	};
+
 	g.buildGrammarFormats();
 	// parsing date format specifiers - ex: "h:m:s tt" 
 	// this little guy will generate a custom parser based
 	// on the format string, ex: g.format("h:m:s tt")
-	
-
-	
-
 	// check for these formats first
 	g._formats = g.formats([
 		"\"yyyy-MM-ddTHH:mm:ssZ\"",
