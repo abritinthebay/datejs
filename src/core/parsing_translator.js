@@ -247,7 +247,7 @@
 				today = finishUtils.getToday.call(this);
 			}
 			
-			expression = !!(this.days && this.days !== null || this.orient || this.operator);
+			expression = !!(this.days !== null || this.orient || this.operator);
 			orient = ((this.orient === "past" || this.operator === "subtract") ? -1 : 1);
 
 			if (this.month && this.unit === "week") {
