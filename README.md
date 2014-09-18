@@ -1,8 +1,8 @@
 # DateJS: Evolved
 The JavaScript Date Library  
-[![Build Status](https://travis-ci.org/abritinthebay/datejs.png?branch=master)](https://travis-ci.org/abritinthebay/datejs)
-[![NPM version](https://badge.fury.io/js/datejs.png)](http://badge.fury.io/js/datejs)
-[![Code Climate](https://codeclimate.com/github/abritinthebay/datejs.png)](https://codeclimate.com/github/abritinthebay/datejs)
+[![Build Status](https://travis-ci.org/abritinthebay/datejs.svg?branch=master)](https://travis-ci.org/abritinthebay/datejs)
+[![NPM version](https://badge.fury.io/js/datejs.svg)](http://badge.fury.io/js/datejs)
+[![Code Climate](https://codeclimate.com/github/abritinthebay/datejs.svg)](https://codeclimate.com/github/abritinthebay/datejs)
 ## What is it?
 DateJS extends the built-in JavaScript Date object to add much better parsing, internationalization support, and all the functions and syntactic sugar you could wish for.
 ### Background 
