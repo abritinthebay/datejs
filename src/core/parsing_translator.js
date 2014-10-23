@@ -71,7 +71,7 @@
 				return $D.today();
 			}
 		},
-		setDaysFromWeekday: function (today){
+		setDaysFromWeekday: function (today, orient) {
 			var gap;
 			this.unit = "day";
 			gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
@@ -276,7 +276,7 @@
 			}
 
 			if (expression && this.weekday && this.unit !== "month" && this.unit !== "week") {
-				finishUtils.setDaysFromWeekday.call(this, today);
+				finishUtils.setDaysFromWeekday.call(this, today, orient);
 			}
 
 			if (this.month && this.unit === "day" && this.operator) {
