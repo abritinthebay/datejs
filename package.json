@@ -1,6 +1,6 @@
 {
   "name": "datejs",
-  "version": "1.0.0-rc1",
+  "version": "1.0.0-rc2",
   "description": "DateJS is the most full-featured, internationalized, open-source JavaScript Date Library.",
   "devDependencies": {
     "grunt": "~0.4.1",

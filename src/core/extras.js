@@ -27,167 +27,166 @@
 	 * @param {String}   A PHP format string consisting of one or more format spcifiers.
 	 * @return {String}  The PHP format converted to a Java/.NET format string.
 	 */
-	var normalizer = function (m) {
-		var formatString;
-		switch (m) {
-			case "d":
-			case "%d":
-				formatString = "dd";
-				break;
-			case "D":
-			case "%a":
-				formatString = "ddd";
-				break;
-			case "j":
-			case "l":
-			case "%A":
-				formatString = "dddd";
-				break;
-			case "N":
-			case "%u":
-				return x.getDay() + 1;
-			case "S":
-				formatString = "S";
-				break;
-			case "w":
-			case "%w":
-				return x.getDay();
-			case "z":
-				return x.getOrdinalNumber();
-			case "%j":
-				return p(x.getOrdinalNumber(), 3);
-			case "%U":
-				var d1 = x.clone().set({month: 0, day: 1}).addDays(-1).moveToDayOfWeek(0),
-					d2 = x.clone().addDays(1).moveToDayOfWeek(0, -1);
-				return (d2 < d1) ? "00" : p((d2.getOrdinalNumber() - d1.getOrdinalNumber()) / 7 + 1);
-			case "W":
-			case "%V":
-				return x.getISOWeek();
-			case "%W":
-				return p(x.getWeek());
-			case "F":
-			case "%B":
-				formatString = "MMMM";
-				break;
-			case "m":
-			case "%m":
-				formatString = "MM";
-				break;
-			case "M":
-			case "%b":
-			case "%h":
-				formatString = "MMM";
-				break;
-			case "n":
-				formatString = "M";
-				break;
-			case "t":
-				return $D.getDaysInMonth(x.getFullYear(), x.getMonth());
-			case "L":
-				return ($D.isLeapYear(x.getFullYear())) ? 1 : 0;
-			case "o":
-			case "%G":
-				return x.setWeek(x.getISOWeek()).toString("yyyy");
-			case "%g":
-				return x._format("%G").slice(-2);
-			case "Y":
-			case "%Y":
-				formatString = "yyyy";
-				break;
-			case "y":
-			case "%y":
-				formatString = "yy";
-				break;
-			case "a":
-			case "%p":
-				return t("tt").toLowerCase();
-			case "A":
-				return t("tt").toUpperCase();
-			case "g":
-			case "%I":
-				formatString = "h";
-				break;
-			case "G":
-				formatString = "H";
-				break;
-			case "h":
-				formatString = "hh";
-				break;
-			case "H":
-			case "%H":
-				formatString = "HH";
-				break;
-			case "i":
-			case "%M":
-				formatString = "mm";
-				break;
-			case "s":
-			case "%S":
-				formatString = "ss";
-				break;
-			case "u":
-				return p(x.getMilliseconds(), 3);
-			case "I":
-				return (x.isDaylightSavingTime()) ? 1 : 0;
-			case "O":
-				return x.getUTCOffset();
-			case "P":
-				y = x.getUTCOffset();
-				return y.substring(0, y.length - 2) + ":" + y.substring(y.length - 2);
-			case "e":
-			case "T":
-			case "%z":
-			case "%Z":
-				return x.getTimezone();
-			case "Z":
-				return x.getTimezoneOffset() * -60;
-			case "B":
-				var now = new Date();
-				return Math.floor(((now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getTimezoneOffset() + 60) * 60) / 86.4);
-			case "c":
-				return x.toISOString().replace(/\"/g, "");
-			case "U":
-				return $D.strtotime("now");
-			case "%c":
-				return t("d") + " " + t("t");
-			case "%C":
-				return Math.floor(x.getFullYear() / 100 + 1);
-			case "%D":
-				formatString = "MM/dd/yy";
-				break;
-			case "%n":
-				return "\\n";
-			case "%t":
-				return "\\t";
-			case "%r":
-				formatString = "hh:mm tt";
-				break;
-			case "%R":
-				formatString = "H:mm";
-				break;
-			case "%T":
-				formatString = "H:mm:ss";
-				break;
-			case "%e":
-				formatString = "d";
-				override = true;
-				break;
-			case "%x":
-				override = false;
-				break;
-			case "%X":
-				formatString = "t";
-				break;
-			default:
+	var normalizer = {
+		substitutes: function (m) {
+			switch (m) {
+				case "d":
+				case "%d":
+					return "dd";
+				case "D":
+				case "%a":
+					return "ddd";
+				case "j":
+				case "l":
+				case "%A":
+					return "dddd";	
+				case "S":
+					return "S";	
+				case "F":
+				case "%B":
+					return "MMMM";
+				case "m":
+				case "%m":
+					return "MM";
+				case "M":
+				case "%b":
+				case "%h":
+					return "MMM";
+				case "n":
+					return "M";
+				case "Y":
+				case "%Y":
+					return "yyyy";
+				case "y":
+				case "%y":
+					return "yy";
+				case "g":
+				case "%I":
+					return "h";
+				case "G":
+					return "H";
+				case "h":
+					return "hh";
+				case "H":
+				case "%H":
+					return "HH";
+				case "i":
+				case "%M":
+					return "mm";
+				case "s":
+				case "%S":
+					return "ss";
+				case "%r":
+					return "hh:mm tt";
+				case "%R":
+					return "H:mm";
+				case "%T":
+					return "H:mm:ss";
+				case "%X":
+					return "t";
+				case "%x":
+				case "%e":
+					return "d";
+				case "%D":
+					return "MM/dd/yy";
+				case "%n":
+					return "\\n";
+				case "%t":
+					return "\\t";
+				case "e":
+				case "T":
+				case "%z":
+				case "%Z":
+					return "z";
+				case "Z":
+					return "ZZ";
+				case "N":
+				case "w":
+				case "%w":
+					return "u";
+				case "W":
+				case "%V":
+					return "W";
+			}
+		},
+		interpreted: function (m, x) {
+			var y;
+			switch (m) {
+				case "%u":
+					return x.getDay() + 1;
+				case "z":
+					return x.getOrdinalNumber();
+				case "%j":
+					return p(x.getOrdinalNumber(), 3);
+				case "%U":
+					var d1 = x.clone().set({month: 0, day: 1}).addDays(-1).moveToDayOfWeek(0),
+						d2 = x.clone().addDays(1).moveToDayOfWeek(0, -1);
+					return (d2 < d1) ? "00" : p((d2.getOrdinalNumber() - d1.getOrdinalNumber()) / 7 + 1);
+
+				case "%W":
+					return p(x.getWeek());
+				case "t":
+					return $D.getDaysInMonth(x.getFullYear(), x.getMonth());
+				case "o":
+				case "%G":
+					return x.setWeek(x.getISOWeek()).toString("yyyy");
+				case "%g":
+					return x._format("%G").slice(-2);
+				case "a":
+				case "%p":
+					return t("tt").toLowerCase();
+				case "A":
+					return t("tt").toUpperCase();
+				case "u":
+					return p(x.getMilliseconds(), 3);
+				case "I":
+					return (x.isDaylightSavingTime()) ? 1 : 0;
+				case "O":
+					return x.getUTCOffset();
+				case "P":
+					y = x.getUTCOffset();
+					return y.substring(0, y.length - 2) + ":" + y.substring(y.length - 2);
+				case "B":
+					var now = new Date();
+					return Math.floor(((now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getTimezoneOffset() + 60) * 60) / 86.4);
+				case "c":
+					return x.toISOString().replace(/\"/g, "");
+				case "U":
+					return $D.strtotime("now");
+				case "%c":
+					return t("d") + " " + t("t");
+				case "%C":
+					return Math.floor(x.getFullYear() / 100 + 1);
+			}
+		},
+		shouldOverrideDefaults: function (m) {
+			switch (m) {
+				case "%e":
+					return true;
+				default:
+					return false;
+			}
+		},
+		parse: function (m, context) {
+			var formatString, c = context || new Date();
+			formatString = normalizer.substitutes(m);
+			if (formatString) {
+				return formatString;
+			}
+			formatString = normalizer.interpreted(m, c);
+
+			if (formatString) {
+				return formatString;
+			} else {
 				return m;
-		}
-		if (formatString) {
-			return formatString;
+			}
 		}
 	};
 
-	$D.normalizeFormat = function (format) {
-		return format.replace(/(%|\\)?.|%%/g, normalizer);
+	$D.normalizeFormat = function (format, context) {
+		return format.replace(/(%|\\)?.|%%/g, function(t){ 
+				return normalizer.parse(t, context);
+		});
 	};
 	/**
 	 * Format a local Unix timestamp according to locale settings
@@ -314,18 +313,16 @@
 	 * @return {String}  A string representation of the current Date object.
 	 */
 	var formatReplace = function (context) {
-		var y, x = context,
-			t = function (v, overrideStandardFormats) {
-					return x.toString(v, overrideStandardFormats);
-			};
 		return function (m) {
 			var formatString, override = false;
 			if (m.charAt(0) === "\\" || m.substring(0, 2) === "%%") {
 				return m.replace("\\", "").replace("%%", "%");
 			}
-			formatString = $D.normalizeFormat(m);
+
+			override = normalizer.shouldOverrideDefaults(m);
+			formatString = $D.normalizeFormat(m, context);
 			if (formatString) {
-				return t(formatString, override);
+				return context.toString(formatString, override);
 			}
 		};
 	};

@@ -1009,60 +1009,75 @@
 				return m.replace("\\", "");
 			}
 			switch (m) {
-			case "hh":
-				return p(context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12));
-			case "h":
-				return context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12);
-			case "HH":
-				return p(context.getHours());
-			case "H":
-				return context.getHours();
-			case "mm":
-				return p(context.getMinutes());
-			case "m":
-				return context.getMinutes();
-			case "ss":
-				return p(context.getSeconds());
-			case "s":
-				return context.getSeconds();
-			case "yyyy":
-				return p(context.getFullYear(), 4);
-			case "yy":
-				return p(context.getFullYear());
-			case "y":
-				return context.getFullYear();
-			case "dddd":
-				return Date.CultureInfo.dayNames[context.getDay()];
-			case "ddd":
-				return Date.CultureInfo.abbreviatedDayNames[context.getDay()];
-			case "dd":
-				return p(context.getDate());
-			case "d":
-				return context.getDate();
-			case "MMMM":
-				return Date.CultureInfo.monthNames[context.getMonth()];
-			case "MMM":
-				return Date.CultureInfo.abbreviatedMonthNames[context.getMonth()];
-			case "MM":
-				return p((context.getMonth() + 1));
-			case "M":
-				return context.getMonth() + 1;
-			case "t":
-				return context.getHours() < 12 ? Date.CultureInfo.amDesignator.substring(0, 1) : Date.CultureInfo.pmDesignator.substring(0, 1);
-			case "tt":
-				return context.getHours() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
-			case "S":
-				return ord(context.getDate());
-			case "W":
-				return context.getWeek();
-			case "WW":
-				return context.getISOWeek();
-			case "Q":
-				return "Q" + context.getQuarter();
-			case "q":
-				return String(context.getQuarter());
-			default:
-				return m;
+				case "hh":
+					return p(context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12));
+				case "h":
+					return context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12);
+				case "HH":
+					return p(context.getHours());
+				case "H":
+					return context.getHours();
+				case "mm":
+					return p(context.getMinutes());
+				case "m":
+					return context.getMinutes();
+				case "ss":
+					return p(context.getSeconds());
+				case "s":
+					return context.getSeconds();
+				case "yyyy":
+					return p(context.getFullYear(), 4);
+				case "yy":
+					return p(context.getFullYear());
+				case "y":
+					return context.getFullYear();
+				case "E":
+				case "dddd":
+					return Date.CultureInfo.dayNames[context.getDay()];
+				case "ddd":
+					return Date.CultureInfo.abbreviatedDayNames[context.getDay()];
+				case "dd":
+					return p(context.getDate());
+				case "d":
+					return context.getDate();
+				case "MMMM":
+					return Date.CultureInfo.monthNames[context.getMonth()];
+				case "MMM":
+					return Date.CultureInfo.abbreviatedMonthNames[context.getMonth()];
+				case "MM":
+					return p((context.getMonth() + 1));
+				case "M":
+					return context.getMonth() + 1;
+				case "t":
+					return context.getHours() < 12 ? Date.CultureInfo.amDesignator.substring(0, 1) : Date.CultureInfo.pmDesignator.substring(0, 1);
+				case "tt":
+					return context.getHours() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
+				case "S":
+					return ord(context.getDate());
+				case "W":
+					return context.getWeek();
+				case "WW":
+					return context.getISOWeek();
+				case "Q":
+					return "Q" + context.getQuarter();
+				case "q":
+					return String(context.getQuarter());
+				case "z":
+					return context.getTimezone();
+				case "Z":
+				case "X":
+					return Date.getTimezoneOffset(context.getTimezone());
+				case "ZZ": // Timezone offset in seconds
+					return context.getTimezoneOffset() * -60;
+				case "u":
+					return context.getDay();
+				case "L":
+					return ($D.isLeapYear(context.getFullYear())) ? 1 : 0;
+				case "B":
+					// Swatch Internet Time (.beats)
+					return "@"+((context.getUTCSeconds() + (context.getUTCMinutes()*60) + ((context.getUTCHours()+1)*3600))/86.4);
+				default:
+					return m;
 			}
 		};
 	};
