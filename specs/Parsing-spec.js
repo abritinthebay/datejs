@@ -297,6 +297,27 @@ describe("Parsing Module", function() {
 			expect(d2.equals(d)).toBe(true);
 		});
 	});
+	describe("can parse Timezones correctly", function() {
+		it("defaults to local timezone", function (){
+			var d = Date.parse("30 Dec 2011 7pm");
+			var d2 = new Date(2011, 11, 30, 19);
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("EST changes time", function (){
+			var d = Date.parse("30 Dec 2011 7pm EST");
+			var d2 = new Date(2011, 11, 30, 16);
+			expect(d2.equals(d)).toBe(true);
+		});
+		it("uses EST correctly when EDT is wrongly specified", function (){
+			var d = Date.parse("30 Dec 2011 7pm EDT");
+			var d2 = new Date(2011, 11, 30, 16);
+			expect(d2.equals(d)).toBe(true);
+		});
+			// Date.parse("monday 7:00pm edt")
+// Mon Oct 06 2014 19:00:00 GMT-0700 (Pacific Daylight Time)
+// Date.parse("monday 7:00pm pdt")
+// Mon Oct 06 2014 19:00:00 GMT-0700 (Pacific Daylight Time)
+	});
 	describe("parses 'dd MMM yyyy' format correctly", function() {
 		it("30 Dec 2011", function () {
 			var d = Date.parse("30 Dec 2011");

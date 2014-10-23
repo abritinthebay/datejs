@@ -328,8 +328,25 @@
 			if (expression && this.timezone && this.day && this.days) {
 				this.day = this.days;
 			}
+
 			
-			return (expression) ? today.add(this) : today.set(this);
+			(expression) ? today.add(this) : today.set(this);
+			
+			if (this.timezone) {
+				this.timezone = this.timezone.toUpperCase();
+				var offset = $D.getTimezoneOffset(this.timezone);
+				var timezone;
+				if (today.hasDaylightSavingTime()) {
+					// lets check that we're being sane with timezone setting
+					timezone = $D.getTimezoneAbbreviation(offset, today.isDaylightSavingTime());
+					if (timezone !== this.timezone) {
+						// bugger, we're in a place where things like EST vs EDT matters.
+						(today.isDaylightSaveTime) ? today.addHours(-1) : today.addHours(1); 
+					}
+				}
+				today.setTimezoneOffset(offset);
+			}
+			return today;
 		}
 	};
 }());
