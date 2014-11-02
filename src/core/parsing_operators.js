@@ -96,13 +96,23 @@
 			return rx;
 		},
 		cache: function (rule) {
-			var cache = {}, r = null;
+			var cache = {}, cache_length = 0, cache_keys = [], CACHE_MAX = Date.Config.CACHE_MAX || 100000, r = null;
+			var cacheCheck = function () {
+				if (cache_length === CACHE_MAX) {
+					var key = cache_keys.shift();
+					delete cache[key];
+					cache_length--;
+				}
+			};
 			return function (s) {
+				cacheCheck();
 				try {
 					r = cache[s] = (cache[s] || rule.call(this, s));
 				} catch (e) {
 					r = cache[s] = e;
 				}
+				cache_length++;
+				cache_keys.push(s);
 				if (r instanceof $P.Exception) {
 					throw r;
 				} else {
