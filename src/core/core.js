@@ -692,8 +692,8 @@
 		var result = {}, self = this, prop, testFunc;
 		testFunc = function (prop, func, value) {
 			if (prop === "day") {
-				var month = (obj.month !== undefined) ? obj.month - self.getMonth() : self.getMonth();
-				var year = (obj.year !== undefined) ? obj.year - self.getFullYear() : self.getFullYear();
+				var month = (obj.month !== undefined) ? obj.month : self.getMonth();
+				var year = (obj.year !== undefined) ? obj.year : self.getFullYear();
 				return $D[func](value, year, month);
 			} else {
 				return $D[func](value);
@@ -702,6 +702,7 @@
 		for (prop in obj) {
 			if (hasOwnProperty.call(obj, prop)) {
 				var func = "validate" + prop.charAt(0).toUpperCase() + prop.slice(1);
+
 				if ($D[func] && obj[prop] !== null && testFunc(prop, func, obj[prop])) {
 					result[prop] = obj[prop];
 				}
@@ -739,9 +740,9 @@
 				} else if (key === "year"){
 					getFunc = "getFullYear";
 				}
-				if (key !== "day" && key !== "timezone" && key !== "timezoneOffset"  && key !== "week") {
+				if (key !== "day" && key !== "timezone" && key !== "timezoneOffset"  && key !== "week" &&  key !== "hour") {
 						this[addFunc](config[key] - this[getFunc]());
-				} else if ( key === "timezone" || key === "timezoneOffset" || key === "week") {
+				} else if ( key === "timezone"|| key === "timezoneOffset" || key === "week" || key === "hour") {
 					this["set"+name](config[key]);
 				}
 			}
