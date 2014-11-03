@@ -267,16 +267,17 @@
 			if (!expression && this.weekday && !this.day && !this.days) {
 				finishUtils.setDMYFromWeekday.call(this);
 			}
+
+			if (expression && this.weekday && this.unit !== "month" && this.unit !== "week") {
+				finishUtils.setDaysFromWeekday.call(this, today, orient);
+			}
+
 			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
 				temp = Date[this.weekday]();
 				this.day = temp.getDate();
 				if (temp.getMonth() !== today.getMonth()) {
 					this.month = temp.getMonth();
 				}
-			}
-
-			if (expression && this.weekday && this.unit !== "month" && this.unit !== "week") {
-				finishUtils.setDaysFromWeekday.call(this, today, orient);
 			}
 
 			if (this.month && this.unit === "day" && this.operator) {

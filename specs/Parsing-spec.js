@@ -226,6 +226,20 @@ describe("Parsing Module", function() {
 		});
 	});
 	describe("supports relative dates like", function() {
+		it("last tuesday", function () {
+			var d = Date.parse("last tuesday");
+			var d2 = Date.today();
+			var diff = Math.abs(d.getElapsed(Date.today())/1000/60/60/24); // days
+			expect(d.getDay()).toBe(2);
+			expect(diff).toBeLessThan(7);
+		});
+		it("next tuesday", function () {
+			var d = Date.parse("next tuesday");
+			var d2 = Date.today();
+			var diff = Math.abs(d.getElapsed(Date.today())/1000/60/60/24); // days
+			expect(d.getDay()).toBe(2);
+			expect(diff).toBeLessThan(7);
+		});
 		it("last week", function () {
 			var d = Date.parse("last week");
 			var w = Date.today().addWeeks(-1).getWeek();
