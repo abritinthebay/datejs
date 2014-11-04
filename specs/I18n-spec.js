@@ -195,6 +195,14 @@ describe("Internationalization Module", function() {
 		
 		Date.i18n.setLanguage("de-DE",false, cb);
 	});
+	it("handles junk/invalid tags gracefully", function() {
+		// now force language to be null
+		var cfg = Date.Config;
+		Date.Config = {};
+		var langSet = Date.i18n.setLanguage("junk");
+		expect(langSet).toBe(false);
+		Date.Config = cfg;
+	});
 	it("defaults to US English when no other language is loaded", function() {
 		// now force language to be null
 		Date.i18n.setLanguage(null, true);

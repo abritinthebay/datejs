@@ -200,7 +200,8 @@
 	 * @return {String}  A string representation of the current Date object.
 	 */
 	$D.strftime = function (format, time) {
-		return new Date(time * 1000)._format(format);
+		var d = Date.parse(time);
+		return d._format(format);
 	};
 	/**
 	 * Parse any textual datetime description into a Unix timestamp. 
@@ -216,7 +217,6 @@
 	 */
 	$D.strtotime = function (time) {
 		var d = $D.parse(time);
-		d.addMinutes(d.getTimezoneOffset() * -1);
 		return Math.round($D.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()) / 1000);
 	};
 	/**

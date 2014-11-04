@@ -393,6 +393,7 @@
 						});
 					} else {
 						Date.console.error("The DateJS IETF language tag '" + code + "' is not available and has not been loaded.");
+						return false;
 					}
 				}
 			}
