@@ -99,9 +99,14 @@
 			var cache = {}, cache_length = 0, cache_keys = [], CACHE_MAX = Date.Config.CACHE_MAX || 100000, r = null;
 			var cacheCheck = function () {
 				if (cache_length === CACHE_MAX) {
-					var key = cache_keys.shift();
-					delete cache[key];
-					cache_length--;
+					// kill several keys, don't want to have to do this all the time...
+					for (var 1=0; i < 10; i++) {
+						var key = cache_keys.shift();
+						if (key) {
+							delete cache[key];
+							cache_length--;
+						}
+					}
 				}
 			};
 			return function (s) {
