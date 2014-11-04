@@ -392,6 +392,7 @@
 			if (value > 0) {
 				this.next().monday();
 				this.addDays(-1);
+				day = this.getDay();
 			}
 		}
 
