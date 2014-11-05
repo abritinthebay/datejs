@@ -410,6 +410,10 @@ describe("Core Module", function() {
 			d.next().sunday();
 			d.addWeekdays(-1);
 			expect(d.getDay()).toBe(5);
+			d.next().sunday();
+			d.addDays(-1);
+			d.addWeekdays(2);
+			expect(d.getDay()).toBe(2);
 		});
 		it("day", function() {
 			var d1 = new Date(2010, 1, 1);
