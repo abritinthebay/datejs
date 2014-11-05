@@ -100,7 +100,7 @@
 			var cacheCheck = function () {
 				if (cache_length === CACHE_MAX) {
 					// kill several keys, don't want to have to do this all the time...
-					for (var 1=0; i < 10; i++) {
+					for (var i=0; i < 10; i++) {
 						var key = cache_keys.shift();
 						if (key) {
 							delete cache[key];
