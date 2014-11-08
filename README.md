@@ -4,6 +4,8 @@ The JavaScript Date Library
 [![NPM version](https://badge.fury.io/js/datejs.svg)](http://badge.fury.io/js/datejs)
 [![Code Climate](https://codeclimate.com/github/abritinthebay/datejs.svg)](https://codeclimate.com/github/abritinthebay/datejs)
 [![Test Coverage](https://codeclimate.com/github/abritinthebay/datejs/badges/coverage.svg)](https://codeclimate.com/github/abritinthebay/datejs)
+
+[![NPM](https://nodei.co/npm/datejs.png?downloadRank=true)](https://nodei.co/npm/datejs/)
 ## What is it?
 DateJS extends the built-in JavaScript Date object to add much better parsing, internationalization support, and all the functions and syntactic sugar you could wish for.
 ### Background 
