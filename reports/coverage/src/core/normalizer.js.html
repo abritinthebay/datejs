@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/core/normalizer.js</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../../prettify.css">
+
+    <style>
+        body, html {
+            margin:0; padding: 0;
+        }
+        body {
+            font-family: Helvetica Neue, Helvetica,Arial;
+            font-size: 10pt;
+        }
+        div.header, div.footer {
+            background: #eee;
+            padding: 1em;
+        }
+        div.header {
+            z-index: 100;
+            position: fixed;
+            top: 0;
+            border-bottom: 1px solid #666;
+            width: 100%;
+        }
+        div.footer {
+            border-top: 1px solid #666;
+        }
+        div.body {
+            margin-top: 10em;
+        }
+        div.meta {
+            font-size: 90%;
+            text-align: center;
+        }
+        h1, h2, h3 {
+            font-weight: normal;
+        }
+        h1 {
+            font-size: 12pt;
+        }
+        h2 {
+            font-size: 10pt;
+        }
+        pre {
+            font-family: Consolas, Menlo, Monaco, monospace;
+            margin: 0;
+            padding: 0;
+            line-height: 14px;
+            font-size: 14px;
+            -moz-tab-size: 2;
+            -o-tab-size:  2;
+            tab-size: 2;
+        }
+
+        div.path { font-size: 110%; }
+        div.path a:link, div.path a:visited { color: #000; }
+        table.coverage { border-collapse: collapse; margin:0; padding: 0 }
+
+        table.coverage td {
+            margin: 0;
+            padding: 0;
+            color: #111;
+            vertical-align: top;
+        }
+        table.coverage td.line-count {
+            width: 50px;
+            text-align: right;
+            padding-right: 5px;
+        }
+        table.coverage td.line-coverage {
+            color: #777 !important;
+            text-align: right;
+            border-left: 1px solid #666;
+            border-right: 1px solid #666;
+        }
+
+        table.coverage td.text {
+        }
+
+        table.coverage td span.cline-any {
+            display: inline-block;
+            padding: 0 5px;
+            width: 40px;
+        }
+        table.coverage td span.cline-neutral {
+            background: #eee;
+        }
+        table.coverage td span.cline-yes {
+            background: #b5d592;
+            color: #999;
+        }
+        table.coverage td span.cline-no {
+            background: #fc8c84;
+        }
+
+        .cstat-yes { color: #111; }
+        .cstat-no { background: #fc8c84; color: #111; }
+        .fstat-no { background: #ffc520; color: #111 !important; }
+        .cbranch-no { background:  yellow !important; color: #111; }
+
+        .cstat-skip { background: #ddd; color: #111; }
+        .fstat-skip { background: #ddd; color: #111 !important; }
+        .cbranch-skip { background: #ddd !important; color: #111; }
+
+        .missing-if-branch {
+            display: inline-block;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: black;
+            color: yellow;
+        }
+
+        .skip-if-branch {
+            display: none;
+            margin-right: 10px;
+            position: relative;
+            padding: 0 4px;
+            background: #ccc;
+            color: white;
+        }
+
+        .missing-if-branch .typ, .skip-if-branch .typ {
+            color: inherit !important;
+        }
+
+        .entity, .metric { font-weight: bold; }
+        .metric { display: inline-block; border: 1px solid #333; padding: 0.3em; background: white; }
+        .metric small { font-size: 80%; font-weight: normal; color: #666; }
+
+        div.coverage-summary table { border-collapse: collapse; margin: 3em; font-size: 110%; }
+        div.coverage-summary td, div.coverage-summary table  th { margin: 0; padding: 0.25em 1em; border-top: 1px solid #666; border-bottom: 1px solid #666; }
+        div.coverage-summary th { text-align: left; border: 1px solid #666; background: #eee; font-weight: normal; }
+        div.coverage-summary th.file { border-right: none !important; }
+        div.coverage-summary th.pic { border-left: none !important; text-align: right; }
+        div.coverage-summary th.pct { border-right: none !important; }
+        div.coverage-summary th.abs { border-left: none !important; text-align: right; }
+        div.coverage-summary td.pct { text-align: right; border-left: 1px solid #666; }
+        div.coverage-summary td.abs { text-align: right; font-size: 90%; color: #444; border-right: 1px solid #666; }
+        div.coverage-summary td.file { text-align: right; border-left: 1px solid #666; white-space: nowrap;  }
+        div.coverage-summary td.pic { min-width: 120px !important;  }
+        div.coverage-summary a:link { text-decoration: none; color: #000; }
+        div.coverage-summary a:visited { text-decoration: none; color: #333; }
+        div.coverage-summary a:hover { text-decoration: underline; }
+        div.coverage-summary tfoot td { border-top: 1px solid #666; }
+
+        div.coverage-summary .yui3-datatable-sort-indicator, div.coverage-summary .dummy-sort-indicator {
+            height: 10px;
+            width: 7px;
+            display: inline-block;
+            margin-left: 0.5em;
+        }
+        div.coverage-summary .yui3-datatable-sort-indicator {
+            background: url("https://yui-s.yahooapis.com/3.6.0/build/datatable-sort/assets/skins/sam/sort-arrow-sprite.png") no-repeat scroll 0 0 transparent;
+        }
+        div.coverage-summary .yui3-datatable-sorted .yui3-datatable-sort-indicator {
+            background-position: 0 -20px;
+        }
+        div.coverage-summary .yui3-datatable-sorted-desc .yui3-datatable-sort-indicator {
+            background-position: 0 -10px;
+        }
+
+        .high { background: #b5d592 !important; }
+        .medium { background: #ffe87c !important; }
+        .low { background: #fc8c84 !important; }
+
+        span.cover-fill, span.cover-empty {
+            display:inline-block;
+            border:1px solid #444;
+            background: white;
+            height: 12px;
+        }
+        span.cover-fill {
+            background: #ccc;
+            border-right: 1px solid #444;
+        }
+        span.cover-empty {
+            background: white;
+            border-left: none;
+        }
+        span.cover-full {
+            border-right: none !important;
+        }
+        pre.prettyprint {
+            border: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .com { color: #999 !important; }
+        .ignore-none { color: #999; font-weight: normal; }
+
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">src/core/normalizer.js</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">8.57% <small>(6 / 70)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">0% <small>(0 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">8.33% <small>(1 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">8.57% <small>(6 / 70)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../index.html">All files</a> &#187; <a href="index.html">src/core/</a> &#187; normalizer.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+(function () {
+	var $D = Date;
+	var $P = $D.Parsing;
+&nbsp;
+	$P.Numerizer = {
+		DIRECT_NUMS : [
+			["eleven", "11"],
+			["twelve", "12"],
+			["thirteen", "13"],
+			["fourteen", "14"],
+			["fifteen", "15"],
+			["sixteen", "16"],
+			["seventeen", "17"],
+			["eighteen", "18"],
+			["nineteen", "19"],
+			["zero", "0"],
+			["one", "1"],
+			["two", "2"],
+			["three", "3"],
+			["four(\\W|$)", "4$1"],  //matches four but not "fourty" or "fourteen"
+			["five", "5"],
+			["six(\\W|$)", "6$1"], // as with four
+			["seven(\\W|$)", "7$1"], // etc
+			["eight(\\W|$)", "8$1"],
+			["nine(\\W|$)", "9$1"],
+			["ten", "10"],
+			["\\ba[\\b^$]", "1"] // doesn't make sense for an "a" at the end to be a 1
+		],
+		ORDINALS : [
+			["first", "1"],
+			["third", "3"],
+			["fourth", "4"],
+			["fifth", "5"],
+			["sixth", "6"],
+			["seventh", "7"],
+			["eighth", "8"],
+			["ninth", "9"],
+			["tenth", "10"],
+			["twelfth", "12"],
+			["twentieth", "20"],
+			["thirtieth", "30"],
+			["fourtieth", "40"],
+			["fiftieth", "50"],
+			["sixtieth", "60"],
+			["seventieth", "70"],
+			["eightieth", "80"],
+			["ninetieth", "90"]
+		],
+		TEN_PREFIXES : [
+			["twenty", 20],
+			["thirty", 30],
+			["forty", 40],
+			["fifty", 50],
+			["sixty", 60],
+			["seventy", 70],
+			["eighty", 80],
+			["ninety", 90]
+		],
+		BIG_PREFIXES : [
+			["hundred", 100],
+			["thousand", 1000],
+			["million", 1000000],
+			["billion", 1000000000],
+			["trillion", 1000000000000],
+		],
+		andition: <span class="fstat-no" title="function not covered" >function(s) {</span>
+<span class="cstat-no" title="statement not covered" >			var r = /&lt;num&gt;(\d+)( | and )&lt;num&gt;(\d+)(?=[^\w]|$)/i;</span>
+			//var r = /&lt;num&gt;(\d+)( | and )(\d+)/i;
+<span class="cstat-no" title="statement not covered" >			var matches, replacement;</span>
+<span class="cstat-no" title="statement not covered" >			while(s.match(r) !== null) {</span>
+<span class="cstat-no" title="statement not covered" >				matches = s.match(r);</span>
+<span class="cstat-no" title="statement not covered" >				replacement = Number(matches[1]) + Number(matches[3]);</span>
+<span class="cstat-no" title="statement not covered" >				s = s.replace(matches[0], replacement);</span>
+			}
+<span class="cstat-no" title="statement not covered" >			return s;</span>
+		},
+	};
+	$P.Numerizer.numerize = <span class="fstat-no" title="function not covered" >function (s) {</span>
+<span class="cstat-no" title="statement not covered" >		var $N = this;</span>
+		// preprocess
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/ +|([^\d])-([^\d])/, "$1 $2");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/a half/, "haAlf"); </span>// else half will be mutilated. Do it later - at the end.
+		// easy/direct replacements
+<span class="cstat-no" title="statement not covered" >		this.DIRECT_NUMS.forEach(<span class="fstat-no" title="function not covered" >function(dn){</span></span>
+<span class="cstat-no" title="statement not covered" >			s = s.replace(new RegExp(dn[0], ["i"]), "&lt;num&gt;" + dn[1]);</span>
+		});
+<span class="cstat-no" title="statement not covered" >		this.ORDINALS.forEach(<span class="fstat-no" title="function not covered" >function(on){</span></span>
+<span class="cstat-no" title="statement not covered" >			s = s.replace(new RegExp(on[0], ["i"]), "&lt;num&gt;" + on[1] + on[0].slice(-2));</span>
+		});
+		// ten, twenty, etc.
+<span class="cstat-no" title="statement not covered" >		this.TEN_PREFIXES.forEach(<span class="fstat-no" title="function not covered" >function(tp){</span></span>
+<span class="cstat-no" title="statement not covered" >			s = s.replace(new RegExp("(?:"+tp[0]+") *&lt;num&gt;(\\d(?=[^\\d]|$))*", ["i"]), <span class="fstat-no" title="function not covered" >function (matx, p1) {</span></span>
+<span class="cstat-no" title="statement not covered" >				return "&lt;num&gt;" + (tp[1] + Number(p1));</span>
+			});
+		});
+<span class="cstat-no" title="statement not covered" >		this.TEN_PREFIXES.forEach(<span class="fstat-no" title="function not covered" >function(tp){</span></span>
+<span class="cstat-no" title="statement not covered" >			s = s.replace(new RegExp(tp[0], ["i"]), "&lt;num&gt;" + tp[1]);</span>
+		});
+		// hundreds, thousands, millions, etc.
+<span class="cstat-no" title="statement not covered" >		this.BIG_PREFIXES.forEach(<span class="fstat-no" title="function not covered" >function(bp){</span></span>
+<span class="cstat-no" title="statement not covered" >			s = s.replace(new RegExp("(?:&lt;num&gt;)?(\\d*) *"+bp[0], ["i"]), <span class="fstat-no" title="function not covered" >function (match, p1) {</span></span>
+<span class="cstat-no" title="statement not covered" >				return (p1 === null || p1 === undefined) ? bp[1] : "&lt;num&gt;" + (bp[1] * Number(p1));</span>
+			});
+<span class="cstat-no" title="statement not covered" >			s = $N.andition(s);</span>
+		});
+&nbsp;
+		// fractional addition
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/(\d+)(?: | and |-)*haAlf/i,  <span class="fstat-no" title="function not covered" >function(match, p1){</span></span>
+<span class="cstat-no" title="statement not covered" >			return (parseFloat(p1) + 0.5);</span>
+		});
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/&lt;num&gt;/g, "");</span>
+<span class="cstat-no" title="statement not covered" >		return s;</span>
+	};
+&nbsp;
+	$P.pre_normalize = <span class="fstat-no" title="function not covered" >function(s) {</span>
+<span class="cstat-no" title="statement not covered" >		s = s.toLowerCase();</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b(\d{2})(\d{2})(\d{4})\b/, "$3 $2 $1");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b(\d{2})\.(\d{2})\.(\d{4})\b/, "$3 $2 $1");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b([ap])\.m\.?/, "$1m");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/(\s+|:\d{2}|:\d{2}\.\d{3})\-(\d{2}:?\d{2})\b/, "$1tzminus$2");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\./, ":");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/([ap]):m:?/, "$1m");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/['"]/, "");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/,/, " ");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/^second /, "2nd ");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\bsecond (of|day|month|hour|minute|second)\b/, "2nd $1");</span>
+<span class="cstat-no" title="statement not covered" >		s = $P.Numerizer.numerize(s);</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/([\/\-\,\@])/, " $1 ");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/(?:^|\s)0(\d+:\d+\s*pm?\b)/, " $1");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\btoday\b/, "this day");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\btomm?orr?ow\b/, "next day");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\byesterday\b/, "last day");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\bnoon\b/, "12:00pm");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\bmidnight\b/, "24:00");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\bnow\b/, "this second");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace("quarter", "15");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace("half", "30");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/(\d{1,2}) (to|till|prior to|before)\b/, "$1 minutes past");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/(\d{1,2}) (after|past)\b/, "$1 minutes future");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b(?:ago|before(?: now)?)\b/, "past");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\bthis (?:last|past)\b/, "last");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b(?:in|during) the (morning)\b/, "$1");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b(?:in the|during the|at) (afternoon|evening|night)\b/, "$1");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\btonight\b/, "this night");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b\d+:?\d*[ap]\b/,"\0m");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b(\d{2})(\d{2})(am|pm)\b/, "$1:$2$3");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/(\d)([ap]m|oclock)\b/, "$1 $2");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b(hence|after|from)\b/, "future");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/^\s?an? /i, "1 ");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b(\d{4}):(\d{2}):(\d{2})\b/, "$1 / $2 / $3");</span>
+<span class="cstat-no" title="statement not covered" >		s = s.replace(/\b0(\d+):(\d{2}):(\d{2}) ([ap]m)\b/, "$1:$2:$3 $4");</span>
+<span class="cstat-no" title="statement not covered" >		return s;</span>
+	};
+}());</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Nov 07 2014 21:04:56 GMT-0800 (PST)</div>
+</div>
+
+<script src="../../prettify.js"></script>
+
+<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
+<script>
+
+    YUI().use('datatable', function (Y) {
+
+        var formatters = {
+          pct: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              try {
+                  return o.value.toFixed(2) + '%';
+              } catch (ex) { return o.value + '%'; }
+          },
+          html: function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.record.get(o.column.key + '_html');
+          }
+        },
+          defaultFormatter = function (o) {
+              o.className += o.record.get('classes')[o.column.key];
+              return o.value;
+          };
+
+        function getColumns(theadNode) {
+            var colNodes = theadNode.all('tr th'),
+                cols = [],
+                col;
+            colNodes.each(function (colNode) {
+                col = {
+                    key: colNode.getAttribute('data-col'),
+                    label: colNode.get('innerHTML') || ' ',
+                    sortable: !colNode.getAttribute('data-nosort'),
+                    className: colNode.getAttribute('class'),
+                    type: colNode.getAttribute('data-type'),
+                    allowHTML: colNode.getAttribute('data-html') === 'true' || colNode.getAttribute('data-fmt') === 'html'
+                };
+                col.formatter = formatters[colNode.getAttribute('data-fmt')] || defaultFormatter;
+                cols.push(col);
+            });
+            return cols;
+        }
+
+        function getRowData(trNode, cols) {
+            var tdNodes = trNode.all('td'),
+                    i,
+                    row = { classes: {} },
+                    node,
+                    name;
+            for (i = 0; i < cols.length; i += 1) {
+                name = cols[i].key;
+                node = tdNodes.item(i);
+                row[name] = node.getAttribute('data-value') || node.get('innerHTML');
+                row[name + '_html'] = node.get('innerHTML');
+                row.classes[name] = node.getAttribute('class');
+                //Y.log('Name: ' + name + '; Value: ' + row[name]);
+                if (cols[i].type === 'number') { row[name] = row[name] * 1; }
+            }
+            //Y.log(row);
+            return row;
+        }
+
+        function getData(tbodyNode, cols) {
+            var data = [];
+            tbodyNode.all('tr').each(function (trNode) {
+                data.push(getRowData(trNode, cols));
+            });
+            return data;
+        }
+
+        function replaceTable(node) {
+            if (!node) { return; }
+            var cols = getColumns(node.one('thead')),
+                data = getData(node.one('tbody'), cols),
+                table,
+                parent = node.get('parentNode');
+
+            table = new Y.DataTable({
+                columns: cols,
+                data: data,
+                sortBy: 'file'
+            });
+            parent.set('innerHTML', '');
+            table.render(parent);
+        }
+
+        Y.on('domready', function () {
+            replaceTable(Y.one('div.coverage-summary table'));
+            if (typeof prettyPrint === 'function') {
+                prettyPrint();
+            }
+        });
+    });
+</script>
+</body>
+</html>
