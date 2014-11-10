@@ -76,7 +76,7 @@
 
 	var grammarFormats = {
 		 timeFormats: function(){
-		 	// hour, minute, second, meridian, timezone
+			// hour, minute, second, meridian, timezone
 			g.h = cacheProcessRtoken(/^(0[0-9]|1[0-2]|[1-9])/, t.hour);
 			g.hh = cacheProcessRtoken(/^(0[0-9]|1[0-2])/, t.hour);
 			g.H = cacheProcessRtoken(/^([0-1][0-9]|2[0-3]|[0-9])/, t.hour);
@@ -100,10 +100,10 @@
 		 },
 		 dateFormats: function () {
 			// Allow rolling these up into general purpose rules
-		 	_fn = function () {
+			_fn = function () {
 				return _.each(_.any.apply(null, arguments), _.not(g.ctoken2("timeContext")));
 			};
-		 	// days, months, years
+			// days, months, years
 			g.d = cacheProcessRtoken(/^([0-2]\d|3[0-1]|\d)/, t.day, "ordinalSuffix");
 			g.dd = cacheProcessRtoken(/^([0-2]\d|3[0-1])/, t.day, "ordinalSuffix");
 			g.ddd = g.dddd = _.cache(_.process(g.ctoken("sun mon tue wed thu fri sat"),
@@ -139,7 +139,7 @@
 			};
 		 },
 		 relative: function () {
-		 	// relative date / time expressions
+			// relative date / time expressions
 			g.orientation = _.process(g.ctoken("past future"),
 				function (s) {
 					return function () {
@@ -170,9 +170,9 @@
 		// these need to be rebuilt every time the language changes.
 		_C = {};
 
-	  	grammarFormats.timeFormats();
-	  	grammarFormats.dateFormats();
-	  	grammarFormats.relative();
+		grammarFormats.timeFormats();
+		grammarFormats.dateFormats();
+		grammarFormats.relative();
 
 		
 		g.value = _.process(_.rtoken(/^([-+]?\d+)?(st|nd|rd|th)?/),

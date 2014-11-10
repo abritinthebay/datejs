@@ -72,14 +72,16 @@
 			}
 		},
 		setDaysFromWeekday: function (today, orient){
-			var gap, orient = orient || 1;
+			var gap;
+			orient = orient || 1;
 			this.unit = "day";
 			gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
 			this.days = gap ? ((gap + (orient * 7)) % 7) : (orient * 7);
 			return this;
 		},
 		setMonthsFromMonth: function (today, orient) {
-			var gap, orient = orient || 1;
+			var gap;
+			orient = orient || 1;
 			this.unit = "month";
 			gap = (this.month - today.getMonth());
 			this.months = gap ? ((gap + (orient * 12)) % 12) : (orient * 12);
@@ -341,7 +343,7 @@
 					timezone = $D.getTimezoneAbbreviation(offset, today.isDaylightSavingTime());
 					if (timezone !== this.timezone) {
 						// bugger, we're in a place where things like EST vs EDT matters.
-						(today.isDaylightSavingTime()) ? today.addHours(-1) : today.addHours(1); 
+						(today.isDaylightSavingTime()) ? today.addHours(-1) : today.addHours(1);
 					}
 				}
 				today.setTimezoneOffset(offset);
