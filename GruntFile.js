@@ -11,12 +11,12 @@ var getI18NFiles = function () {
 };
 
 var buildMinifyFileList = function (dev) {
-	var output_path = dev ? " : "production/";
+	var output_path = dev ? "" : "production/";
 	var output_ext = dev ? "." : ".min.";
 	var files = getI18NFiles();
 	var output = {};
 	files.map(function(item){
-		var file_core_name = "date-" + item.replace(".js", ");
+		var file_core_name = "date-" + item.replace(".js", "");
 		var dest = dirs.build + "/"+output_path + file_core_name + output_ext + "js";
 		output[dest] = [dirs.build + "/" + file_core_name + ".js"];
 		return dest;
@@ -29,7 +29,7 @@ var banner = "/** \n" +
 			" * @overview <%= pkg.name %>\n" +
 			" * @version <%= pkg.version %>\n" +
 			" * @author <%= pkg.author.name %> <<%= pkg.author.email %>>\n" +
-			" * @copyright <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n" +
+			" * @copyright <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>\n" +
 			" * @license <%= pkg.license %>\n" +
 			" * @homepage <%= pkg.homepage %>\n" +
 			" */";
