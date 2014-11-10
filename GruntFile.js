@@ -65,6 +65,7 @@ module.exports = function(grunt) {
 				src: [
 					'<%= dirs.core %>/i18n.js',
 					'<%= dirs.core %>/core.js',
+					'<%= dirs.core %>/core-prototypes.js',
 					'<%= dirs.core %>/sugarpak.js',
 					'<%= dirs.core %>/format_parser.js',
 					'<%= dirs.core %>/parsing_operators.js',
@@ -81,6 +82,7 @@ module.exports = function(grunt) {
 				src: [
 					'<%= dirs.core %>/i18n.js',
 					'<%= dirs.core %>/core.js',
+					'<%= dirs.core %>/core-prototypes.js',
 					'<%= dirs.core %>/sugarpak.js',
 					'<%= dirs.core %>/format_parser.js',
 					'<%= dirs.core %>/parsing_operators.js',
@@ -102,15 +104,46 @@ module.exports = function(grunt) {
 			}
 		},
 		shell: {
-			runTests: {
-				command: 'jasmine-node --captureExceptions specs/',
+			updateCodeClimate: {
+				command: 'codeclimate < reports/coverage/lcov.info',
 				options: {
 					stdout: true,
 					stderr: true,
 					failOnError: true
 				}
 			}
-		}
+		},
+		jasmine : {
+			src : [
+				"./src/core/i18n.js",
+				"./src/core/core.js",
+				"./src/core/core-prototypes.js",
+				"./src/core/sugarpak.js",
+				"./src/core/format_parser.js",
+				"./src/core/parsing_operators.js",
+				"./src/core/parsing_translator.js",
+				"./src/core/parsing_grammar.js",
+				"./src/core/parser.js",
+				"./src/core/extras.js",
+				"./src/core/time_period.js",
+				"./src/core/time_span.js"
+			],
+			options : {
+				specs : 'specs/*-spec.js',
+				template : require('grunt-template-jasmine-istanbul'),
+				templateOptions: {
+					template: 'specs/jasmine-2.0.3/specrunner.tmpl',
+					coverage: 'reports/coverage.json',
+					report: {
+						type: 'lcov',
+						options: {
+							dir: 'reports/coverage'
+						}
+					}
+				}
+			}
+		},
+
 	});
 
 	grunt.registerMultiTask('i18n', 'Wraps DateJS core with Internationalization info.', function() {
@@ -138,7 +171,7 @@ module.exports = function(grunt) {
 		grunt.task.run(['concat:core', 'concat:basic', 'i18n:core', 'closurecompiler:minify']);
 	});
 
-
+	grunt.loadNpmTasks('grunt-contrib-jasmine');
 
 	// now set the default
 	grunt.registerTask('default', ['build_dev']);
@@ -146,5 +179,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-shell');
 	grunt.loadNpmTasks('grunt-closurecompiler');
 	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.registerTask('test', ['shell:runTests']);
+	grunt.registerTask('test', ['jasmine', 'shell:updateCodeClimate']);
 };

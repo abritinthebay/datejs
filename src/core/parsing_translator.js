@@ -331,7 +331,7 @@
 			}
 			
 			(expression) ? today.add(this) : today.set(this);
-
+			
 			if (this.timezone) {
 				this.timezone = this.timezone.toUpperCase();
 				var offset = $D.getTimezoneOffset(this.timezone);

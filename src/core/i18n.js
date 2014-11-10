@@ -376,7 +376,7 @@
 							throw new Error("The DateJS IETF language tag '" + code + "' could not be loaded by Node. It likely does not exist.");
 						}
 					} else if (Date.Config && Date.Config.i18n) {
-						// we know the location of the files, so lets load them
+						// we know the location of the files, so lets load them					
 						async = true;
 						loadI18nScript(code).done(function(){
 							lang = code;

@@ -12,7 +12,10 @@
     "grunt-shell": "~0.6.1",
     "grunt-saucelabs": "~5.1.2",
     "jasmine-core": "~2.0.0",
-    "jasmine-node": "~2.0.0-beta4"
+    "jasmine-node": "~2.0.0-beta4",
+    "grunt-contrib-jasmine": "^0.8.1",
+    "grunt-template-jasmine-istanbul": "^0.3.0",
+    "codeclimate-test-reporter": "*"
   },
   "testling": {
     "files": [

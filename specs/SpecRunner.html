@@ -4,27 +4,25 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>DateJS Spec Runner</title>
 
-	<link rel="shortcut icon" type="image/png" href="jasmine/jasmine_favicon.png">
-	<link rel="stylesheet" type="text/css" href="jasmine/jasmine.css">
+	<link rel="shortcut icon" type="image/png" href="jasmine-2.0.3/jasmine_favicon.png">
+	<link rel="stylesheet" type="text/css" href="jasmine-2.0.3/jasmine.css"> 
+
+	<script type="text/javascript" src="jasmine-2.0.3/jasmine.js"></script>
+	<script type="text/javascript" src="jasmine-2.0.3/jasmine-html.js"></script>
+	<script type="text/javascript" src="jasmine-2.0.3/boot.js"></script>
 
 	<script type="text/javascript">
-		function require() {}; // stub out a dummy require for node compatibility with the specs
-	</script>
-
-	<script>
+		if (typeof require !== "function") {
+			function require() {}; // stub out a dummy require for node compatibility with the specs
+		}
 		Date.Config = Date.Config || {};
 		Date.Config.i18n="../src/i18n/";
 	</script>
-	<script type="text/javascript" src="jasmine/jasmine.js"></script>
-	<script type="text/javascript" src="jasmine/jasmine-html.js"></script>
-	<!-- <script type="text/javascript" src="jasmine/jasmine-tap.js"></script> -->
-	<script type="text/javascript" src="jasmine/boot.js"></script>
-	<script type="text/javascript" src="jasmine/blanket.js"></script>
-	<script type="text/javascript" src="jasmine/jasmine2-blanket.js"></script>
 
 	<!-- Source files -->
 	<script type="text/javascript" src="../src/core/i18n.js" data-cover></script>
 	<script type="text/javascript" src="../src/core/core.js" data-cover></script>
+	<script type="text/javascript" src="../src/core/core-prototypes.js" data-cover></script>
 	<script type="text/javascript" src="../src/core/sugarpak.js" data-cover></script>
 	<script type="text/javascript" src="../src/core/format_parser.js" data-cover></script>
 	<script type="text/javascript" src="../src/core/parsing_operators.js" data-cover></script>
