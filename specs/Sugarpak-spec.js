@@ -2,7 +2,9 @@
 if (typeof process !== "undefined") {
 	process.env.TZ = 'America/Los_Angeles';
 }
-require("../index.js");
+if (typeof require === "function") {
+	require("../index.js");
+}
 
 describe("Sugarpak Extensions", function() {
 	describe("has syntax sugar to allow movement to relative dates",function (){

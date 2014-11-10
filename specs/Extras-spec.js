@@ -2,7 +2,9 @@
 if (typeof process !== "undefined") {
 	process.env.TZ = "America/Los_Angeles";
 }
-require("../index.js");
+if (typeof require === "function") {
+	require("../index.js");
+}
 
 describe("Extras Module", function(){
 	var correctDate = new Date(1995, 11, 4, 0, 0, 0, 0);

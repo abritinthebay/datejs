@@ -2,12 +2,14 @@
 if (typeof process !== "undefined") {
 	process.env.TZ = 'America/Los_Angeles';
 }
-require("../index.js");
+if (typeof require === "function") {
+	require("../index.js");
+}
 
 describe("Core Module", function() {
 	describe("has Exception handling for when", function() {
 		it("no params are passed to Date.parse()", function() {
-			var d = Date.parse();
+			var d = Date.parse("");
 			expect(Date.parse.bind(null)).not.toThrow();
 			expect(d).toBe(null);
 		});
@@ -99,8 +101,9 @@ describe("Core Module", function() {
 		});
 		it("updates time to now", function(){
 			var d = new Date(1995, 1,1,1,1,1,1);
-			var d2 = new Date();
+			var d2;
 			d.setTimeToNow();
+			d2 = new Date();
 			expect(d.getHours()).toBe(d2.getHours());
 			expect(d.getMinutes()).toBe(d2.getMinutes());
 			expect(d.getSeconds()).toBe(d2.getSeconds());
