@@ -845,7 +845,6 @@ describe("Date Math operations support", function() {
 	// switch to smaller formats
 
 	it("+5 second and variants", function () {
-		this.d = (new Date()).add(+5).seconds();
 		var d2 = Date.parse("+5sec");
 		var d3 = Date.parse("+5 sec");
 		var d16 = Date.parse(" + 5 sec");
@@ -861,6 +860,7 @@ describe("Date Math operations support", function() {
 		var d13 = Date.parse("+5Seconds");
 		var d14 = Date.parse("+5 Seconds");
 		var d15 = Date.parse(" + 5 Seconds");
+		this.d = (new Date()).add(+5).seconds();
 
 		expect(this.d.getSeconds()).toBe(d2.getSeconds());
 		expect(this.d.getSeconds()).toBe(d3.getSeconds());
