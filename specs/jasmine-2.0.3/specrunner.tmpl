@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Jasmine Spec Runner</title>
+	<link rel="shortcut icon" type="image/png" href="<%= temp %>/jasmine_favicon.png">
+<% css.forEach(function(style){ %>
+	<link rel="stylesheet" type="text/css" href="<%= style %>">
+<% }) %>
+	<script type="text/javascript">
+		if (typeof require !== "function") {
+			function require() {}; // stub out a dummy require for node compatibility with the specs
+		}
+		// add bind for things (like PhantomJS) that don't support it (!!!)
+		if (!Function.prototype.bind) {
+			Function.prototype.bind = function (oThis) {
+				if (typeof this !== "function") {
+					// closest thing possible to the ECMAScript 5 internal IsCallable function
+					throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+				}
+
+				var aArgs = Array.prototype.slice.call(arguments, 1), 
+				fToBind = this, 
+				fNOP = function () {},
+				fBound = function () {
+				return fToBind
+					.apply(this instanceof fNOP && oThis ? this : oThis, 
+						aArgs.concat(Array.prototype.slice.call(arguments)));
+				};
+
+				fNOP.prototype = this.prototype;
+				fBound.prototype = new fNOP();
+
+				return fBound;
+			};
+		}
+		Date.Config = Date.Config || {};
+		Date.Config.i18n="src/i18n/";
+
+	</script>
+
+<% with (scripts) { %>
+	<% [].concat(jasmine, boot, vendor, helpers, src, specs,reporters).forEach(function(script){ %>
+	<script src="<%= script %>"></script><% }) %>
+<% }; %>
+</head>
+<body>
+</body>
+</html>
