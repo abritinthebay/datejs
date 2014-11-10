@@ -39,9 +39,9 @@
 				case "j":
 				case "l":
 				case "%A":
-					return "dddd";	
+					return "dddd";
 				case "S":
-					return "S";	
+					return "S";
 				case "F":
 				case "%B":
 					return "MMMM";
@@ -184,7 +184,7 @@
 	};
 
 	$D.normalizeFormat = function (format, context) {
-		return format.replace(/(%|\\)?.|%%/g, function(t){ 
+		return format.replace(/(%|\\)?.|%%/g, function(t){
 				return normalizer.parse(t, context);
 		});
 	};
