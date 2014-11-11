@@ -233,14 +233,14 @@ describe("Parsing Module", function() {
 			var d2 = Date.today();
 			var diff = Math.abs(d.getElapsed(Date.today())/1000/60/60/24); // days
 			expect(d.getDay()).toBe(2);
-			expect(diff).toBeLessThan(7);
+			expect(diff <= 7).toBeTruthy();
 		});
 		it("next tuesday", function () {
 			var d = Date.parse("next tuesday");
 			var d2 = Date.today();
 			var diff = Math.abs(d.getElapsed(Date.today())/1000/60/60/24); // days
 			expect(d.getDay()).toBe(2);
-			expect(diff).toBeLessThan(7);
+			expect(diff <= 7).toBeTruthy();
 		});
 		it("last week", function () {
 			var d = Date.parse("last week");
