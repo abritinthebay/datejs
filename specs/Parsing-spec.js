@@ -171,6 +171,17 @@ describe("Parsing Module", function() {
 			expect(d.getTime()).toBe(correctDate.getTime());
 		});
 	});
+	describe("supports shorter date formats", function() {
+		var thisYear = Date.today().set({month: 9, day: 6});
+		it("10/6", function () {
+			var d = Date.parse("10/6");
+			expect(d.getTime()).toBe(thisYear.getTime());
+		});
+		it("10.6", function () {
+			var d = Date.parse("10.6");
+			expect(d.getTime()).toBe(thisYear.getTime());
+		});
+	});
 	describe("supports variations in sortable date formats", function() {
 		it("1995/12/04", function () {
 			var d = Date.parse("1995/12/04");

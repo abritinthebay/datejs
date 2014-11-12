@@ -250,7 +250,7 @@
 				(s[0] === "+" && s[0] === "-")) {			// It's an arithmatic string (eg +/-1000)
 				return null;
 			}
-			if (s.length < 5) { // assume it's just a year.
+			if (s.length < 5 && s.indexOf(".") < 0 && s.indexOf("/") < 0) { // assume it's just a year.
 				time.year = s;
 				return $P.processTimeObject(time);
 			}
