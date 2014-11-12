@@ -2,7 +2,10 @@
 	var $D = Date;
 	$D.Grammar = {};
 	var _ = $D.Parsing.Operators, g = $D.Grammar, t = $D.Translator, _fn;
-
+	// Allow rolling up into general purpose rules
+	_fn = function () {
+		return _.each(_.any.apply(null, arguments), _.not(g.ctoken2("timeContext")));
+	};
 	g.datePartDelimiter = _.rtoken(/^([\s\-\.\,\/\x27]+)/);
 	g.timePartDelimiter = _.stoken(":");
 	g.whiteSpace = _.rtoken(/^\s*/);
@@ -31,19 +34,9 @@
 			g[key] = _.cache(_.process(_.rtoken(token), type));
 		}
 	};
-
-	// var cacheProcessRtoken = function (token, type, eachToken) {
-	// 	if (eachToken) {
-	// 		return _.cache(_.process(_.each(_.rtoken(token),_.optional(g.ctoken2(eachToken))), type));
-	// 	} else {
-	// 		return _.cache(_.process(_.rtoken(token), type));
-	// 	}
-	// };
-
 	var cacheProcessCtoken = function (token, type) {
 		return _.cache(_.process(g.ctoken2(token), type));
-	}
-
+	};
 	var _F = {}; //function cache
 
 	var _get = function (f) {
@@ -77,7 +70,7 @@
 
 	var grammarFormats = {
 		 timeFormats: function(){
-			var i, 
+			var i,
 			RTokenKeys = [
 				"h",
 				"hh",
@@ -132,10 +125,6 @@
 			g.time = _.each(_.optional(_.ignore(_.stoken("T"))), g.hms, g.timeSuffix);
 		 },
 		 dateFormats: function () {
-			// Allow rolling these up into general purpose rules
-			var _fn = function () {
-				return _.each(_.any.apply(null, arguments), _.not(g.ctoken2("timeContext")));
-			};
 			// days, months, years
 			cacheProcessRtoken("d", /^([0-2]\d|3[0-1]|\d)/, t.day, "ordinalSuffix");
 			cacheProcessRtoken("dd", /^([0-2]\d|3[0-1])/, t.day, "ordinalSuffix");
