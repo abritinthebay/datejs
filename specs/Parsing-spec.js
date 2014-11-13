@@ -323,6 +323,24 @@ describe("Parsing Module", function() {
 			var d2 = Date.today().addDays(1).set({hour: 15});
 			expect(d2.equals(d)).toBe(true);
 		});
+		it("today", function () {
+			var d = Date.today();
+			expect(Date.parse("today").getTime()).toBe(d.getTime());
+		});
+		it("tomorrow", function () {
+			var d = Date.today().add(1).days();
+			expect(Date.parse("tomorrow").getTime()).toBe(d.getTime());
+		});
+		it("today 18:00", function () {
+			var d = Date.today().set({hour: 18});
+			expect(Date.parse("today 18:00").getTime()).toBe(d.getTime());
+			expect(Date.parse("today 18").getTime()).toBe(d.getTime());
+		});
+		it("tomorrow 18:00", function () {
+			var d = Date.today().add(1).days().set({hour: 18});
+			expect(Date.parse("tomorrow 18:00").getTime()).toBe(d.getTime());
+			expect(Date.parse("tomorrow 18").getTime()).toBe(d.getTime());
+		});
 	});
 	describe("can parse Timezones correctly", function() {
 		it("defaults to local timezone", function (){

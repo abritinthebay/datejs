@@ -329,10 +329,14 @@
 		buildRegexFunctions: function () {
 			var $R = Date.CultureInfo.regexPatterns;
 			var __ = Date.i18n.__;
-			var regexStr = new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i");
+			var tomorrowRE = new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i"); // adapted tomorrow regex for AM PM relative dates
+			var todayRE = new RegExp($R.today.source + "(?!\\s*([+-]))\\b"); // today, but excludes the math operators (eg "today + 2h")
 			
 			this.replaceFuncs = [
-				[regexStr,
+				[todayRE, function (full, m1) {
+					return (full.length > 1) ? Date.today().toString("d") : full;
+				}],
+				[tomorrowRE,
 				function(full, m1) {
 					var t = Date.today().addDays(1).toString("d");
 					return (t + " " + m1);

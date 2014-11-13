@@ -242,7 +242,6 @@
 					x[i].call(this);
 				}
 			}
-
 			if (this.now && !this.unit && !this.operator) {
 				return new Date();
 			} else {
@@ -331,7 +330,6 @@
 			if (expression && this.timezone && this.day && this.days) {
 				this.day = this.days;
 			}
-			
 			(expression) ? today.add(this) : today.set(this);
 			
 			if (this.timezone) {
