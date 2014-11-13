@@ -333,7 +333,7 @@
 			var todayRE = new RegExp($R.today.source + "(?!\\s*([+-]))\\b"); // today, but excludes the math operators (eg "today + 2h")
 			
 			this.replaceFuncs = [
-				[todayRE, function (full, m1) {
+				[todayRE, function (full) {
 					return (full.length > 1) ? Date.today().toString("d") : full;
 				}],
 				[tomorrowRE,
