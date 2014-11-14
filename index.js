@@ -4,6 +4,7 @@
  */
 require("./src/core/i18n.js");
 require("./src/core/core.js");
+require("./src/core/core-prototypes.js");
 require("./src/core/sugarpak.js");
 require("./src/core/format_parser.js");
 require("./src/core/parsing_operators.js");
