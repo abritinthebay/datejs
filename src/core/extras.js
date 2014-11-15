@@ -27,87 +27,60 @@
 	 * @param {String}   A PHP format string consisting of one or more format spcifiers.
 	 * @return {String}  The PHP format converted to a Java/.NET format string.
 	 */
+	 var normalizerSubstitutions = {
+		"d" : "dd",
+		"%d": "dd",
+		"D" : "ddd",
+		"%a": "ddd",
+		"j" : "dddd",
+		"l" : "dddd",
+		"%A": "dddd",
+		"S" : "S",
+		"F" : "MMMM",
+		"%B": "MMMM",
+		"m" : "MM",
+		"%m": "MM",
+		"M" : "MMM",
+		"%b": "MMM",
+		"%h": "MMM",
+		"n" : "M",
+		"Y" : "yyyy",
+		"%Y": "yyyy",
+		"y" : "yy",
+		"%y": "yy", 
+		"g" : "h",
+		"%I": "h", 
+		"G" : "H", 
+		"h" : "hh", 
+		"H" : "HH",
+		"%H": "HH", 
+		"i" : "mm",
+		"%M": "mm", 
+		"s" : "ss",
+		"%S": "ss",
+		"%r": "hh:mm tt", 
+		"%R": "H:mm", 
+		"%T": "H:mm:ss", 
+		"%X": "t", 
+		"%x": "d",
+		"%e": "d", 
+		"%D": "MM/dd/yy", 
+		"%n": "\\n", 
+		"%t": "\\t", 
+		"e" : "z",
+		"T" : "z",
+		"%z": "z",
+		"%Z": "z", 
+		"Z" : "ZZ",
+		"N" : "u",
+		"w" : "u",
+		"%w": "u", 
+		"W" : "W",
+		"%V": "W", 
+	};
 	var normalizer = {
 		substitutes: function (m) {
-			switch (m) {
-				case "d":
-				case "%d":
-					return "dd";
-				case "D":
-				case "%a":
-					return "ddd";
-				case "j":
-				case "l":
-				case "%A":
-					return "dddd";
-				case "S":
-					return "S";
-				case "F":
-				case "%B":
-					return "MMMM";
-				case "m":
-				case "%m":
-					return "MM";
-				case "M":
-				case "%b":
-				case "%h":
-					return "MMM";
-				case "n":
-					return "M";
-				case "Y":
-				case "%Y":
-					return "yyyy";
-				case "y":
-				case "%y":
-					return "yy";
-				case "g":
-				case "%I":
-					return "h";
-				case "G":
-					return "H";
-				case "h":
-					return "hh";
-				case "H":
-				case "%H":
-					return "HH";
-				case "i":
-				case "%M":
-					return "mm";
-				case "s":
-				case "%S":
-					return "ss";
-				case "%r":
-					return "hh:mm tt";
-				case "%R":
-					return "H:mm";
-				case "%T":
-					return "H:mm:ss";
-				case "%X":
-					return "t";
-				case "%x":
-				case "%e":
-					return "d";
-				case "%D":
-					return "MM/dd/yy";
-				case "%n":
-					return "\\n";
-				case "%t":
-					return "\\t";
-				case "e":
-				case "T":
-				case "%z":
-				case "%Z":
-					return "z";
-				case "Z":
-					return "ZZ";
-				case "N":
-				case "w":
-				case "%w":
-					return "u";
-				case "W":
-				case "%V":
-					return "W";
-			}
+			return normalizerSubstitutions[m];
 		},
 		interpreted: function (m, x) {
 			var y;
@@ -196,7 +169,7 @@
 	 * Date.strftime("c", "2008-04-13T17:52:03Z");	// "04/13/08"
 	 * 
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
-	 * @param {Number}   The number representing the number of seconds that have elapsed since January 1, 1970 (local time). 
+	 * @param {Number|String}   The number representing the number of seconds that have elapsed since January 1, 1970 (local time). 
 	 * @return {String}  A string representation of the current Date object.
 	 */
 	$D.strftime = function (format, time) {
