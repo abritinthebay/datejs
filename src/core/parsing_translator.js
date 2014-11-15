@@ -330,7 +330,12 @@
 			if (expression && this.timezone && this.day && this.days) {
 				this.day = this.days;
 			}
-			(expression) ? today.add(this) : today.set(this);
+
+			if (expression){
+				today.add(this);
+			} else {
+				today.set(this);
+			}
 			
 			if (this.timezone) {
 				this.timezone = this.timezone.toUpperCase();
@@ -341,7 +346,11 @@
 					timezone = $D.getTimezoneAbbreviation(offset, today.isDaylightSavingTime());
 					if (timezone !== this.timezone) {
 						// bugger, we're in a place where things like EST vs EDT matters.
-						(today.isDaylightSavingTime()) ? today.addHours(-1) : today.addHours(1);
+						if (today.isDaylightSavingTime()) {
+							today.addHours(-1);
+						} else {
+							today.addHours(1);
+						}
 					}
 				}
 				today.setTimezoneOffset(offset);
