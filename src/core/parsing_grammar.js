@@ -6,6 +6,7 @@
 	_fn = function () {
 		return _.each(_.any.apply(null, arguments), _.not(g.ctoken2("timeContext")));
 	};
+	
 	g.datePartDelimiter = _.rtoken(/^([\s\-\.\,\/\x27]+)/);
 	g.timePartDelimiter = _.stoken(":");
 	g.whiteSpace = _.rtoken(/^\s*/);
@@ -125,9 +126,50 @@
 			g.time = _.each(_.optional(_.ignore(_.stoken("T"))), g.hms, g.timeSuffix);
 		 },
 		 dateFormats: function () {
-			// days, months, years
-			cacheProcessRtoken("d", /^([0-2]\d|3[0-1]|\d)/, t.day, "ordinalSuffix");
-			cacheProcessRtoken("dd", /^([0-2]\d|3[0-1])/, t.day, "ordinalSuffix");
+			// pre-loaded rules for different date part order preferences
+			var _setfn = function () {
+				return  _.set(arguments, g.datePartDelimiter);
+			};
+			var i,
+			RTokenKeys = [
+				"d",
+				"dd",
+				"M",
+				"MM",
+				"y",
+				"yy",
+				"yyy",
+				"yyyy"
+			],
+			RToken = [
+				/^([0-2]\d|3[0-1]|\d)/,
+				/^([0-2]\d|3[0-1])/,
+				/^(1[0-2]|0\d|\d)/,
+				/^(1[0-2]|0\d)/,
+				/^(\d+)/,
+				/^(\d\d)/,
+				/^(\d\d?\d?\d?)/,
+				/^(\d\d\d\d)/
+			],
+			tokens = [
+				t.day,
+				t.day,
+				t.month,
+				t.month,
+				t.year,
+				t.year,
+				t.year,
+				t.year
+			],
+			eachToken = [
+				"ordinalSuffix",
+				"ordinalSuffix"
+			];
+			for (i=0; i < RTokenKeys.length; i++) {
+				cacheProcessRtoken(RTokenKeys[i], RToken[i], tokens[i], eachToken[i]);
+			}
+
+			g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
 			g.ddd = g.dddd = _.cache(_.process(g.ctoken("sun mon tue wed thu fri sat"),
 				function (s) {
 					return function () {
@@ -135,23 +177,11 @@
 					};
 				}
 			));
-			cacheProcessRtoken("M", /^(1[0-2]|0\d|\d)/, t.month);
-			cacheProcessRtoken("MM", /^(1[0-2]|0\d)/, t.month);
-			g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
-			//g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join(" ")), t.month));
-			cacheProcessRtoken("y", /^(\d+)/, t.year);
-			cacheProcessRtoken("yy", /^(\d\d)/, t.year);
-			cacheProcessRtoken("yyy", /^(\d\d?\d?\d?)/, t.year);
-			cacheProcessRtoken("yyyy", /^(\d\d\d\d)/, t.year);
 
 			g.day = _fn(g.d, g.dd);
 			g.month = _fn(g.M, g.MMM);
 			g.year = _fn(g.yyyy, g.yy);
 
-			// pre-loaded rules for different date part order preferences
-			var _setfn = function () {
-				return  _.set(arguments, g.datePartDelimiter);
-			};
 			g.mdy = _setfn(g.ddd, g.month, g.day, g.year);
 			g.ymd = _setfn(g.ddd, g.year, g.month, g.day);
 			g.dmy = _setfn(g.ddd, g.day, g.month, g.year);
