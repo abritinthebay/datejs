@@ -105,7 +105,7 @@ module.exports = function(grunt) {
 		},
 		shell: {
 			updateCodeClimate: {
-				command: "codeclimate < reports/coverage/lcov.info",
+				command: "codeclimate < reports/lcov.info",
 				options: {
 					stdout: true,
 					stderr: true,
@@ -115,18 +115,18 @@ module.exports = function(grunt) {
 		},
 		jasmine : {
 			src : [
-				"./src/core/i18n.js",
-				"./src/core/core.js",
-				"./src/core/core-prototypes.js",
-				"./src/core/sugarpak.js",
-				"./src/core/format_parser.js",
-				"./src/core/parsing_operators.js",
-				"./src/core/parsing_translator.js",
-				"./src/core/parsing_grammar.js",
-				"./src/core/parser.js",
-				"./src/core/extras.js",
-				"./src/core/time_period.js",
-				"./src/core/time_span.js"
+				"src/core/i18n.js",
+				"src/core/core.js",
+				"src/core/core-prototypes.js",
+				"src/core/sugarpak.js",
+				"src/core/format_parser.js",
+				"src/core/parsing_operators.js",
+				"src/core/parsing_translator.js",
+				"src/core/parsing_grammar.js",
+				"src/core/parser.js",
+				"src/core/extras.js",
+				"src/core/time_period.js",
+				"src/core/time_span.js"
 			],
 			options : {
 				specs : "specs/*-spec.js",
@@ -137,7 +137,8 @@ module.exports = function(grunt) {
 					report: {
 						type: "lcov",
 						options: {
-							dir: "reports/coverage"
+							replace: true,
+							dir: "reports/"
 						}
 					}
 				}
@@ -177,7 +178,7 @@ module.exports = function(grunt) {
 	grunt.registerTask("default", ["build_dev"]);
 	// Load the plugin that provides the "minify" task.
 	grunt.loadNpmTasks("grunt-shell");
-	grunt.loadNpmTasks("grunt-closurecompiler");
+	// grunt.loadNpmTasks("grunt-closurecompiler");
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.registerTask("test", ["jasmine", "shell:updateCodeClimate"]);
 };
