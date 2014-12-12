@@ -186,13 +186,13 @@
 			} else if (last) {
 				return Date.today().last()[inc]().toString("d");
 			}
-			
+
 		},
 		buildRegexData: function (array) {
 			var arr = [];
 			var len = array.length;
 			for (var i=0; i < len; i++) {
-				if (Array.isArray(array[i])) {
+				if (Object.prototype.toString.call(array[i]) === '[object Array]') { // oldIE compat version of Array.isArray
 					arr.push(this.combineRegex(array[i][0], array[i][1]));
 				} else {
 					arr.push(array[i]);
@@ -221,7 +221,7 @@
 		}
 		return date;
 	};
-	
+
 	$P.ISO = {
 		regex : /^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-3])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-4])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?\s?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/,
 		parse : function (s) {
@@ -331,7 +331,7 @@
 			var __ = Date.i18n.__;
 			var tomorrowRE = new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i"); // adapted tomorrow regex for AM PM relative dates
 			var todayRE = new RegExp($R.today.source + "(?!\\s*([+-]))\\b"); // today, but excludes the math operators (eg "today + 2h")
-			
+
 			this.replaceFuncs = [
 				[todayRE, function (full) {
 					return (full.length > 1) ? Date.today().toString("d") : full;
@@ -344,7 +344,7 @@
 				[$R.amThisMorning, function(str, am){return am;}],
 				[$R.pmThisEvening, function(str, pm){return pm;}]
 			];
-				
+
 		},
 		buildReplaceData: function () {
 			this.buildRegexFunctions();
