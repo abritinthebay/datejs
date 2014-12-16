@@ -1,6 +1,6 @@
 /** 
  * @overview datejs
- * @version 1.0.0-rc2
+ * @version 1.0.0-rc3
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -187,7 +187,7 @@ Date.CultureStrings.lang = "fo-FO";
 
 /** 
  * @overview datejs
- * @version 1.0.0-rc2
+ * @version 1.0.0-rc3
  * @author Gregory Wild-Smith <gregory@wild-smith.com>
  * @copyright 2014 Gregory Wild-Smith
  * @license MIT
@@ -570,7 +570,7 @@ Date.CultureStrings.lang = "fo-FO";
 							throw new Error("The DateJS IETF language tag '" + code + "' could not be loaded by Node. It likely does not exist.");
 						}
 					} else if (Date.Config && Date.Config.i18n) {
-						// we know the location of the files, so lets load them
+						// we know the location of the files, so lets load them					
 						async = true;
 						loadI18nScript(code).done(function(){
 							lang = code;
@@ -587,6 +587,7 @@ Date.CultureStrings.lang = "fo-FO";
 						});
 					} else {
 						Date.console.error("The DateJS IETF language tag '" + code + "' is not available and has not been loaded.");
+						return false;
 					}
 				}
 			}
@@ -677,31 +678,6 @@ Date.CultureStrings.lang = "fo-FO";
 	};
 	$D.initOverloads();
 
-	/**
-	 * Resets the time of this Date object to 12:00 AM (00:00), which is the start of the day.
-	 * @param {Boolean}  .clone() this date instance before clearing Time
-	 * @return {Date}    this
-	 */
-	$P.clearTime = function () {
-		this.setHours(0);
-		this.setMinutes(0);
-		this.setSeconds(0);
-		this.setMilliseconds(0);
-		return this;
-	};
-
-	/**
-	 * Resets the time of this Date object to the current time ('now').
-	 * @return {Date}    this
-	 */
-	$P.setTimeToNow = function () {
-		var n = new Date();
-		this.setHours(n.getHours());
-		this.setMinutes(n.getMinutes());
-		this.setSeconds(n.getSeconds());
-		this.setMilliseconds(n.getMilliseconds());
-		return this;
-	};
 
 	/** 
 	 * Gets a date that is set to the current date. The time is set to the start of the day (00:00 or 12:00 AM).
@@ -867,6 +843,172 @@ Date.CultureStrings.lang = "fo-FO";
 		return Math.floor((qEnd - d) / 8.64e7);
 	};
 
+	// private
+	var validate = function (n, min, max, name) {
+		name = name ? name : "Object";
+		if (typeof n === "undefined") {
+			return false;
+		} else if (typeof n !== "number") {
+			throw new TypeError(n + " is not a Number.");
+		} else if (n < min || n > max) {
+			// As failing validation is *not* an exceptional circumstance 
+			// lets not throw a RangeError Exception here. 
+			// It's semantically correct but it's not sensible.
+			return false;
+		}
+		return true;
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for milliseconds [0-999].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
+	$D.validateMillisecond = function (value) {
+		return validate(value, 0, 999, "millisecond");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for seconds [0-59].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
+	$D.validateSecond = function (value) {
+		return validate(value, 0, 59, "second");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for minutes [0-59].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
+	$D.validateMinute = function (value) {
+		return validate(value, 0, 59, "minute");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for hours [0-23].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
+	$D.validateHour = function (value) {
+		return validate(value, 0, 23, "hour");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for the days in a month [0-MaxDaysInMonth].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
+	$D.validateDay = function (value, year, month) {
+		if (year === undefined || year === null || month === undefined || month === null) { return false;}
+		return validate(value, 1, $D.getDaysInMonth(year, month), "day");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for months [0-11].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
+	$D.validateWeek = function (value) {
+		return validate(value, 0, 53, "week");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for months [0-11].
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
+	$D.validateMonth = function (value) {
+		return validate(value, 0, 11, "month");
+	};
+
+	/**
+	 * Validates the number is within an acceptable range for years.
+	 * @param {Number}   The number to check if within range.
+	 * @return {Boolean} true if within range, otherwise false.
+	 */
+	$D.validateYear = function (value) {
+		/**
+		 * Per ECMAScript spec the range of times supported by Date objects is 
+		 * exactly -100,000,000 days to +100,000,000 days measured relative to 
+		 * midnight at the beginning of 01 January, 1970 UTC. 
+		 * This gives a range of 8,640,000,000,000,000 milliseconds to either 
+		 * side of 01 January, 1970 UTC.
+		 *
+		 * Earliest possible date: Tue, 20 Apr 271,822 B.C. 00:00:00 UTC
+		 * Latest possible date: Sat, 13 Sep 275,760 00:00:00 UTC
+		 */
+		return validate(value, -271822, 275760, "year");
+	};
+	$D.validateTimezone = function(value) {
+		var timezones = {"ACDT":1,"ACST":1,"ACT":1,"ADT":1,"AEDT":1,"AEST":1,"AFT":1,"AKDT":1,"AKST":1,"AMST":1,"AMT":1,"ART":1,"AST":1,"AWDT":1,"AWST":1,"AZOST":1,"AZT":1,"BDT":1,"BIOT":1,"BIT":1,"BOT":1,"BRT":1,"BST":1,"BTT":1,"CAT":1,"CCT":1,"CDT":1,"CEDT":1,"CEST":1,"CET":1,"CHADT":1,"CHAST":1,"CHOT":1,"ChST":1,"CHUT":1,"CIST":1,"CIT":1,"CKT":1,"CLST":1,"CLT":1,"COST":1,"COT":1,"CST":1,"CT":1,"CVT":1,"CWST":1,"CXT":1,"DAVT":1,"DDUT":1,"DFT":1,"EASST":1,"EAST":1,"EAT":1,"ECT":1,"EDT":1,"EEDT":1,"EEST":1,"EET":1,"EGST":1,"EGT":1,"EIT":1,"EST":1,"FET":1,"FJT":1,"FKST":1,"FKT":1,"FNT":1,"GALT":1,"GAMT":1,"GET":1,"GFT":1,"GILT":1,"GIT":1,"GMT":1,"GST":1,"GYT":1,"HADT":1,"HAEC":1,"HAST":1,"HKT":1,"HMT":1,"HOVT":1,"HST":1,"ICT":1,"IDT":1,"IOT":1,"IRDT":1,"IRKT":1,"IRST":1,"IST":1,"JST":1,"KGT":1,"KOST":1,"KRAT":1,"KST":1,"LHST":1,"LINT":1,"MAGT":1,"MART":1,"MAWT":1,"MDT":1,"MET":1,"MEST":1,"MHT":1,"MIST":1,"MIT":1,"MMT":1,"MSK":1,"MST":1,"MUT":1,"MVT":1,"MYT":1,"NCT":1,"NDT":1,"NFT":1,"NPT":1,"NST":1,"NT":1,"NUT":1,"NZDT":1,"NZST":1,"OMST":1,"ORAT":1,"PDT":1,"PET":1,"PETT":1,"PGT":1,"PHOT":1,"PHT":1,"PKT":1,"PMDT":1,"PMST":1,"PONT":1,"PST":1,"PYST":1,"PYT":1,"RET":1,"ROTT":1,"SAKT":1,"SAMT":1,"SAST":1,"SBT":1,"SCT":1,"SGT":1,"SLST":1,"SRT":1,"SST":1,"SYOT":1,"TAHT":1,"THA":1,"TFT":1,"TJT":1,"TKT":1,"TLT":1,"TMT":1,"TOT":1,"TVT":1,"UCT":1,"ULAT":1,"UTC":1,"UYST":1,"UYT":1,"UZT":1,"VET":1,"VLAT":1,"VOLT":1,"VOST":1,"VUT":1,"WAKT":1,"WAST":1,"WAT":1,"WEDT":1,"WEST":1,"WET":1,"WST":1,"YAKT":1,"YEKT":1,"Z":1};
+		return (timezones[value] === 1);
+	};
+	$D.validateTimezoneOffset= function(value) {
+		// timezones go from +14hrs to -12hrs, the +X hours are negative offsets.
+		return (value > -841 && value < 721);
+	};
+
+}());
+
+(function () {
+	var $D = Date,
+		$P = $D.prototype,
+		p = function (s, l) {
+			if (!l) {
+				l = 2;
+			}
+			return ("000" + s).slice(l * -1);
+		};
+
+	var validateConfigObject = function (obj) {
+		var result = {}, self = this, prop, testFunc;
+		testFunc = function (prop, func, value) {
+			if (prop === "day") {
+				var month = (obj.month !== undefined) ? obj.month : self.getMonth();
+				var year = (obj.year !== undefined) ? obj.year : self.getFullYear();
+				return $D[func](value, year, month);
+			} else {
+				return $D[func](value);
+			}
+		};
+		for (prop in obj) {
+			if (hasOwnProperty.call(obj, prop)) {
+				var func = "validate" + prop.charAt(0).toUpperCase() + prop.slice(1);
+
+				if ($D[func] && obj[prop] !== null && testFunc(prop, func, obj[prop])) {
+					result[prop] = obj[prop];
+				}
+			}
+		}
+		return result;
+	};
+	/**
+	 * Resets the time of this Date object to 12:00 AM (00:00), which is the start of the day.
+	 * @param {Boolean}  .clone() this date instance before clearing Time
+	 * @return {Date}    this
+	 */
+	$P.clearTime = function () {
+		this.setHours(0);
+		this.setMinutes(0);
+		this.setSeconds(0);
+		this.setMilliseconds(0);
+		return this;
+	};
+
+	/**
+	 * Resets the time of this Date object to the current time ('now').
+	 * @return {Date}    this
+	 */
+	$P.setTimeToNow = function () {
+		var n = new Date();
+		this.setHours(n.getHours());
+		this.setMinutes(n.getMinutes());
+		this.setSeconds(n.getSeconds());
+		this.setMilliseconds(n.getMilliseconds());
+		return this;
+	};
 	/**
 	 * Returns a new Date object that is an exact date and time copy of the original instance.
 	 * @return {Date}    A new Date instance
@@ -1001,6 +1143,7 @@ Date.CultureStrings.lang = "fo-FO";
 			if (value > 0) {
 				this.next().monday();
 				this.addDays(-1);
+				day = this.getDay();
 			}
 		}
 
@@ -1029,6 +1172,7 @@ Date.CultureStrings.lang = "fo-FO";
 		if (!value) { return this; }
 		return this.addDays(value * 7);
 	};
+
 
 	/**
 	 * Adds the specified number of months to this instance. 
@@ -1190,195 +1334,6 @@ Date.CultureStrings.lang = "fo-FO";
 		return Date.getDaysLeftInQuarter(this);
 	};
 
-	// private
-	var validate = function (n, min, max, name) {
-		name = name ? name : "Object";
-		if (typeof n === "undefined") {
-			return false;
-		} else if (typeof n !== "number") {
-			throw new TypeError(n + " is not a Number.");
-		} else if (n < min || n > max) {
-			// As failing validation is *not* an exceptional circumstance 
-			// lets not throw a RangeError Exception here. 
-			// It's semantically correct but it's not sensible.
-			return false;
-		}
-		return true;
-	};
-
-	/**
-	 * Validates the number is within an acceptable range for milliseconds [0-999].
-	 * @param {Number}   The number to check if within range.
-	 * @return {Boolean} true if within range, otherwise false.
-	 */
-	$D.validateMillisecond = function (value) {
-		return validate(value, 0, 999, "millisecond");
-	};
-
-	/**
-	 * Validates the number is within an acceptable range for seconds [0-59].
-	 * @param {Number}   The number to check if within range.
-	 * @return {Boolean} true if within range, otherwise false.
-	 */
-	$D.validateSecond = function (value) {
-		return validate(value, 0, 59, "second");
-	};
-
-	/**
-	 * Validates the number is within an acceptable range for minutes [0-59].
-	 * @param {Number}   The number to check if within range.
-	 * @return {Boolean} true if within range, otherwise false.
-	 */
-	$D.validateMinute = function (value) {
-		return validate(value, 0, 59, "minute");
-	};
-
-	/**
-	 * Validates the number is within an acceptable range for hours [0-23].
-	 * @param {Number}   The number to check if within range.
-	 * @return {Boolean} true if within range, otherwise false.
-	 */
-	$D.validateHour = function (value) {
-		return validate(value, 0, 23, "hour");
-	};
-
-	/**
-	 * Validates the number is within an acceptable range for the days in a month [0-MaxDaysInMonth].
-	 * @param {Number}   The number to check if within range.
-	 * @return {Boolean} true if within range, otherwise false.
-	 */
-	$D.validateDay = function (value, year, month) {
-		if (year === undefined || year === null || month === undefined || month === null) { return false;}
-		return validate(value, 1, $D.getDaysInMonth(year, month), "day");
-	};
-
-	/**
-	 * Validates the number is within an acceptable range for months [0-11].
-	 * @param {Number}   The number to check if within range.
-	 * @return {Boolean} true if within range, otherwise false.
-	 */
-	$D.validateWeek = function (value) {
-		return validate(value, 0, 53, "week");
-	};
-
-	/**
-	 * Validates the number is within an acceptable range for months [0-11].
-	 * @param {Number}   The number to check if within range.
-	 * @return {Boolean} true if within range, otherwise false.
-	 */
-	$D.validateMonth = function (value) {
-		return validate(value, 0, 11, "month");
-	};
-
-	/**
-	 * Validates the number is within an acceptable range for years.
-	 * @param {Number}   The number to check if within range.
-	 * @return {Boolean} true if within range, otherwise false.
-	 */
-	$D.validateYear = function (value) {
-		/**
-		 * Per ECMAScript spec the range of times supported by Date objects is 
-		 * exactly -100,000,000 days to +100,000,000 days measured relative to 
-		 * midnight at the beginning of 01 January, 1970 UTC. 
-		 * This gives a range of 8,640,000,000,000,000 milliseconds to either 
-		 * side of 01 January, 1970 UTC.
-		 *
-		 * Earliest possible date: Tue, 20 Apr 271,822 B.C. 00:00:00 UTC
-		 * Latest possible date: Sat, 13 Sep 275,760 00:00:00 UTC
-		 */
-		return validate(value, -271822, 275760, "year");
-	};
-	$D.validateTimezone = function(value) {
-		var timezones = {"ACDT":1,"ACST":1,"ACT":1,"ADT":1,"AEDT":1,"AEST":1,"AFT":1,"AKDT":1,"AKST":1,"AMST":1,"AMT":1,"ART":1,"AST":1,"AWDT":1,"AWST":1,"AZOST":1,"AZT":1,"BDT":1,"BIOT":1,"BIT":1,"BOT":1,"BRT":1,"BST":1,"BTT":1,"CAT":1,"CCT":1,"CDT":1,"CEDT":1,"CEST":1,"CET":1,"CHADT":1,"CHAST":1,"CHOT":1,"ChST":1,"CHUT":1,"CIST":1,"CIT":1,"CKT":1,"CLST":1,"CLT":1,"COST":1,"COT":1,"CST":1,"CT":1,"CVT":1,"CWST":1,"CXT":1,"DAVT":1,"DDUT":1,"DFT":1,"EASST":1,"EAST":1,"EAT":1,"ECT":1,"EDT":1,"EEDT":1,"EEST":1,"EET":1,"EGST":1,"EGT":1,"EIT":1,"EST":1,"FET":1,"FJT":1,"FKST":1,"FKT":1,"FNT":1,"GALT":1,"GAMT":1,"GET":1,"GFT":1,"GILT":1,"GIT":1,"GMT":1,"GST":1,"GYT":1,"HADT":1,"HAEC":1,"HAST":1,"HKT":1,"HMT":1,"HOVT":1,"HST":1,"ICT":1,"IDT":1,"IOT":1,"IRDT":1,"IRKT":1,"IRST":1,"IST":1,"JST":1,"KGT":1,"KOST":1,"KRAT":1,"KST":1,"LHST":1,"LINT":1,"MAGT":1,"MART":1,"MAWT":1,"MDT":1,"MET":1,"MEST":1,"MHT":1,"MIST":1,"MIT":1,"MMT":1,"MSK":1,"MST":1,"MUT":1,"MVT":1,"MYT":1,"NCT":1,"NDT":1,"NFT":1,"NPT":1,"NST":1,"NT":1,"NUT":1,"NZDT":1,"NZST":1,"OMST":1,"ORAT":1,"PDT":1,"PET":1,"PETT":1,"PGT":1,"PHOT":1,"PHT":1,"PKT":1,"PMDT":1,"PMST":1,"PONT":1,"PST":1,"PYST":1,"PYT":1,"RET":1,"ROTT":1,"SAKT":1,"SAMT":1,"SAST":1,"SBT":1,"SCT":1,"SGT":1,"SLST":1,"SRT":1,"SST":1,"SYOT":1,"TAHT":1,"THA":1,"TFT":1,"TJT":1,"TKT":1,"TLT":1,"TMT":1,"TOT":1,"TVT":1,"UCT":1,"ULAT":1,"UTC":1,"UYST":1,"UYT":1,"UZT":1,"VET":1,"VLAT":1,"VOLT":1,"VOST":1,"VUT":1,"WAKT":1,"WAST":1,"WAT":1,"WEDT":1,"WEST":1,"WET":1,"WST":1,"YAKT":1,"YEKT":1,"Z":1};
-		return (timezones[value] === 1);
-	};
-	$D.validateTimezoneOffset= function(value) {
-		// timezones go from +14hrs to -12hrs, the +X hours are negative offsets.
-		return (value > -841 && value < 721);
-	};
-
-	var validateConfigObject = function (obj) {
-		var result = {}, self = this, prop, testFunc;
-		testFunc = function (prop, func, value) {
-			if (prop === "day") {
-				var month = (obj.month !== undefined) ? obj.month - self.getMonth() : self.getMonth();
-				var year = (obj.year !== undefined) ? obj.year - self.getFullYear() : self.getFullYear();
-				return $D[func](value, year, month);
-			} else {
-				return $D[func](value);
-			}
-		};
-		for (prop in obj) {
-			if (hasOwnProperty.call(obj, prop)) {
-				var func = "validate" + prop.charAt(0).toUpperCase() + prop.slice(1);
-				if ($D[func] && obj[prop] !== null && testFunc(prop, func, obj[prop])) {
-					result[prop] = obj[prop];
-				}
-			}
-		}
-		return result;
-	};
-	
-	/**
-	 * Set the value of year, month, day, hour, minute, second, millisecond of date instance using given configuration object.
-	 * Example
-	<pre><code>
-	Date.today().set( { day: 20, month: 1 } )
-
-	new Date().set( { millisecond: 0 } )
-	</code></pre>
-	 * 
-	 * @param {Object}   Configuration object containing attributes (month, day, etc.)
-	 * @return {Date}    this
-	 */
-	$P.set = function (config) {
-		config = validateConfigObject.call(this, config);
-		var key;
-		for (key in config) {
-			if (hasOwnProperty.call(config, key)) {
-				var name = key.charAt(0).toUpperCase() + key.slice(1);
-				var addFunc, getFunc;
-				if (key !== "week" && key !== "month" && key !== "timezone" && key !== "timezoneOffset") {
-					name += "s";
-				}
-				addFunc = "add" + name;
-				getFunc = "get" + name;
-				if (key === "month") {
-					addFunc = addFunc + "s";
-				} else if (key === "year"){
-					getFunc = "getFullYear";
-				}
-				if (key !== "day" && key !== "timezone" && key !== "timezoneOffset"  && key !== "week") {
-						this[addFunc](config[key] - this[getFunc]());
-				} else if ( key === "timezone" || key === "timezoneOffset" || key === "week") {
-					this["set"+name](config[key]);
-				}
-			}
-		}
-		// day has to go last because you can't validate the day without first knowing the month
-		if (config.day) {
-			this.addDays(config.day - this.getDate());
-		}
-		
-		return this;
-	};
-
-	/**
-	 * Moves the date to the first day of the month.
-	 * @return {Date}    this
-	 */
-	$P.moveToFirstDayOfMonth = function () {
-		return this.set({ day: 1 });
-	};
-
-	/**
-	 * Moves the date to the last day of the month.
-	 * @return {Date}    this
-	 */
-	$P.moveToLastDayOfMonth = function () {
-		return this.set({ day: $D.getDaysInMonth(this.getFullYear(), this.getMonth())});
-	};
-
 	/**
 	 * Moves the date to the next n'th occurrence of the dayOfWeek starting from the beginning of the month. The number (-1) is a magic number and will return the last occurrence of the dayOfWeek in the month.
 	 * @param {Number}   The dayOfWeek to move to
@@ -1511,6 +1466,67 @@ Date.CultureStrings.lang = "fo-FO";
 	};
 
 	/**
+	 * Set the value of year, month, day, hour, minute, second, millisecond of date instance using given configuration object.
+	 * Example
+	<pre><code>
+	Date.today().set( { day: 20, month: 1 } )
+
+	new Date().set( { millisecond: 0 } )
+	</code></pre>
+	 * 
+	 * @param {Object}   Configuration object containing attributes (month, day, etc.)
+	 * @return {Date}    this
+	 */
+	$P.set = function (config) {
+		config = validateConfigObject.call(this, config);
+		var key;
+		for (key in config) {
+			if (hasOwnProperty.call(config, key)) {
+				var name = key.charAt(0).toUpperCase() + key.slice(1);
+				var addFunc, getFunc;
+				if (key !== "week" && key !== "month" && key !== "timezone" && key !== "timezoneOffset") {
+					name += "s";
+				}
+				addFunc = "add" + name;
+				getFunc = "get" + name;
+				if (key === "month") {
+					addFunc = addFunc + "s";
+				} else if (key === "year"){
+					getFunc = "getFullYear";
+				}
+				if (key !== "day" && key !== "timezone" && key !== "timezoneOffset"  && key !== "week" &&  key !== "hour") {
+						this[addFunc](config[key] - this[getFunc]());
+				} else if ( key === "timezone"|| key === "timezoneOffset" || key === "week" || key === "hour") {
+					this["set"+name](config[key]);
+				}
+			}
+		}
+		// day has to go last because you can't validate the day without first knowing the month
+		if (config.day) {
+			this.addDays(config.day - this.getDate());
+		}
+		
+		return this;
+	};
+
+	/**
+	 * Moves the date to the first day of the month.
+	 * @return {Date}    this
+	 */
+	$P.moveToFirstDayOfMonth = function () {
+		return this.set({ day: 1 });
+	};
+
+	/**
+	 * Moves the date to the last day of the month.
+	 * @return {Date}    this
+	 */
+	$P.moveToLastDayOfMonth = function () {
+		return this.set({ day: $D.getDaysInMonth(this.getFullYear(), this.getMonth())});
+	};
+
+
+	/**
 	 * Converts the value of the current Date object to its equivalent string representation.
 	 * Format Specifiers
 	 * CUSTOM DATE AND TIME FORMAT STRINGS
@@ -1618,60 +1634,75 @@ Date.CultureStrings.lang = "fo-FO";
 				return m.replace("\\", "");
 			}
 			switch (m) {
-			case "hh":
-				return p(context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12));
-			case "h":
-				return context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12);
-			case "HH":
-				return p(context.getHours());
-			case "H":
-				return context.getHours();
-			case "mm":
-				return p(context.getMinutes());
-			case "m":
-				return context.getMinutes();
-			case "ss":
-				return p(context.getSeconds());
-			case "s":
-				return context.getSeconds();
-			case "yyyy":
-				return p(context.getFullYear(), 4);
-			case "yy":
-				return p(context.getFullYear());
-			case "y":
-				return context.getFullYear();
-			case "dddd":
-				return Date.CultureInfo.dayNames[context.getDay()];
-			case "ddd":
-				return Date.CultureInfo.abbreviatedDayNames[context.getDay()];
-			case "dd":
-				return p(context.getDate());
-			case "d":
-				return context.getDate();
-			case "MMMM":
-				return Date.CultureInfo.monthNames[context.getMonth()];
-			case "MMM":
-				return Date.CultureInfo.abbreviatedMonthNames[context.getMonth()];
-			case "MM":
-				return p((context.getMonth() + 1));
-			case "M":
-				return context.getMonth() + 1;
-			case "t":
-				return context.getHours() < 12 ? Date.CultureInfo.amDesignator.substring(0, 1) : Date.CultureInfo.pmDesignator.substring(0, 1);
-			case "tt":
-				return context.getHours() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
-			case "S":
-				return ord(context.getDate());
-			case "W":
-				return context.getWeek();
-			case "WW":
-				return context.getISOWeek();
-			case "Q":
-				return "Q" + context.getQuarter();
-			case "q":
-				return String(context.getQuarter());
-			default:
-				return m;
+				case "hh":
+					return p(context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12));
+				case "h":
+					return context.getHours() < 13 ? (context.getHours() === 0 ? 12 : context.getHours()) : (context.getHours() - 12);
+				case "HH":
+					return p(context.getHours());
+				case "H":
+					return context.getHours();
+				case "mm":
+					return p(context.getMinutes());
+				case "m":
+					return context.getMinutes();
+				case "ss":
+					return p(context.getSeconds());
+				case "s":
+					return context.getSeconds();
+				case "yyyy":
+					return p(context.getFullYear(), 4);
+				case "yy":
+					return p(context.getFullYear());
+				case "y":
+					return context.getFullYear();
+				case "E":
+				case "dddd":
+					return Date.CultureInfo.dayNames[context.getDay()];
+				case "ddd":
+					return Date.CultureInfo.abbreviatedDayNames[context.getDay()];
+				case "dd":
+					return p(context.getDate());
+				case "d":
+					return context.getDate();
+				case "MMMM":
+					return Date.CultureInfo.monthNames[context.getMonth()];
+				case "MMM":
+					return Date.CultureInfo.abbreviatedMonthNames[context.getMonth()];
+				case "MM":
+					return p((context.getMonth() + 1));
+				case "M":
+					return context.getMonth() + 1;
+				case "t":
+					return context.getHours() < 12 ? Date.CultureInfo.amDesignator.substring(0, 1) : Date.CultureInfo.pmDesignator.substring(0, 1);
+				case "tt":
+					return context.getHours() < 12 ? Date.CultureInfo.amDesignator : Date.CultureInfo.pmDesignator;
+				case "S":
+					return ord(context.getDate());
+				case "W":
+					return context.getWeek();
+				case "WW":
+					return context.getISOWeek();
+				case "Q":
+					return "Q" + context.getQuarter();
+				case "q":
+					return String(context.getQuarter());
+				case "z":
+					return context.getTimezone();
+				case "Z":
+				case "X":
+					return Date.getTimezoneOffset(context.getTimezone());
+				case "ZZ": // Timezone offset in seconds
+					return context.getTimezoneOffset() * -60;
+				case "u":
+					return context.getDay();
+				case "L":
+					return ($D.isLeapYear(context.getFullYear())) ? 1 : 0;
+				case "B":
+					// Swatch Internet Time (.beats)
+					return "@"+((context.getUTCSeconds() + (context.getUTCMinutes()*60) + ((context.getUTCHours()+1)*3600))/86.4);
+				default:
+					return m;
 			}
 		};
 	};
@@ -1690,7 +1721,6 @@ Date.CultureStrings.lang = "fo-FO";
 	};
 
 }());
-
 /*************************************************************
  * SugarPak - Domain Specific Language -  Syntactical Sugar  *
  *************************************************************/
@@ -2373,13 +2403,13 @@ Date.CultureStrings.lang = "fo-FO";
 			} else if (last) {
 				return Date.today().last()[inc]().toString("d");
 			}
-			
+
 		},
 		buildRegexData: function (array) {
 			var arr = [];
 			var len = array.length;
 			for (var i=0; i < len; i++) {
-				if (Array.isArray(array[i])) {
+				if (Object.prototype.toString.call(array[i]) === '[object Array]') { // oldIE compat version of Array.isArray
 					arr.push(this.combineRegex(array[i][0], array[i][1]));
 				} else {
 					arr.push(array[i]);
@@ -2408,7 +2438,7 @@ Date.CultureStrings.lang = "fo-FO";
 		}
 		return date;
 	};
-	
+
 	$P.ISO = {
 		regex : /^([\+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-3])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-4])((:?)[0-5]\d)?|24\:?00)([\.,]\d+(?!:))?)?(\17[0-5]\d([\.,]\d+)?)?\s?([zZ]|([\+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/,
 		parse : function (s) {
@@ -2437,7 +2467,7 @@ Date.CultureStrings.lang = "fo-FO";
 				(s[0] === "+" && s[0] === "-")) {			// It's an arithmatic string (eg +/-1000)
 				return null;
 			}
-			if (s.length < 5) { // assume it's just a year.
+			if (s.length < 5 && s.indexOf(".") < 0 && s.indexOf("/") < 0) { // assume it's just a year.
 				time.year = s;
 				return $P.processTimeObject(time);
 			}
@@ -2516,10 +2546,14 @@ Date.CultureStrings.lang = "fo-FO";
 		buildRegexFunctions: function () {
 			var $R = Date.CultureInfo.regexPatterns;
 			var __ = Date.i18n.__;
-			var regexStr = new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i");
-			
+			var tomorrowRE = new RegExp("(\\b\\d\\d?("+__("AM")+"|"+__("PM")+")? )("+$R.tomorrow.source.slice(1)+")", "i"); // adapted tomorrow regex for AM PM relative dates
+			var todayRE = new RegExp($R.today.source + "(?!\\s*([+-]))\\b"); // today, but excludes the math operators (eg "today + 2h")
+
 			this.replaceFuncs = [
-				[regexStr,
+				[todayRE, function (full) {
+					return (full.length > 1) ? Date.today().toString("d") : full;
+				}],
+				[tomorrowRE,
 				function(full, m1) {
 					var t = Date.today().addDays(1).toString("d");
 					return (t + " " + m1);
@@ -2527,7 +2561,7 @@ Date.CultureStrings.lang = "fo-FO";
 				[$R.amThisMorning, function(str, am){return am;}],
 				[$R.pmThisEvening, function(str, pm){return pm;}]
 			];
-				
+
 		},
 		buildReplaceData: function () {
 			this.buildRegexFunctions();
@@ -2660,13 +2694,28 @@ Date.CultureStrings.lang = "fo-FO";
 			return rx;
 		},
 		cache: function (rule) {
-			var cache = {}, r = null;
+			var cache = {}, cache_length = 0, cache_keys = [], CACHE_MAX = Date.Config.CACHE_MAX || 100000, r = null;
+			var cacheCheck = function () {
+				if (cache_length === CACHE_MAX) {
+					// kill several keys, don't want to have to do this all the time...
+					for (var i=0; i < 10; i++) {
+						var key = cache_keys.shift();
+						if (key) {
+							delete cache[key];
+							cache_length--;
+						}
+					}
+				}
+			};
 			return function (s) {
+				cacheCheck();
 				try {
 					r = cache[s] = (cache[s] || rule.call(this, s));
 				} catch (e) {
 					r = cache[s] = e;
 				}
+				cache_length++;
+				cache_keys.push(s);
 				if (r instanceof $P.Exception) {
 					throw r;
 				} else {
@@ -3078,8 +3127,9 @@ Date.CultureStrings.lang = "fo-FO";
 				return $D.today();
 			}
 		},
-		setDaysFromWeekday: function (today){
+		setDaysFromWeekday: function (today, orient){
 			var gap;
+			orient = orient || 1;
 			this.unit = "day";
 			gap = ($D.getDayNumberFromName(this.weekday) - today.getDay());
 			this.days = gap ? ((gap + (orient * 7)) % 7) : (orient * 7);
@@ -3087,6 +3137,7 @@ Date.CultureStrings.lang = "fo-FO";
 		},
 		setMonthsFromMonth: function (today, orient) {
 			var gap;
+			orient = orient || 1;
 			this.unit = "month";
 			gap = (this.month - today.getMonth());
 			this.months = gap ? ((gap + (orient * 12)) % 12) : (orient * 12);
@@ -3247,7 +3298,6 @@ Date.CultureStrings.lang = "fo-FO";
 					x[i].call(this);
 				}
 			}
-
 			if (this.now && !this.unit && !this.operator) {
 				return new Date();
 			} else {
@@ -3274,16 +3324,17 @@ Date.CultureStrings.lang = "fo-FO";
 			if (!expression && this.weekday && !this.day && !this.days) {
 				finishUtils.setDMYFromWeekday.call(this);
 			}
+
+			if (expression && this.weekday && this.unit !== "month" && this.unit !== "week") {
+				finishUtils.setDaysFromWeekday.call(this, today, orient);
+			}
+
 			if (this.weekday && this.unit !== "week" && !this.day && !this.days) {
 				temp = Date[this.weekday]();
 				this.day = temp.getDate();
 				if (temp.getMonth() !== today.getMonth()) {
 					this.month = temp.getMonth();
 				}
-			}
-
-			if (expression && this.weekday && this.unit !== "month" && this.unit !== "week") {
-				finishUtils.setDaysFromWeekday.call(this, today);
 			}
 
 			if (this.month && this.unit === "day" && this.operator) {
@@ -3335,8 +3386,33 @@ Date.CultureStrings.lang = "fo-FO";
 			if (expression && this.timezone && this.day && this.days) {
 				this.day = this.days;
 			}
+
+			if (expression){
+				today.add(this);
+			} else {
+				today.set(this);
+			}
 			
-			return (expression) ? today.add(this) : today.set(this);
+			if (this.timezone) {
+				this.timezone = this.timezone.toUpperCase();
+				var offset = $D.getTimezoneOffset(this.timezone);
+				var timezone;
+				if (today.hasDaylightSavingTime()) {
+					// lets check that we're being sane with timezone setting
+					timezone = $D.getTimezoneAbbreviation(offset, today.isDaylightSavingTime());
+					if (timezone !== this.timezone) {
+						// bugger, we're in a place where things like EST vs EDT matters.
+						if (today.isDaylightSavingTime()) {
+							today.addHours(-1);
+						} else {
+							today.addHours(1);
+						}
+					}
+				}
+				today.setTimezoneOffset(offset);
+			}
+
+			return today;
 		}
 	};
 }());
@@ -3344,7 +3420,11 @@ Date.CultureStrings.lang = "fo-FO";
 	var $D = Date;
 	$D.Grammar = {};
 	var _ = $D.Parsing.Operators, g = $D.Grammar, t = $D.Translator, _fn;
-
+	// Allow rolling up into general purpose rules
+	_fn = function () {
+		return _.each(_.any.apply(null, arguments), _.not(g.ctoken2("timeContext")));
+	};
+	
 	g.datePartDelimiter = _.rtoken(/^([\s\-\.\,\/\x27]+)/);
 	g.timePartDelimiter = _.stoken(":");
 	g.whiteSpace = _.rtoken(/^\s*/);
@@ -3366,27 +3446,18 @@ Date.CultureStrings.lang = "fo-FO";
 	g.ctoken2 = function (key) {
 		return _.rtoken(Date.CultureInfo.regexPatterns[key]);
 	};
-	var cacheProcessRtoken = function (token, type, eachToken) {
+	var cacheProcessRtoken = function (key, token, type, eachToken) {
 		if (eachToken) {
-			return _.cache(_.process(_.each(_.rtoken(token),_.optional(g.ctoken2(eachToken))), type));
+			g[key] = _.cache(_.process(_.each(_.rtoken(token),_.optional(g.ctoken2(eachToken))), type));
 		} else {
-			return _.cache(_.process(_.rtoken(token), type));
+			g[key] = _.cache(_.process(_.rtoken(token), type));
 		}
 	};
-
-	var _F = {
-		//"M/d/yyyy": function (s) { 
-		//	var m = s.match(/^([0-2]\d|3[0-1]|\d)\/(1[0-2]|0\d|\d)\/(\d\d\d\d)/);
-		//	if (m!=null) { 
-		//		var r =  [ t.month.call(this,m[1]), t.day.call(this,m[2]), t.year.call(this,m[3]) ];
-		//		r = t.finishExact.call(this,r);
-		//		return [ r, "" ];
-		//	} else {
-		//		throw new Date.Parsing.Exception(s);
-		//	}
-		//}
-		//"M/d/yyyy": function (s) { return [ new Date(Date._parse(s)), ""]; }
+	var cacheProcessCtoken = function (token, type) {
+		return _.cache(_.process(g.ctoken2(token), type));
 	};
+	var _F = {}; //function cache
+
 	var _get = function (f) {
 		_F[f] = (_F[f] || g.format(f)[0]);
 		return _F[f];
@@ -3416,83 +3487,164 @@ Date.CultureStrings.lang = "fo-FO";
 		}
 	};
 
+	var grammarFormats = {
+		 timeFormats: function(){
+			var i,
+			RTokenKeys = [
+				"h",
+				"hh",
+				"H",
+				"HH",
+				"m",
+				"mm",
+				"s",
+				"ss",
+				"ss.s",
+				"z",
+				"zz"
+			],
+			RToken = [
+				/^(0[0-9]|1[0-2]|[1-9])/,
+				/^(0[0-9]|1[0-2])/,
+				/^([0-1][0-9]|2[0-3]|[0-9])/,
+				/^([0-1][0-9]|2[0-3])/,
+				/^([0-5][0-9]|[0-9])/,
+				/^[0-5][0-9]/,
+				/^([0-5][0-9]|[0-9])/,
+				/^[0-5][0-9]/,
+				/^[0-5][0-9]\.[0-9]{1,3}/,
+				/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/,
+				/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/
+			],
+			tokens = [
+				t.hour,
+				t.hour,
+				t.hour,
+				t.minute,
+				t.minute,
+				t.second,
+				t.second,
+				t.secondAndMillisecond,
+				t.timezone,
+				t.timezone,
+				t.timezone
+			];
+
+			for (i=0; i < RTokenKeys.length; i++) {
+				cacheProcessRtoken(RTokenKeys[i], RToken[i], tokens[i]);
+			}
+
+			g.hms = _.cache(_.sequence([g.H, g.m, g.s], g.timePartDelimiter));
+
+			g.t = cacheProcessCtoken("shortMeridian", t.meridian);
+			g.tt = cacheProcessCtoken("longMeridian", t.meridian);
+			g.zzz = cacheProcessCtoken("timezone", t.timezone);
+
+			g.timeSuffix = _.each(_.ignore(g.whiteSpace), _.set([ g.tt, g.zzz ]));
+			g.time = _.each(_.optional(_.ignore(_.stoken("T"))), g.hms, g.timeSuffix);
+		 },
+		 dateFormats: function () {
+			// pre-loaded rules for different date part order preferences
+			var _setfn = function () {
+				return  _.set(arguments, g.datePartDelimiter);
+			};
+			var i,
+			RTokenKeys = [
+				"d",
+				"dd",
+				"M",
+				"MM",
+				"y",
+				"yy",
+				"yyy",
+				"yyyy"
+			],
+			RToken = [
+				/^([0-2]\d|3[0-1]|\d)/,
+				/^([0-2]\d|3[0-1])/,
+				/^(1[0-2]|0\d|\d)/,
+				/^(1[0-2]|0\d)/,
+				/^(\d+)/,
+				/^(\d\d)/,
+				/^(\d\d?\d?\d?)/,
+				/^(\d\d\d\d)/
+			],
+			tokens = [
+				t.day,
+				t.day,
+				t.month,
+				t.month,
+				t.year,
+				t.year,
+				t.year,
+				t.year
+			],
+			eachToken = [
+				"ordinalSuffix",
+				"ordinalSuffix"
+			];
+			for (i=0; i < RTokenKeys.length; i++) {
+				cacheProcessRtoken(RTokenKeys[i], RToken[i], tokens[i], eachToken[i]);
+			}
+
+			g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
+			g.ddd = g.dddd = _.cache(_.process(g.ctoken("sun mon tue wed thu fri sat"),
+				function (s) {
+					return function () {
+						this.weekday = s;
+					};
+				}
+			));
+
+			g.day = _fn(g.d, g.dd);
+			g.month = _fn(g.M, g.MMM);
+			g.year = _fn(g.yyyy, g.yy);
+
+			g.mdy = _setfn(g.ddd, g.month, g.day, g.year);
+			g.ymd = _setfn(g.ddd, g.year, g.month, g.day);
+			g.dmy = _setfn(g.ddd, g.day, g.month, g.year);
+						
+			g.date = function (s) {
+				return ((g[Date.CultureInfo.dateElementOrder] || g.mdy).call(this, s));
+			};
+		 },
+		 relative: function () {
+			// relative date / time expressions
+			g.orientation = _.process(g.ctoken("past future"),
+				function (s) {
+					return function () {
+						this.orient = s;
+					};
+				}
+			);
+
+			g.operator = _.process(g.ctoken("add subtract"),
+				function (s) {
+					return function () {
+						this.operator = s;
+					};
+				}
+			);
+			g.rday = _.process(g.ctoken("yesterday tomorrow today now"), t.rday);
+			g.unit = _.process(g.ctoken("second minute hour day week month year"),
+				function (s) {
+					return function () {
+						this.unit = s;
+					};
+				}
+			);
+		 }
+	};
+
 	g.buildGrammarFormats = function () {
 		// these need to be rebuilt every time the language changes.
 		_C = {};
-		// hour, minute, second, meridian, timezone
-		g.h = cacheProcessRtoken(/^(0[0-9]|1[0-2]|[1-9])/, t.hour);
-		g.hh = cacheProcessRtoken(/^(0[0-9]|1[0-2])/, t.hour);
-		g.H = cacheProcessRtoken(/^([0-1][0-9]|2[0-3]|[0-9])/, t.hour);
-		g.HH = cacheProcessRtoken(/^([0-1][0-9]|2[0-3])/, t.hour);
-		g.m = cacheProcessRtoken(/^([0-5][0-9]|[0-9])/, t.minute);
-		g.mm = cacheProcessRtoken(/^[0-5][0-9]/, t.minute);
-		g.s = cacheProcessRtoken(/^([0-5][0-9]|[0-9])/, t.second);
-		g.ss = cacheProcessRtoken(/^[0-5][0-9]/, t.second);
-		g["ss.s"] = cacheProcessRtoken(/^[0-5][0-9]\.[0-9]{1,3}/, t.secondAndMillisecond);
-		g.hms = _.cache(_.sequence([g.H, g.m, g.s], g.timePartDelimiter));
-	  
-		// _.min(1, _.set([ g.H, g.m, g.s ], g._t));
-		g.t = _.cache(_.process(g.ctoken2("shortMeridian"), t.meridian));
-		g.tt = _.cache(_.process(g.ctoken2("longMeridian"), t.meridian));
-		g.z = cacheProcessRtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/, t.timezone);
-		g.zz = cacheProcessRtoken(/^((\+|\-)\s*\d\d\d\d)|((\+|\-)\d\d\:?\d\d)/, t.timezone);
-		
-		g.zzz = _.cache(_.process(g.ctoken2("timezone"), t.timezone));
-		g.timeSuffix = _.each(_.ignore(g.whiteSpace), _.set([ g.tt, g.zzz ]));
-		g.time = _.each(_.optional(_.ignore(_.stoken("T"))), g.hms, g.timeSuffix);
-			  
-		// days, months, years
-		g.d = cacheProcessRtoken(/^([0-2]\d|3[0-1]|\d)/, t.day, "ordinalSuffix");
-		g.dd = cacheProcessRtoken(/^([0-2]\d|3[0-1])/, t.day, "ordinalSuffix");
-		g.ddd = g.dddd = _.cache(_.process(g.ctoken("sun mon tue wed thu fri sat"),
-			function (s) {
-				return function () {
-					this.weekday = s;
-				};
-			}
-		));
-		g.M = cacheProcessRtoken(/^(1[0-2]|0\d|\d)/, t.month);
-		g.MM = cacheProcessRtoken(/^(1[0-2]|0\d)/, t.month);
-		g.MMM = g.MMMM = _.cache(_.process(g.ctoken("jan feb mar apr may jun jul aug sep oct nov dec"), t.month));
-	//	g.MMM = g.MMMM = _.cache(_.process(g.ctoken(Date.CultureInfo.abbreviatedMonthNames.join(" ")), t.month));
-		g.y = cacheProcessRtoken(/^(\d+)/, t.year);
-		g.yy = cacheProcessRtoken(/^(\d\d)/, t.year);
-		g.yyy = cacheProcessRtoken(/^(\d\d?\d?\d?)/, t.year);
-		g.yyyy = cacheProcessRtoken(/^(\d\d\d\d)/, t.year);
-		
-		// rolling these up into general purpose rules
-		_fn = function () {
-			return _.each(_.any.apply(null, arguments), _.not(g.ctoken2("timeContext")));
-		};
-		
-		g.day = _fn(g.d, g.dd);
-		g.month = _fn(g.M, g.MMM);
-		g.year = _fn(g.yyyy, g.yy);
 
-		// relative date / time expressions
-		g.orientation = _.process(g.ctoken("past future"),
-			function (s) {
-				return function () {
-					this.orient = s;
-				};
-			}
-		);
+		grammarFormats.timeFormats();
+		grammarFormats.dateFormats();
+		grammarFormats.relative();
 
-		g.operator = _.process(g.ctoken("add subtract"),
-			function (s) {
-				return function () {
-					this.operator = s;
-				};
-			}
-		);
-		g.rday = _.process(g.ctoken("yesterday tomorrow today now"), t.rday);
-		g.unit = _.process(g.ctoken("second minute hour day week month year"),
-			function (s) {
-				return function () {
-					this.unit = s;
-				};
-			}
-		);
+		
 		g.value = _.process(_.rtoken(/^([-+]?\d+)?(st|nd|rd|th)?/),
 			function (s) {
 				return function () {
@@ -3500,18 +3652,7 @@ Date.CultureStrings.lang = "fo-FO";
 				};
 			}
 		);
-		g.expression = _.set([ g.rday, g.operator, g.value, g.unit, g.orientation, g.ddd, g.MMM ]);
-
-		// pre-loaded rules for different date part order preferences
-		_fn = function () {
-			return  _.set(arguments, g.datePartDelimiter);
-		};
-		g.mdy = _fn(g.ddd, g.month, g.day, g.year);
-		g.ymd = _fn(g.ddd, g.year, g.month, g.day);
-		g.dmy = _fn(g.ddd, g.day, g.month, g.year);
-		g.date = function (s) {
-			return ((g[Date.CultureInfo.dateElementOrder] || g.mdy).call(this, s));
-		};
+		g.expression = _.set([g.rday, g.operator, g.value, g.unit, g.orientation, g.ddd, g.MMM ]);
 
 		g.format = _.process(_.many(
 			_.any(
@@ -3544,14 +3685,11 @@ Date.CultureStrings.lang = "fo-FO";
 		g._start = _.process(_.set([ g.date, g.time, g.expression ],
 		g.generalDelimiter, g.whiteSpace), t.finish);
 	};
+
 	g.buildGrammarFormats();
 	// parsing date format specifiers - ex: "h:m:s tt" 
 	// this little guy will generate a custom parser based
 	// on the format string, ex: g.format("h:m:s tt")
-	
-
-	
-
 	// check for these formats first
 	g._formats = g.formats([
 		"\"yyyy-MM-ddTHH:mm:ssZ\"",
@@ -3736,7 +3874,6 @@ Date.CultureStrings.lang = "fo-FO";
 			// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
 			s = $D.Parsing.Normalizer.parse(parseUtils.removeOrds(s));
 			d = parseUtils.grammarParser(s);
-
 			if (d !== null) {
 				return d;
 			} else {
@@ -3807,60 +3944,187 @@ Date.CultureStrings.lang = "fo-FO";
 			return ("000" + s).slice(l * -1);
 		};
 	/**
-	 * Converts a PHP format string to Java/.NET format string. 
-	 * A PHP format string can be used with .$format or .format.
+	 * Converts a PHP format string to Java/.NET format string.
+	 * A PHP format string can be used with ._format or .format.
 	 * A Java/.NET format string can be used with .toString().
 	 * The .parseExact function will only accept a Java/.NET format string
 	 *
 	 * Example
 	 * var f1 = "%m/%d/%y"
 	 * var f2 = Date.normalizeFormat(f1);	// "MM/dd/yy"
-	 * 
+	 *
 	 * new Date().format(f1);	// "04/13/08"
-	 * new Date().$format(f1);	// "04/13/08"
+	 * new Date()._format(f1);	// "04/13/08"
 	 * new Date().toString(f2);	// "04/13/08"
-	 *  
+	 *
 	 * var date = Date.parseExact("04/13/08", f2); // Sun Apr 13 2008
-	 * 
+	 *
 	 * @param {String}   A PHP format string consisting of one or more format spcifiers.
 	 * @return {String}  The PHP format converted to a Java/.NET format string.
 	 */
-	$D.normalizeFormat = function (format) {
-		// function does nothing atm
-		// $f = [];
-		// var t = new Date().$format(format);
-		// return $f.join("");
-		return format;
+	 var normalizerSubstitutions = {
+		"d" : "dd",
+		"%d": "dd",
+		"D" : "ddd",
+		"%a": "ddd",
+		"j" : "dddd",
+		"l" : "dddd",
+		"%A": "dddd",
+		"S" : "S",
+		"F" : "MMMM",
+		"%B": "MMMM",
+		"m" : "MM",
+		"%m": "MM",
+		"M" : "MMM",
+		"%b": "MMM",
+		"%h": "MMM",
+		"n" : "M",
+		"Y" : "yyyy",
+		"%Y": "yyyy",
+		"y" : "yy",
+		"%y": "yy",
+		"g" : "h",
+		"%I": "h",
+		"G" : "H",
+		"h" : "hh",
+		"H" : "HH",
+		"%H": "HH",
+		"i" : "mm",
+		"%M": "mm",
+		"s" : "ss",
+		"%S": "ss",
+		"%r": "hh:mm tt",
+		"%R": "H:mm",
+		"%T": "H:mm:ss",
+		"%X": "t",
+		"%x": "d",
+		"%e": "d",
+		"%D": "MM/dd/yy",
+		"%n": "\\n",
+		"%t": "\\t",
+		"e" : "z",
+		"T" : "z",
+		"%z": "z",
+		"%Z": "z",
+		"Z" : "ZZ",
+		"N" : "u",
+		"w" : "u",
+		"%w": "u",
+		"W" : "W",
+		"%V": "W"
+	};
+	var normalizer = {
+		substitutes: function (m) {
+			return normalizerSubstitutions[m];
+		},
+		interpreted: function (m, x) {
+			var y;
+			switch (m) {
+				case "%u":
+					return x.getDay() + 1;
+				case "z":
+					return x.getOrdinalNumber();
+				case "%j":
+					return p(x.getOrdinalNumber(), 3);
+				case "%U":
+					var d1 = x.clone().set({month: 0, day: 1}).addDays(-1).moveToDayOfWeek(0),
+						d2 = x.clone().addDays(1).moveToDayOfWeek(0, -1);
+					return (d2 < d1) ? "00" : p((d2.getOrdinalNumber() - d1.getOrdinalNumber()) / 7 + 1);
+
+				case "%W":
+					return p(x.getWeek());
+				case "t":
+					return $D.getDaysInMonth(x.getFullYear(), x.getMonth());
+				case "o":
+				case "%G":
+					return x.setWeek(x.getISOWeek()).toString("yyyy");
+				case "%g":
+					return x._format("%G").slice(-2);
+				case "a":
+				case "%p":
+					return t("tt").toLowerCase();
+				case "A":
+					return t("tt").toUpperCase();
+				case "u":
+					return p(x.getMilliseconds(), 3);
+				case "I":
+					return (x.isDaylightSavingTime()) ? 1 : 0;
+				case "O":
+					return x.getUTCOffset();
+				case "P":
+					y = x.getUTCOffset();
+					return y.substring(0, y.length - 2) + ":" + y.substring(y.length - 2);
+				case "B":
+					var now = new Date();
+					return Math.floor(((now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getTimezoneOffset() + 60) * 60) / 86.4);
+				case "c":
+					return x.toISOString().replace(/\"/g, "");
+				case "U":
+					return $D.strtotime("now");
+				case "%c":
+					return t("d") + " " + t("t");
+				case "%C":
+					return Math.floor(x.getFullYear() / 100 + 1);
+			}
+		},
+		shouldOverrideDefaults: function (m) {
+			switch (m) {
+				case "%e":
+					return true;
+				default:
+					return false;
+			}
+		},
+		parse: function (m, context) {
+			var formatString, c = context || new Date();
+			formatString = normalizer.substitutes(m);
+			if (formatString) {
+				return formatString;
+			}
+			formatString = normalizer.interpreted(m, c);
+
+			if (formatString) {
+				return formatString;
+			} else {
+				return m;
+			}
+		}
+	};
+
+	$D.normalizeFormat = function (format, context) {
+		return format.replace(/(%|\\)?.|%%/g, function(t){
+				return normalizer.parse(t, context);
+		});
 	};
 	/**
 	 * Format a local Unix timestamp according to locale settings
-	 * 
+	 *
 	 * Example:
 	 * Date.strftime("%m/%d/%y", new Date());		// "04/13/08"
 	 * Date.strftime("c", "2008-04-13T17:52:03Z");	// "04/13/08"
-	 * 
+	 *
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
-	 * @param {Number}   The number representing the number of seconds that have elapsed since January 1, 1970 (local time). 
+	 * @param {Number|String}   The number representing the number of seconds that have elapsed since January 1, 1970 (local time).
 	 * @return {String}  A string representation of the current Date object.
 	 */
 	$D.strftime = function (format, time) {
-		return new Date(time * 1000).$format(format);
+		var d = Date.parse(time);
+		return d._format(format);
 	};
 	/**
-	 * Parse any textual datetime description into a Unix timestamp. 
+	 * Parse any textual datetime description into a Unix timestamp.
 	 * A Unix timestamp is the number of seconds that have elapsed since January 1, 1970 (midnight UTC/GMT).
-	 * 
+	 *
 	 * Example:
 	 * Date.strtotime("04/13/08");				// 1208044800
 	 * Date.strtotime("1970-01-01T00:00:00Z");	// 0
-	 * 
+	 *
 	 * @param {String}   A format string consisting of one or more format spcifiers [Optional].
 	 * @param {Object}   A string or date object.
 	 * @return {String}  A string representation of the current Date object.
 	 */
 	$D.strtotime = function (time) {
 		var d = $D.parse(time);
-		d.addMinutes(d.getTimezoneOffset() * -1);
 		return Math.round($D.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()) / 1000);
 	};
 	/**
@@ -3911,7 +4175,7 @@ Date.CultureStrings.lang = "fo-FO";
 	 * %y		year as a decimal number without a century									"00" "99"
 	 * %Y		year as a decimal number including the century								"2008"
 	 * %Z		time zone or name or abbreviation											"UTC", "EST", "PST"
-	 * %z		same as %Z 
+	 * %z		same as %Z
 	 * %%		a literal "%" characters													"%"
 	 * d		Day of the month, 2 digits with leading zeros								"01" to "31"
 	 * D		A textual representation of a day, three letters							"Mon" through "Sun"
@@ -3920,7 +4184,7 @@ Date.CultureStrings.lang = "fo-FO";
 	 * N		ISO-8601 numeric representation of the day of the week (added in PHP 5.1.0)	"1" (for Monday) through "7" (for Sunday)
 	 * S		English ordinal suffix for the day of the month, 2 characters				"st", "nd", "rd" or "th". Works well with j
 	 * w		Numeric representation of the day of the week								"0" (for Sunday) through "6" (for Saturday)
-	 * z		The day of the year (starting from "0")										"0" through "365"		
+	 * z		The day of the year (starting from "0")										"0" through "365"
 	 * W		ISO-8601 week number of year, weeks starting on Monday						"00" to ("52" or "53")
 	 * F		A full textual representation of a month, such as January or March			"January" through "December"
 	 * m		Numeric representation of a month, with leading zeros						"01" through "12"
@@ -3929,7 +4193,7 @@ Date.CultureStrings.lang = "fo-FO";
 	 * t		Number of days in the given month											"28" through "31"
 	 * L		Whether it's a leap year													"1" if it is a leap year, "0" otherwise
 	 * o		ISO-8601 year number. This has the same value as Y, except that if the		"2008"
-	 *		ISO week number (W) belongs to the previous or next year, that year 
+	 *		ISO week number (W) belongs to the previous or next year, that year
 	 *		is used instead.
 	 * Y		A full numeric representation of a year, 4 digits							"2008"
 	 * y		A two digit representation of a year										"08"
@@ -3957,174 +4221,20 @@ Date.CultureStrings.lang = "fo-FO";
 	 * @return {String}  A string representation of the current Date object.
 	 */
 	var formatReplace = function (context) {
-		var y, x = context,
-			t = function (v, overrideStandardFormats) {
-					return x.toString(v, overrideStandardFormats);
-			};
 		return function (m) {
 			var formatString, override = false;
 			if (m.charAt(0) === "\\" || m.substring(0, 2) === "%%") {
 				return m.replace("\\", "").replace("%%", "%");
 			}
-			switch (m) {
-				case "d":
-				case "%d":
-					formatString = "dd";
-					break;
-				case "D":
-				case "%a":
-					formatString = "ddd";
-					break;
-				case "j":
-				case "l":
-				case "%A":
-					formatString = "dddd";
-					break;
-				case "N":
-				case "%u":
-					return x.getDay() + 1;
-				case "S":
-					formatString = "S";
-					break;
-				case "w":
-				case "%w":
-					return x.getDay();
-				case "z":
-					return x.getOrdinalNumber();
-				case "%j":
-					return p(x.getOrdinalNumber(), 3);
-				case "%U":
-					var d1 = x.clone().set({month: 0, day: 1}).addDays(-1).moveToDayOfWeek(0),
-						d2 = x.clone().addDays(1).moveToDayOfWeek(0, -1);
-					return (d2 < d1) ? "00" : p((d2.getOrdinalNumber() - d1.getOrdinalNumber()) / 7 + 1);
-				case "W":
-				case "%V":
-					return x.getISOWeek();
-				case "%W":
-					return p(x.getWeek());
-				case "F":
-				case "%B":
-					formatString = "MMMM";
-					break;
-				case "m":
-				case "%m":
-					formatString = "MM";
-					break;
-				case "M":
-				case "%b":
-				case "%h":
-					formatString = "MMM";
-					break;
-				case "n":
-					formatString = "M";
-					break;
-				case "t":
-					return $D.getDaysInMonth(x.getFullYear(), x.getMonth());
-				case "L":
-					return ($D.isLeapYear(x.getFullYear())) ? 1 : 0;
-				case "o":
-				case "%G":
-					return x.setWeek(x.getISOWeek()).toString("yyyy");
-				case "%g":
-					return x.$format("%G").slice(-2);
-				case "Y":
-				case "%Y":
-					formatString = "yyyy";
-					break;
-				case "y":
-				case "%y":
-					formatString = "yy";
-					break;
-				case "a":
-				case "%p":
-					return t("tt").toLowerCase();
-				case "A":
-					return t("tt").toUpperCase();
-				case "g":
-				case "%I":
-					formatString = "h";
-					break;
-				case "G":
-					formatString = "H";
-					break;
-				case "h":
-					formatString = "hh";
-					break;
-				case "H":
-				case "%H":
-					formatString = "HH";
-					break;
-				case "i":
-				case "%M":
-					formatString = "mm";
-					break;
-				case "s":
-				case "%S":
-					formatString = "ss";
-					break;
-				case "u":
-					return p(x.getMilliseconds(), 3);
-				case "I":
-					return (x.isDaylightSavingTime()) ? 1 : 0;
-				case "O":
-					return x.getUTCOffset();
-				case "P":
-					y = x.getUTCOffset();
-					return y.substring(0, y.length - 2) + ":" + y.substring(y.length - 2);
-				case "e":
-				case "T":
-				case "%z":
-				case "%Z":
-					return x.getTimezone();
-				case "Z":
-					return x.getTimezoneOffset() * -60;
-				case "B":
-					var now = new Date();
-					return Math.floor(((now.getHours() * 3600) + (now.getMinutes() * 60) + now.getSeconds() + (now.getTimezoneOffset() + 60) * 60) / 86.4);
-				case "c":
-					return x.toISOString().replace(/\"/g, "");
-				case "U":
-					return $D.strtotime("now");
-				case "%c":
-					return t("d") + " " + t("t");
-				case "%C":
-					return Math.floor(x.getFullYear() / 100 + 1);
-				case "%D":
-					formatString = "MM/dd/yy";
-					break;
-				case "%n":
-					return "\\n";
-				case "%t":
-					return "\\t";
-				case "%r":
-					formatString = "hh:mm tt";
-					break;
-				case "%R":
-					formatString = "H:mm";
-					break;
-				case "%T":
-					formatString = "H:mm:ss";
-					break;
-				case "%e":
-					formatString = "d";
-					override = true;
-					break;
-				case "%x":
-					override = false;
-					break;
-				case "%X":
-					formatString = "t";
-					break;
-				default:
-					return m;
-			}
+
+			override = normalizer.shouldOverrideDefaults(m);
+			formatString = $D.normalizeFormat(m, context);
 			if (formatString) {
-				return t(formatString, override);
+				return context.toString(formatString, override);
 			}
 		};
 	};
-
-	$P.$format = function (format) {
+	$P._format = function (format) {
 		var formatter = formatReplace(this);
 		if (!format) {
 			return this._toString();
@@ -4134,7 +4244,7 @@ Date.CultureStrings.lang = "fo-FO";
 	};
 
 	if (!$P.format) {
-		$P.format = $P.$format;
+		$P.format = $P._format;
 	}
 }());
 (function () {

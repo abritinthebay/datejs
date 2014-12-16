@@ -178,7 +178,7 @@ module.exports = function(grunt) {
 	grunt.registerTask("default", ["build_dev"]);
 	// Load the plugin that provides the "minify" task.
 	grunt.loadNpmTasks("grunt-shell");
-	// grunt.loadNpmTasks("grunt-closurecompiler");
+	grunt.loadNpmTasks("grunt-closurecompiler");
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.registerTask("test", ["jasmine", "shell:updateCodeClimate"]);
 };
