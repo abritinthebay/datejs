@@ -103,7 +103,7 @@
 	 */
 	var parseUtils = {
 		removeOrds: function (s) {
-			ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
+			var ords = s.match(/\b(\d+)(?:st|nd|rd|th)\b/); // find ordinal matches
 			s = ((ords && ords.length === 2) ? s.replace(ords[0], ords[1]) : s);
 			return s;
 		},
