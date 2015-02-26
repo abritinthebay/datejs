@@ -102,12 +102,12 @@
 				t.hour,
 				t.hour,
 				t.hour,
+				t.hour,
 				t.minute,
 				t.minute,
 				t.second,
 				t.second,
 				t.secondAndMillisecond,
-				t.timezone,
 				t.timezone,
 				t.timezone
 			];
