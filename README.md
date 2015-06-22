@@ -20,6 +20,8 @@ DateJS supports running either your regular web browser as a client library or N
 Installation is as easy as running:
 
     npm install datejs
+    
+To run just `require('datejs')` and DateJS will extend the built in Date object like it does in the browser. 
 
 #### For a Browser 
 If you use [Bower](http://bower.io/) to manage your frontend packages then it's also really simple:
