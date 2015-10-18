@@ -757,7 +757,7 @@
 		// Standard Date and Time Format Strings. Formats pulled from CultureInfo file and
 		// may vary by culture.
 		if (!ignoreStandards && format && format.length === 1) {
-			output = parseStandardFormats.call(this, format);
+			var output = parseStandardFormats.call(this, format);
 			if (output) {
 				return output;
 			}
