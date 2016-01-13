@@ -464,7 +464,7 @@
 
 	$P.setTimezoneOffset = function (offset) {
 		var here = this.getTimezoneOffset(), there = Number(offset) * -6 / 10;
-		return (there || there === 0) ? this.addMinutes(there - here) : this;
+		return (there || there === 0) ? this.addMinutes(here - there) : this;
 	};
 
 	$P.setTimezone = function (offset) {
@@ -757,7 +757,7 @@
 		// Standard Date and Time Format Strings. Formats pulled from CultureInfo file and
 		// may vary by culture.
 		if (!ignoreStandards && format && format.length === 1) {
-			output = parseStandardFormats.call(this, format);
+			var output = parseStandardFormats.call(this, format);
 			if (output) {
 				return output;
 			}

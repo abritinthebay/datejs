@@ -43,7 +43,7 @@ describe("Parsing Module", function() {
 			expect(d.getTime()).toBe(correctDate.getTime());
 		});
 		it("4-Dec-1995", function () {
-			var d = Date.parse("12/04/95");
+			var d = Date.parse("4-Dec-1995");
 			expect(d.getTime()).toBe(correctDate.getTime());
 		});
 		it("1995-12-04", function () {
