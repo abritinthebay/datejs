@@ -107,7 +107,7 @@
 			return getText.getFromKey(key, countryCode);
 		}
 	};
-	
+
 	var loadI18nScript = function (code) {
 		// paatterned after jQuery's getScript.
 		var url = Date.Config.i18n + code + ".js";
@@ -130,7 +130,7 @@
 		setTimeout(function() {
 			head.insertBefore(script, head.firstChild);
 		}, 0); // allows return to execute first
-		
+
 		return {
 			done: function (cb) {
 				events.done = function() {
@@ -296,7 +296,7 @@
 				future: "/^next/",
 				past: "/^last|past|prev(ious)?/",
 				add: "/^(\\+|aft(er)?|from|hence)/",
-				subtract: "/^(\\-|bef(ore)?|ago)/",
+				subtract: "/(^\\-|bef(ore)?|ago)/",
 				yesterday: "/^yes(terday)?/",
 				today: "/^t(od(ay)?)?/",
 				tomorrow: "/^tom(orrow)?/",
@@ -376,7 +376,7 @@
 							throw new Error("The DateJS IETF language tag '" + code + "' could not be loaded by Node. It likely does not exist.");
 						}
 					} else if (Date.Config && Date.Config.i18n) {
-						// we know the location of the files, so lets load them					
+						// we know the location of the files, so lets load them
 						async = true;
 						loadI18nScript(code).done(function(){
 							lang = code;
