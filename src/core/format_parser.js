@@ -336,13 +336,17 @@
 				[todayRE, function (full) {
 					return (full.length > 1) ? Date.today().toString("d") : full;
 				}],
-				[tomorrowRE,
-				function(full, m1) {
+				[tomorrowRE, function(full, m1) {
 					var t = Date.today().addDays(1).toString("d");
 					return (t + " " + m1);
 				}],
 				[$R.amThisMorning, function(str, am){return am;}],
-				[$R.pmThisEvening, function(str, pm){return pm;}]
+				[$R.pmThisEvening, function(str, pm){return pm;}],
+				[$R.subtract, function (str, match) {
+					return "";
+				}, function (str){
+					return "-"+str;
+				}]
 			];
 
 		},
@@ -353,13 +357,15 @@
 		stringReplaceFuncs: function (s) {
 			for (var i=0; i < this.replaceFuncs.length; i++) {
 				s = s.replace(this.replaceFuncs[i][0], this.replaceFuncs[i][1]);
+				if(this.replaceFuncs[i][2]) {
+					s = this.replaceFuncs[i][2](s);
+				}
 			}
 			return s;
 		},
 		parse: function (s) {
 			s = this.stringReplaceFuncs(s);
 			s = utils.multiReplace(s, this.replaceHash);
-
 			try {
 				var n = s.split(/([\s\-\.\,\/\x27]+)/);
 				if (n.length === 3 &&
