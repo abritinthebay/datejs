@@ -133,6 +133,9 @@
 		if (!s) {
 			return null;
 		}
+		if (typeof s === 'number') {
+			return $D._parse(s);
+		}
 		if (s instanceof Date) {
 			return s.clone();
 		}
