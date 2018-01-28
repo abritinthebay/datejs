@@ -284,6 +284,7 @@
 		"yyyy-MM-ddTHH:mm",
 		"ddd, MMM dd, yyyy H:mm:ss tt",
 		"ddd MMM d yyyy HH:mm:ss zzz",
+        "d MMM yyyy",
 		"MMddyyyy",
 		"ddMMyyyy",
 		"Mddyyyy",
