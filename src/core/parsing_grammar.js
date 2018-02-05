@@ -221,6 +221,7 @@
 	g.buildGrammarFormats = function () {
 		// these need to be rebuilt every time the language changes.
 		_C = {};
+        _F = {};
 
 		grammarFormats.timeFormats();
 		grammarFormats.dateFormats();
@@ -266,35 +267,37 @@
 		// starting rule for general purpose grammar
 		g._start = _.process(_.set([ g.date, g.time, g.expression ],
 		g.generalDelimiter, g.whiteSpace), t.finish);
+
+        // parsing date format specifiers - ex: "h:m:s tt"
+        // this little guy will generate a custom parser based
+        // on the format string, ex: g.format("h:m:s tt")
+        // check for these formats first
+        g._formats = g.formats([
+            "\"yyyy-MM-ddTHH:mm:ssZ\"",
+            "yyyy-MM-ddTHH:mm:ss.sz",
+            "yyyy-MM-ddTHH:mm:ssZ",
+            "yyyy-MM-ddTHH:mm:ssz",
+            "yyyy-MM-ddTHH:mm:ss",
+            "yyyy-MM-ddTHH:mmZ",
+            "yyyy-MM-ddTHH:mmz",
+            "yyyy-MM-ddTHH:mm",
+            "ddd, MMM dd, yyyy H:mm:ss tt",
+            "ddd MMM d yyyy HH:mm:ss zzz",
+            "d MMM yyyy",
+            "MMddyyyy",
+            "ddMMyyyy",
+            "Mddyyyy",
+            "ddMyyyy",
+            "Mdyyyy",
+            "dMyyyy",
+            "yyyy",
+            "Mdyy",
+            "dMyy",
+            "d"
+        ]);
 	};
 
 	g.buildGrammarFormats();
-	// parsing date format specifiers - ex: "h:m:s tt" 
-	// this little guy will generate a custom parser based
-	// on the format string, ex: g.format("h:m:s tt")
-	// check for these formats first
-	g._formats = g.formats([
-		"\"yyyy-MM-ddTHH:mm:ssZ\"",
-		"yyyy-MM-ddTHH:mm:ss.sz",
-		"yyyy-MM-ddTHH:mm:ssZ",
-		"yyyy-MM-ddTHH:mm:ssz",
-		"yyyy-MM-ddTHH:mm:ss",
-		"yyyy-MM-ddTHH:mmZ",
-		"yyyy-MM-ddTHH:mmz",
-		"yyyy-MM-ddTHH:mm",
-		"ddd, MMM dd, yyyy H:mm:ss tt",
-		"ddd MMM d yyyy HH:mm:ss zzz",
-		"MMddyyyy",
-		"ddMMyyyy",
-		"Mddyyyy",
-		"ddMyyyy",
-		"Mdyyyy",
-		"dMyyyy",
-		"yyyy",
-		"Mdyy",
-		"dMyy",
-		"d"
-	]);
 	
 	// real starting rule: tries selected formats first, 
 	// then general purpose rule

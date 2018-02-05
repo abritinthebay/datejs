@@ -144,7 +144,7 @@
 			return d;
 		} else {
 			// find ordinal dates (1st, 3rd, 8th, etc and remove them as they cause parsing issues)
-			s = $D.Parsing.Normalizer.parse(parseUtils.removeOrds(s));
+			s = parseUtils.removeOrds(s);
 			d = parseUtils.grammarParser(s);
 			if (d !== null) {
 				return d;

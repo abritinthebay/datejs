@@ -293,18 +293,6 @@
 		basicReplaceHash : function() {
 			var $R = Date.CultureInfo.regexPatterns;
 			return {
-				"January": $R.jan.source,
-				"February": $R.feb,
-				"March": $R.mar,
-				"April": $R.apr,
-				"May": $R.may,
-				"June": $R.jun,
-				"July": $R.jul,
-				"August": $R.aug,
-				"September": $R.sep,
-				"October": $R.oct,
-				"November": $R.nov,
-				"December": $R.dec,
 				"": /\bat\b/gi,
 				" ": /\s{2,}/,
 				"am": $R.inTheMorning,
