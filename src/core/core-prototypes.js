@@ -753,7 +753,7 @@
 		};
 	};
 	$P.toString = function (format, ignoreStandards) {
-
+                 var output;
 		// Standard Date and Time Format Strings. Formats pulled from CultureInfo file and
 		// may vary by culture.
 		if (!ignoreStandards && format && format.length === 1) {
